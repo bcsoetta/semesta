@@ -1,0 +1,83 @@
+Last updated on 26 Maret 2019
+
+@---
+standard role:
+
+1. 	Untuk bisa masuk (logged in) status user harus aktif (100), dan minimal mempunyai 1 otoritas (privilege) aktif (100).
+2. 	administrator:
+	user@browse
+	user@profile
+	user@privil4
+	user@register
+	user@upassw
+	user@update
+	user@logout
+	user@log
+	user@info
+3. 	default:
+	user@profile
+	user@upassw
+	user@log
+	user@info
+
+
+@---
+privilege
+	#1
+	user controller:
+	user@index (redirect to user@browse)
+	user@browse 
+	user@get_user_role_count
+	user@profile
+	user@privil4
+	user@privil4_disable
+	user@privil4_activate
+	user@privil4_enable
+	user@load_privils_for_pagination
+	user@load_privils_ref_for_pagination
+	user@load_user_for_pagination
+	user@register
+	user@nip_check
+	user@username_check
+	user@upassw
+	user@update
+	user@update_process
+	user@username_update_check
+	user@nip_update_check
+	user@login
+	user@usernamex_check
+	user@password_check
+	user@logout
+	user@log
+	user@info
+
+	must check the privilege to access:
+	user@browse 
+	user@profile
+	user@privil4
+	user@register
+	user@upassw
+	user@update
+	user@logout
+	user@log
+	user@info
+
+	#2
+	guide controllers:
+	guide@download
+	guide@read
+	guide@update_
+	guide@update
+	guide@load_guide_for_pagination
+	guide@learn
+	guide@create_
+	guide@create
+	guide@index (redirect to guide@download)
+
+	must check the privilege to access:
+	guide@download
+	guide@read
+	guide@update
+	guide@learn
+	guide@create
+
