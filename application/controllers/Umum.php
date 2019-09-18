@@ -7,6 +7,13 @@ class Umum extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->library(array('mainlib', 'pagination'));
+
+		$this->load->model('Umum_st_model');
+		$this->load->model('Umum_sdm_model');
+		$this->load->model('Penomoran_model');
+		$this->load->model('Tanggal_model');
+		$this->load->model('Angka_model');
+		$this->load->model('Admin_model');
 	}
 
 	public function index() {
@@ -406,5 +413,224 @@ class Umum extends CI_Controller {
 		} else {
 			echo '0';
 		}
+	}
+
+	// Surat tugas
+	public function surat_tugas()
+	{
+		$this->mainlib->logged_in();
+		$this->mainlib->privilege();
+
+		$data['menus'] = $this->mainlib->menus();
+		$data['class'] = $this->router->fetch_class();
+		$data['hal'] = 'Surat Tugas';
+		$data['content'] = 'umum_st';
+		$this->load->view('index', $data);
+	}
+
+	public function get_st_all()
+	{
+		$this->mainlib->logged_in();
+		$data = $this->Umum_st_model->GetStAll();
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
+
+	public function simpan_st()
+	{
+		$this->mainlib->logged_in();
+		$tahun = date("Y");
+
+		$pejabatKbu = $this->Admin_model->GetPlh(date("Y-m-d"), 10);
+
+		if (count($pejabatKbu) > 0) {
+			$plhKbu = 1;
+			$kbu = $pejabatKbu[0]->plh;
+		} else {
+			$plhKbu = 0;
+			$kbu = $this->Umum_st_model->GetPejabat(10);
+			$kbu = $kbu[0]->id;
+		}
+
+		switch ($_POST['header']['jenis_st']) {
+			case '1':
+				$agenda = 'KPU.03';
+				$jenis_st = 'KK';
+				break;
+
+			case '10':
+				$agenda = 'KPU.03/BG.01';
+				$jenis_st = 'KBU';
+				break;
+			
+			default:
+				$agenda = '';
+				break;
+		}
+
+		$_POST['header']['jenis_st'] = $jenis_st;
+
+		foreach ($_POST['pegawai'] as $p) {
+			if (isset($_POST['header']['spd']) && $_POST['header']['spd'] == 1 && $_POST['header']['dipa'] == 1) {
+				$no_spd = $this->Penomoran_model->GetNo('SPD', 'KPU.03', $tahun);
+			} else {
+				$no_spd = null;
+			}
+
+			$pegawai[] = [
+				'id_pegawai' => $p,
+				'no_spd' => $no_spd,
+				'plh_kbu' => $plhKbu,
+				'pjb_kbu' => $kbu
+			];
+
+		}
+
+		$_POST['pegawai'] = $pegawai;
+		
+		$no_st = $this->Penomoran_model->GetNo('ST', $agenda, $tahun);
+		$this->Umum_st_model->SaveSt($_POST, $no_st);
+	}
+
+	public function edit_st()
+	{
+		$this->mainlib->logged_in();
+		$data = $this->Umum_st_model->GetSt($_POST['id_st']);
+
+		$tgl_tugas_start = $this->Tanggal_model->ConvertTanggal($data['st_header']->tgl_tugas_start, '%d-%m-%Y');
+		$tgl_tugas_end = $this->Tanggal_model->ConvertTanggal($data['st_header']->tgl_tugas_end, '%d-%m-%Y');
+
+		$data['st_header']->tgl_tugas_start = $tgl_tugas_start;
+		$data['st_header']->tgl_tugas_end = $tgl_tugas_end;
+		
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
+
+	public function update_st()
+	{
+		$this->mainlib->logged_in();
+		$tahun = date("Y");
+
+		$current_detail = $this->Umum_st_model->CekJmlSpd($_POST['header']['id_st']);
+
+		$del_detail = [];
+
+		foreach ($current_detail as $key => $value) {
+			if (!in_array($value->id_pegawai, $_POST['pegawai'])) {
+				$del_detail[] = $value->id_pegawai;
+			}
+		}
+
+		foreach ($_POST['pegawai'] as $key => $value) {
+			if (isset($_POST['header']['spd']) && $_POST['header']['spd'] == 1 && $_POST['header']['dipa'] == 1) {
+				$cek_no_spd = $this->Umum_st_model->CekSpd($_POST['header']['id_st'], $value);
+				if ($cek_no_spd != null) {
+					$no_spd = $cek_no_spd;
+				} else {
+					$no_spd = $this->Penomoran_model->GetNo('SPD', 'KPU.03', $tahun);	
+				}
+			} else {
+				$no_spd = null;
+			}
+
+			$new_detail[] = [
+				'id_pegawai' => $value,
+				'no_spd' => $no_spd
+			];
+		}
+
+		switch ($_POST['header']['jenis_st']) {
+			case '1':
+				// $agenda = 'KPU.03';
+				$jenis_st = 'KK';
+				break;
+
+			case '10':
+				// $agenda = 'KPU.03/BG.01';
+				$jenis_st = 'KBU';
+				break;
+			
+			default:
+				// $agenda = '';
+				$jenis_st = '';
+				break;
+		}
+
+		$_POST['header']['jenis_st'] = $jenis_st;
+
+		$this->Umum_st_model->UpdateSt($_POST['header'], $new_detail, $del_detail);
+	}
+
+	public function delete_st()
+	{
+		$this->mainlib->logged_in();
+		$this->Umum_st_model->DeleteSt($_POST['id_st']);
+	}
+
+	public function preview_st()
+	{
+		$this->mainlib->logged_in();
+		$data = $this->Umum_st_model->GetSt($_GET['id_st']);
+
+		$tgl_tugas = $this->Tanggal_model->ConvertRangeTanggal($data['st_header']->tgl_tugas_start, $data['st_header']->tgl_tugas_end);
+		$tgl_st = $this->Tanggal_model->ConvertTanggal($data['st_header']->tanggal, '%d %B %Y');
+		$wkt_tugas = $this->Tanggal_model->ConvertRangeWaktu($data['st_header']->wkt_tugas_start, $data['st_header']->wkt_tugas_end);
+
+		$data['st_header']->tgl_tugas = $tgl_tugas;
+		$data['st_header']->tgl_st = $tgl_st;
+		$data['st_header']->wkt_tugas = $wkt_tugas;
+
+		$this->load->view('umum_st_form_st', $data);
+	}
+
+	public function preview_spd()
+	{
+		$this->mainlib->logged_in();
+		$data = $this->Umum_st_model->GetSt($_GET['id_st']);
+
+		$tgl_tugas_start = strtotime($data['st_header']->tgl_tugas_start);
+		$tgl_tugas_end = ($data['st_header']->tgl_tugas_end != null ? strtotime($data['st_header']->tgl_tugas_end) : strtotime($data['st_header']->tgl_tugas_start));
+		$date_diff = (($tgl_tugas_end - $tgl_tugas_start) / (60*60*24)) + 1;
+		$data['st_header']->hari = $this->Angka_model->terbilang($date_diff);
+
+		$data['st_header']->tgl_tugas_start = $this->Tanggal_model->ConvertTanggal($data['st_header']->tgl_tugas_start, '%d %B %Y');
+		$data['st_header']->tgl_tugas_end = (
+			$data['st_header']->tgl_tugas_end == null ? 
+			$data['st_header']->tgl_tugas_start :
+			$this->Tanggal_model->ConvertTanggal($data['st_header']->tgl_tugas_end, '%d %B %Y') 
+		);
+		$data['st_header']->tgl_spd = $this->Tanggal_model->ConvertTanggal($data['st_header']->tanggal, '%d %B %Y');
+
+		$this->load->view('umum_st_form_spd', $data);
+	}
+
+	public function get_pejabat()
+	{
+		$this->mainlib->logged_in();
+		// $pejabat = $this->Umum_st_model->GetPejabat($_POST['jabatan']);
+
+		$pejabatPlh = $this->Admin_model->GetPlh(date("Y-m-d"), $_POST['jabatan']);
+
+		if (count($pejabatPlh) > 0) {
+			$pjb = $this->Umum_sdm_model->GetPegawaiById($pejabatPlh[0]->plh);
+			$data = $pjb[0];
+			$data->plh = 1;
+		} else {
+			$pjb = $this->Umum_sdm_model->GetPejabat($_POST['jabatan']);
+			$data = $pjb[0];
+			$data->plh = 0;
+		}
+
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
+
+	public function cari_pegawai()
+	{
+		$this->mainlib->logged_in();
+		$list = $this->Umum_st_model->GetPegawai($_POST['pegawai'], $_POST['exclude']);
+		header('Content-type:application/json');
+		echo json_encode($list);
 	}
 }
