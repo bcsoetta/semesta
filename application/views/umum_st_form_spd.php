@@ -64,6 +64,10 @@
             width: 75mm;
         }
 
+        .naskah-dinas .ttd .label {
+            width: 25mm;
+        }
+
         .naskah-dinas .colon {
             width: 2mm;
         }
@@ -286,14 +290,29 @@
                 <div>
                     <table class="ttd" style="margin-top: 20px; float: right">
                         <tr>
-                            <td>Dikeluarkan di</td>
-                            <td>:&nbsp;</td>
-                            <td>Tangerang</td>
+                            <td class="label">Dikeluarkan di</td>
+                            <td class="colon">:&nbsp;</td>
+                            <td>
+                                <?php 
+                                    if ($st_header->dipa == '1') {
+                                        echo "Tangerang";
+                                    } else {
+                                        echo "";
+                                    }
+                                ?>
+                            </td>
                         </tr>
                         <tr>
-                            <td>pada tanggal</td>
-                            <td>:&nbsp;</td>
-                            <td><?php echo $st_header->tgl_spd; ?></td>
+                            <td class="label">pada tanggal</td>
+                            <td class="colon">:&nbsp;</td>
+                            <td>
+                                <?php 
+                                    if ($st_header->dipa == '1') {
+                                        echo $st_header->tgl_spd;
+                                    } else {
+                                        echo "";
+                                    }
+                                ?>
                         </tr>
                         <tr>
                             <td colspan="3">
