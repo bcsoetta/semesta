@@ -70,7 +70,8 @@
 							<input type="text" class="id-pejabat" name="id_pejabat" style="display: none">
 						</div>
 						<div class="col-sm-1 form-control-label">
-							<input class="form-control-label" id="inpPlh" type="checkbox" name="plh" value="1" disabled="">
+							<input class="form-control-label" id="inpPlh" type="checkbox" disabled="">
+							<input type="hidden" id="inpHidPlh" name="plh" value="0">
 							<label>Plh</label>
 						</div>
 					</div>

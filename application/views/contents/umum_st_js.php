@@ -351,8 +351,10 @@
 
 				if (result.plh == 1) {
 					$('#inpPlh').prop('checked', true);
+					$('#inpHidPlh').val(1);
 				} else {
 					$('#inpPlh').prop('checked', false);
+					$('#inpHidPlh').val(0);
 				}
 			}
 		});
