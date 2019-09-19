@@ -139,7 +139,7 @@ class Barkir_model extends CI_Model {
 				b.nama,
 				sum(a.jumlah_dok) dok
 			from fact_barkir a
-			inner join dim_barkir_pjt b on a.pjt = b.id
+			inner join dim_pengguna_jasa b on a.pjt = b.id
 			inner join dim_date c on a.tgl_house_blawb = c.id
 			where c.date between '" . $date['start'] . "' and '" . $date['end'] . "'
 			group by a.pjt

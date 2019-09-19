@@ -80,7 +80,7 @@ class Barkir_penerimaan_model extends CI_Model {
 				) total
 			from fact_barkir a
 			inner join dim_date b on a.tgl_house_blawb = b.id
-			inner join dim_barkir_pjt c on a.pjt = c.id
+			inner join dim_pengguna_jasa c on a.pjt = c.id
 			where b.date between '" . $date['start'] . "' and '" . $date['end'] . "'
 			group by c.npwp
 			order by total desc
@@ -100,7 +100,7 @@ class Barkir_penerimaan_model extends CI_Model {
 				sum(a.total_bm_penetapan) bm
 			from fact_barkir a
 			inner join dim_date b on a.tgl_house_blawb = b.id
-			inner join dim_barkir_pjt c on a.pjt = c.id
+			inner join dim_pengguna_jasa c on a.pjt = c.id
 			where b.date between '" . $date['start'] . "' and '" . $date['end'] . "'
 			group by c.npwp
 			order by bm desc
