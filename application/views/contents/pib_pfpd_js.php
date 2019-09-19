@@ -39,9 +39,79 @@
 					{ "data": "Nama" },
 					{ "data": "Jml PIB" },
 					{ "data": "Jml SPTNP" },
-					{ "data": "Hit Rate" },
-					{ "data": "BM Hit", render: $.fn.dataTable.render.number( '.', ',', 2, 'Rp ' ) }
-				]
+					{ 
+						"data": "Hit Rate", 
+						"render": function ( data, type, row, meta ) {
+					      return data + ' %';
+					    }
+					},
+					{ "data": "BM Hit", render: $.fn.dataTable.render.number( '.', ',', 2, 'Rp ' ) },
+					{ "data": "PDRI", render: $.fn.dataTable.render.number( '.', ',', 2, 'Rp ' ) }
+				],
+				"footerCallback": function ( row, data, start, end, display ) {
+					var api = this.api(), data;
+
+					// Remove the formatting to get integer data for summation
+		            var intVal = function ( i ) {
+		                return typeof i === 'string' ?
+		                    i.replace(/[\$,]/g, '')*1 :
+		                    typeof i === 'number' ?
+		                        i : 0;
+		            };
+
+		            var numberFormat = $.fn.dataTable.render.number( '.', ',', 2, 'Rp ' ).display;
+		            var percentFormat = $.fn.dataTable.render.number( ',', '.', 2).display;
+
+		            // Total over all pages
+		            totalPib = api
+		                .column( 1 )
+		                .data()
+		                .reduce( function (a, b) {
+		                    return intVal(a) + intVal(b);
+		                }, 0 );
+
+		            totalSptnp = api
+		                .column( 2 )
+		                .data()
+		                .reduce( function (a, b) {
+		                    return intVal(a) + intVal(b);
+		                }, 0 );
+
+	                totalBm = api
+		                .column( 4 )
+		                .data()
+		                .reduce( function (a, b) {
+		                    return intVal(a) + intVal(b);
+		                }, 0 );
+
+					totalPdri = api
+						.column( 5 )
+						.data()
+						.reduce( function (a, b) {
+						return intVal(a) + intVal(b);
+						}, 0 );
+
+		            // Update footer
+		            $( api.column( 1 ).footer() ).html(
+		                totalPib
+		            );
+
+		            $( api.column( 2 ).footer() ).html(
+		                totalSptnp
+		            );
+
+		            $( api.column( 3 ).footer() ).html(
+		                percentFormat((totalSptnp / totalPib)*100) + ' %'
+		            );
+
+		            $( api.column( 4 ).footer() ).html(
+						numberFormat(totalBm)
+		            );
+
+		            $( api.column( 5 ).footer() ).html(
+						numberFormat(totalPdri)
+					);
+				}
 			});
 		}
 		

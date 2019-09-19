@@ -83,8 +83,19 @@
 										<th>Jml SPTNP</th>
 										<th>Hit Rate</th>
 										<th>BM Hit</th>
+										<th>PDRI Hit</th>
 									</tr>
 								</thead>
+								<tfoot>
+									<tr>
+										<th>Total</th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+										<th></th>
+									</tr>
+								</tfoot>
 							</table>
 						</div>
 

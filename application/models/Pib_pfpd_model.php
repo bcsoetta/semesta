@@ -49,8 +49,9 @@ class Pib_pfpd_model extends CI_Model {
 				src.NAMA_PFPD Nama,
 				COUNT(src.NO_PIB) `Jml PIB`,
 				COUNT(src.NO_SPTNP) `Jml SPTNP`,
-				CONCAT(ROUND(((COUNT(src.NO_SPTNP) / COUNT(src.NO_PIB)) * 100), 2), ' %') `Hit Rate`,
-				SUM(src.diff) `BM Hit`
+				ROUND(((COUNT(src.NO_SPTNP) / COUNT(src.NO_PIB)) * 100), 2) `Hit Rate`,
+				SUM(src.bm_diff) `BM Hit`,
+				SUM(src.pdri_diff) `PDRI`
 			FROM (
 				SELECT
 					a.CAR,
@@ -58,7 +59,11 @@ class Pib_pfpd_model extends CI_Model {
 					a.NAMA_PFPD,
 					a.NO_PIB,
 					b.NO_SPTNP,
-					b.NILAI_AKHIR_BM - b.NILAI_AWAL_BM diff
+					b.NILAI_AKHIR_BM - b.NILAI_AWAL_BM bm_diff,
+					(
+						(b.NILAI_AKHIR_PPN + b.NILAI_AKHIR_PPH + b.NILAI_AKHIR_PPNBM) -
+						(b.NILAI_AWAL_PPN + b.NILAI_AWAL_PPH + b.NILAI_AWAL_PPNBM)
+					) pdri_diff
 				FROM data_dt.new_pib_header a
 				LEFT JOIN data_dt.sptnp b ON a.CAR = b.CAR AND b.FL_LEBIH <> 'Y'
 				WHERE 
