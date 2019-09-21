@@ -10,6 +10,7 @@ class Umum extends CI_Controller {
 
 		$this->load->model('Umum_st_model');
 		$this->load->model('Umum_sdm_model');
+		$this->load->model('Umum_apps_model');
 		$this->load->model('Penomoran_model');
 		$this->load->model('Tanggal_model');
 		$this->load->model('Angka_model');
@@ -632,5 +633,54 @@ class Umum extends CI_Controller {
 		$list = $this->Umum_st_model->GetPegawai($_POST['pegawai'], $_POST['exclude']);
 		header('Content-type:application/json');
 		echo json_encode($list);
+	}
+
+	// Halaman Monitor Aplikasi
+	public function aplikasi()
+	{
+		$this->mainlib->logged_in();
+		$this->mainlib->privilege();
+
+		$data['menus'] = $this->mainlib->menus();
+		$data['class'] = $this->router->fetch_class();
+		$data['hal'] = 'Monitor Aplikasi';
+		$data['content'] = 'umum_aplikasi';
+		$this->load->view('index', $data);
+	}
+
+	public function list_apps()
+	{
+		$this->mainlib->logged_in();
+		$data = $this->Umum_apps_model->GetAllApps($_POST);
+
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
+
+	public function simpan_apps()
+	{
+		$this->mainlib->logged_in();
+		$this->Umum_apps_model->SaveApp($_POST);
+	}
+
+	public function edit_apps()
+	{
+		$this->mainlib->logged_in();
+		$data = $this->Umum_apps_model->GetAppById($_POST['id_data']);
+
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
+
+	public function update_apps()
+	{
+		$this->mainlib->logged_in();
+		$this->Umum_apps_model->UpdateApp($_POST);
+	}
+
+	public function delete_app()
+	{
+		$this->mainlib->logged_in();
+		$this->Umum_apps_model->DeleteApp($_POST);
 	}
 }
