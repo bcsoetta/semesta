@@ -542,4 +542,56 @@ class User extends CI_Controller
 		$this->load->view('index', $data);
 	}
 
+	// Halaman setting feature
+	public function feature()
+	{
+		$data['menus'] = $this->mainlib->menus();
+		$data['class'] = $this->router->fetch_class();
+		$data['hal'] = 'aplikasi';
+		$data['content'] = 'priv_feature';
+		$this->load->view('index', $data);
+	}
+
+	public function feature_list()
+	{
+		$this->load->model('User_feature_model');
+		$data = $this->User_feature_model->GetAllFeature();
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
+
+	public function feature_save()
+	{
+		$fitur = $_POST['nama-fitur'];
+		$this->load->model('User_feature_model');
+		$m = $this->User_feature_model->SaveFeature($fitur);
+		header('Content-type:application/json');
+		echo json_encode($m);
+	}
+
+	public function feature_show()
+	{
+		$id = $_POST['id'];
+		$this->load->model('User_feature_model');
+		$data = $this->User_feature_model->GetFeatureById($id);
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
+
+	public function feature_update()
+	{
+		$this->load->model('User_feature_model');
+		$m = $this->User_feature_model->UpdateFeature($_POST);
+		header('Content-type:application/json');
+		echo json_encode($m);
+	}
+
+	public function subfeature_list()
+	{
+		$this->load->model('User_feature_model');
+		$data = $this->User_feature_model->GetAllSubFeatureById($_POST['id']);
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
+
 }
