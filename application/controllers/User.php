@@ -594,4 +594,12 @@ class User extends CI_Controller
 		echo json_encode($data);
 	}
 
+	public function subfeature_save()
+	{
+		$this->load->model('User_feature_model');
+		$m = $this->User_feature_model->SaveSubFeature($_POST);
+		header('Content-type:application/json');
+		echo json_encode($m);
+	}
+
 }

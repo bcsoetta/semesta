@@ -23,7 +23,7 @@
 											<label class="form-group-label">Tambah aplikasi:</label>
 										</div>
 										<div class="col-md-3 col-sm-12">
-											<input id="inp-nm-fitur" class="form-control" type="text" name="nama-fitur" placeholder="Isikan nama fitur">
+											<input id="inp-nm-fitur" class="form-control" type="text" name="nama-fitur" placeholder="Isikan nama aplikasi">
 										</div>
 										<button id="btn-simpan" class="btn btn-md info">Simpan</button>	
 									</div>

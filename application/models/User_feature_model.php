@@ -12,15 +12,6 @@ class User_feature_model extends CI_Model {
 		return $query->result_array();
 	}
 
-	public function GetAllSubFeatureById($app_id='')
-	{
-		$query = $this->db->select('a.id, a.description, a.have_view, a.url, a.`status`')
-			->from('priv_app_feature a')
-			->where('a.parent_id', $app_id)
-			->get();
-		return $query->result_array();
-	}
-
 	public function SaveFeature($input='')
 	{
 		$message = [];
@@ -110,5 +101,45 @@ class User_feature_model extends CI_Model {
 			->where('a.id', $input)
 			->get();
 		return $query->result_array();
+	}
+
+	public function GetAllSubFeatureById($app_id='')
+	{
+		$query = $this->db->select('a.id, a.description, a.have_view, a.url, a.`status`')
+			->from('priv_app_feature a')
+			->where('a.parent_id', $app_id)
+			->get();
+		return $query->result_array();
+	}
+
+	private function GetSubFeatureByUrl($url='')
+	{
+		$query = $this->db->select('a.id, a.description, a.have_view, a.url, a.`status`')
+			->from('priv_app_feature a')
+			->where('a.url', $url)
+			->get();
+		return $query->result_array();
+	}
+
+	public function SaveSubFeature($input='')
+	{
+		$message = [];
+		if ($input['url'] == '') {
+			$m_content = 'URL harus diisi';
+			$m_status = 0;
+		} else {
+			$checkSubfeature = $this->GetSubFeatureByUrl($input['url']);
+			if (count($checkSubfeature) > 0 ) {
+				$m_content = 'URL fitur sudah ada';
+				$m_status = 0;
+			} else {
+				$this->db->insert('priv_app_feature', $input);
+				$m_content = 'Fitur berhasil disimpan';
+				$m_status = 1;
+			}
+		}
+		$message['message'] = $m_content;
+		$message['status'] = $m_status;
+		return $message;
 	}
 }
