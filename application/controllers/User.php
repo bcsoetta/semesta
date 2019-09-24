@@ -602,4 +602,30 @@ class User extends CI_Controller
 		echo json_encode($m);
 	}
 
+	// Halaman setting role
+	public function role()
+	{
+		$data['menus'] = $this->mainlib->menus();
+		$data['class'] = $this->router->fetch_class();
+		$data['hal'] = 'role';
+		$data['content'] = 'priv_role';
+		$this->load->view('index', $data);
+	}
+
+	public function role_list()
+	{
+		$this->load->model('User_role_model');
+		$data = $this->User_role_model->GetAllRole();
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
+
+	public function role_save()
+	{
+		$this->load->model('User_role_model');
+		$m = $this->User_role_model->SaveRole($_POST);
+		header('Content-type:application/json');
+		echo json_encode($m);
+	}
+
 }

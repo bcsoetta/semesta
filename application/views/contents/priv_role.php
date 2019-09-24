@@ -9,25 +9,14 @@
 				<div class="row-col box">
 					<div class="col-sm-12">
 						<div class="box-header">
-							<h3>Daftar Fitur Semesta</h3>
+							<h3>Setting Role</h3>
 						</div>
 						<div class="box-divider m-a-0"></div>
-
 						<div class="box-body">
-							<div id="list-aplikasi" class="list-group m-b">
+							<div class="row mb-3">
+								<div class="col-md-4"><button id="btn-tambah-role" class="btn btn-sm info">+ Buat role baru</button><button id="btn-test" class="btn btn-sm info">+ Buat role baru</button></div>	
 							</div>
-							<div class="row px-3 mb-2">
-								<form id="form-simpan-fitur">
-									<div class="form-group row">
-										<div class="col-md-1 col-sm-12">
-											<label class="form-group-label">Tambah aplikasi:</label>
-										</div>
-										<div class="col-md-3 col-sm-12">
-											<input id="inp-nm-fitur" class="form-control" type="text" name="nama-fitur" placeholder="Isikan nama aplikasi">
-										</div>
-										<button id="btn-simpan" class="btn btn-md info">Simpan</button>	
-									</div>
-								</form>
+							<div id="list-aplikasi" class="list-group m-b">
 							</div>
 						</div>
 
@@ -40,20 +29,19 @@
 </div>
 <!-- / content -->
 
-<!-- modal edit data -->
-<div id="modal-edit" class="modal" data-backdrop="true">
+<!-- modal edit role -->
+<div id="modal-role" class="modal" data-backdrop="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">Edit Fitur</h5>
+				<h5 class="modal-title">Edit Role</h5>
 			</div>
 			<div class="modal-body p-lg">
 				<form action="#" id="form-role" class="row mb-1 mx-2">
-					<input id="inpId" type="hidden" name="id">
 					<div class="form-group row">
-						<label for="inpNama" class="col-sm-2 form-control-label">Nama Fitur</label>
+						<label for="inpNama" class="col-sm-2 form-control-label">Nama Role</label>
 						<div class="col-sm-10">
-							<input id="inpNama" name="nama" type="text" class="form-control" autocomplete="off">
+							<input id="inpRole" name="role" type="text" class="form-control" autocomplete="off">
 						</div>
 					</div>
 					<div class="form-group row">
@@ -64,9 +52,6 @@
 						</label>
 					</div>
 				</form>
-				<form action="#" id="formDetail">
-					
-				</form>
 			</div>
 			<div class="modal-footer">
 				<button id="btn-simpan" type="button" class="btn primary p-x-md">Simpan</button>
@@ -75,4 +60,4 @@
 		</div>
 	</div>
 </div>
-<!-- /modal edit data -->
+<!-- /modal edit role -->
