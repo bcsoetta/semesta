@@ -14,7 +14,7 @@
 						<div class="box-divider m-a-0"></div>
 						<div class="box-body">
 							<div class="row mb-3">
-								<div class="col-md-4"><button id="btn-tambah-role" class="btn btn-sm info">+ Buat role baru</button><button id="btn-test" class="btn btn-sm info">+ Buat role baru</button></div>	
+								<div class="col-md-4"><button id="btn-tambah-role" class="btn btn-sm info">+ Buat role baru</button></div>	
 							</div>
 							<div id="list-aplikasi" class="list-group m-b">
 							</div>

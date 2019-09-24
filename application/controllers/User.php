@@ -612,18 +612,43 @@ class User extends CI_Controller
 		$this->load->view('index', $data);
 	}
 
-	public function role_list()
+	public function role_list_unused()
 	{
 		$this->load->model('User_role_model');
-		$data = $this->User_role_model->GetAllRole();
+		$data = $this->User_role_model->GetUnusedRoleByAppId($_POST['app_id']);
 		header('Content-type:application/json');
 		echo json_encode($data);
+	}
+
+	public function role_list_used()
+	{
+		$data = [];
+		$this->load->model('User_role_model');
+		$result = $this->User_role_model->GetUsedRoleByAppId($_POST['app_id']);
+		foreach ($result as $key => $value) {
+			$features = explode(',', $value['feature']);
+			$data[] = [
+				'id' => $value['id'],
+				'role' => $value['role'],
+				'features' => $features
+			];
+		};
+		header('Content-type:application/json');
+		echo json_encode($data, JSON_UNESCAPED_SLASHES);
 	}
 
 	public function role_save()
 	{
 		$this->load->model('User_role_model');
 		$m = $this->User_role_model->SaveRole($_POST);
+		header('Content-type:application/json');
+		echo json_encode($m);
+	}
+
+	public function role_feature_save()
+	{
+		$this->load->model('User_role_model');
+		$m = $this->User_role_model->SaveRoleFeature($_POST);
 		header('Content-type:application/json');
 		echo json_encode($m);
 	}

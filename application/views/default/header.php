@@ -27,5 +27,6 @@
 	<link rel="stylesheet" href="<?php echo base_url('assets/styles/font.css'); ?>" type="text/css" />
 	<link rel="stylesheet" href="<?php echo base_url('assets/libs/jquery/footable/css/footable.bootstrap.min.css'); ?>" type="text/css" />
 	<link rel="stylesheet" href="<?php echo base_url('assets/libs/jquery/datatables/css/datatables.min.css'); ?>" type="text/css" />
+	<link rel="stylesheet" href="<?php echo base_url('assets/libs/jquery/select2/dist/css/select2.min.css'); ?>" type="text/css" />
 	<link rel="stylesheet" href="<?php echo base_url('assets/styles/my-style.css'); ?>" type="text/css" />
 </head>
