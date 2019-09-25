@@ -111,8 +111,14 @@ class Umum_st_model extends CI_Model {
 			->where("a.id_st", $id_st)
 			->order_by("a.id")
 			->get();
-
-		return $query->result();
+		$result = $query->result();
+		for ($i=0; $i < count($result); $i++) { 
+			$nama = $result[$i]->nama;
+			$nama = explode(',', $nama);
+			$nama = $nama[0];
+			$result[$i]->nama = $nama;
+		}
+		return $result;
 	}
 
 	public function SaveSt($input=[], $no_st='')
