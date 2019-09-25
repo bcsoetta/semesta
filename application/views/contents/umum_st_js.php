@@ -6,66 +6,67 @@
 <script type="text/javascript">
 	// Display datatable
 	
-		function displayAllData() {
-			$.ajax({
-				url: "get_st_all",
-				method: "POST",
-				success: function(result) {
-					data = result;
+	function displayAllData() {
+		$.ajax({
+			url: "get_st_all",
+			method: "POST",
+			success: function(result) {
+				$.fn.dataTable.moment( 'DD-MM-YYYY' );
+				DisplayDatatable(result);
+			}
+		});
+	}
 
-					$.fn.dataTable.moment( 'DD-MM-YYYY' );
+	function DisplayDatatable(data) {
+		$('#table-pfpd-data').DataTable({
+			"destroy": true,
+			"data": data,
+			"columns": [
+				{ "data": "jenis_st" },
+				{
+					"data": null,
+					"render": function function_name(data, type, row) {
+						switch(data.jenis_st) {
+							case 'KK':
+								var agenda = '/KPU.03/';
+								break;
 
-					$('#table-pfpd-data').DataTable({
-						"destroy": true,
-						"data": data,
-						"columns": [
-							{ "data": "jenis_st" },
-							{
-								"data": null,
-								"render": function function_name(data, type, row) {
-									switch(data.jenis_st) {
-										case 'KK':
-											var agenda = '/KPU.03/';
-											break;
+							case 'KBU':
+								var agenda = '/KPU.03/BG.01/';
+								break;
+							default:
+								var agenda = 'AGENDA TIDAK DITEMUKAN';
+						};
+						return 'ST-' + data.no + agenda + data.tahun;
+					}
+				},
+				{ "data": "tanggal" },
+				{ "data": "hal" },
+				{ 
+					"data": null, 
+					"render": function function_name(data, type, row) {
+						button_st = "<a href='preview_st/?id_st=" + data.id + "' id='btn-modal-preview' class='btn btn-sm blue' target='_blank'>ST</a>";
 
-										case 'KBU':
-											var agenda = '/KPU.03/BG.01/';
-											break;
-										default:
-											var agenda = 'AGENDA TIDAK DITEMUKAN';
-									};
-									return 'ST-' + data.no + agenda + data.tahun;
-								}
-							},
-							{ "data": "tanggal" },
-							{ "data": "hal" },
-							{ 
-								"data": null, 
-								"render": function function_name(data, type, row) {
-									button_st = "<a href='preview_st/?id_st=" + data.id + "' id='btn-modal-preview' class='btn btn-sm blue' target='_blank'>ST</a>";
+						if (data.spd == '1') {
+							button_spd = "<a href='preview_spd/?id_st=" + data.id + "' id='btn-modal-preview' class='btn btn-sm blue' target='_blank' disabled=''>SPD</a>";
+						} else {
+							button_spd = "<button class='btn btn-sm dark' disabled=''>SPD</button>";
+						}
 
-									if (data.spd == '1') {
-										button_spd = "<a href='preview_spd/?id_st=" + data.id + "' id='btn-modal-preview' class='btn btn-sm blue' target='_blank' disabled=''>SPD</a>";
-									} else {
-										button_spd = "<button class='btn btn-sm dark' disabled=''>SPD</button>";
-									}
+						button_edit = "<a href='#' id='" + data.id + "' class='edit-st'><i class='fa fa-edit text-primary' data-toggle='modal' data-target='#modal-tambah'></i></a>";
+						button_del = "<a href='#' id='" + data.id + "' class='delete-st'><i class='fa fa-trash text-danger' data-toggle='modal' data-target='#modal-konfirmasi'></i></a>";
 
-									button_edit = "<a href='#' id='" + data.id + "' class='edit-st'><i class='fa fa-edit text-primary' data-toggle='modal' data-target='#modal-tambah'></i></a>";
-									button_del = "<a href='#' id='" + data.id + "' class='delete-st'><i class='fa fa-trash text-danger' data-toggle='modal' data-target='#modal-konfirmasi'></i></a>";
-
-									return button_st + '&nbsp;' + button_spd + '&nbsp;&nbsp;&nbsp;' + button_edit + '&nbsp;' + button_del;
-								}
-							},
-							{
-								"data": "created_at",
-								"visible": false
-							}
-						],
-						"order": [[ 5, "desc" ]]
-					});
+						return button_st + '&nbsp;' + button_spd + '&nbsp;&nbsp;&nbsp;' + button_edit + '&nbsp;' + button_del;
+					}
+				},
+				{
+					"data": "created_at",
+					"visible": false
 				}
-			});
-		}
+			],
+			"order": [[ 5, "desc" ]]
+		});
+	}
 
 	$(document).ready(function() {
 		displayAllData();
@@ -435,4 +436,51 @@
 			SearchPegawai(element, input, exclude);
 		});
 	});
+</script>
+
+<script type="text/javascript">
+	// Advance search
+	$(document).ready(function (argument) {
+		// Open search form
+		$(document).on('click', '#btn-open-adv-src', function (e) {
+			e.preventDefault();
+			$('#adv-src').css('display', 'block');
+			$(this).attr('id', 'btn-close-adv-src');
+		})
+
+		// Close search form
+		$(document).on('click', '#btn-close-adv-src', function (e) {
+			e.preventDefault();
+			$('#adv-src').css('display', 'none');
+			$(this).attr('id', 'btn-open-adv-src');
+		})
+
+		// Submit search
+		$(document).on('click', '#btn-adv-src', function (e) {
+			e.preventDefault();
+			var input = $('#form-adv-src').serializeArray();
+			$.ajax({
+				url: 'st_search',
+				method: 'POST',
+				type: 'json',
+				data: input,
+				success: function (result) {
+					DisplayDatatable(result);
+				}
+			})
+		})
+
+		$(document).on('click', '#btn-clr-src', function (e) {
+			e.preventDefault();
+			$('#form-adv-src #srcJenisSt').val('');
+			$('#form-adv-src #srcTglStSta').val('');
+			$('#form-adv-src #srcTglStEnd').val('');
+			$('#form-adv-src #srcDipa').val('');
+			$('#form-adv-src #srcHal').val('');
+			$('#form-adv-src #srcTempat').val('');
+			$('#form-adv-src #srcKota').val('');
+			$('#form-adv-src #srcNama').val('');
+			displayAllData();
+		})
+	})
 </script>

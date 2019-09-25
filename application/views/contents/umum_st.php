@@ -16,8 +16,114 @@
 						<div class="box-divider m-a-0"></div>
 
 						<div class="box-body">
-							<div class="row px-3 mb-2 pull-right">
-								<button id="btn-modal-tambah" class="btn btn-sm primary" data-toggle="modal" data-target="#modal-tambah">+ Tambah</button>
+							<div class="row">
+								<div class=" px-3 mb-2 pull-right">
+									<button id="btn-modal-tambah" class="btn btn-sm primary" data-toggle="modal" data-target="#modal-tambah">+ Tambah</button>
+									<button id="btn-open-adv-src" class="btn btn-sm info">Advance Search</button>
+								</div>
+							</div>
+
+							<div id="adv-src" class="row light p-3" style="display: none;">
+								<form id="form-adv-src">
+									<div class="col-md-6">
+										<div class="form-group row">
+											<label for="srcJenisSt" class="col-sm-2 form-control-label">Jenis ST</label>
+											<div class="col-sm-9">
+												<select id="srcJenisSt" name="jenis_st" class="form-control c-select">
+													<option value="" selected="" disabled="" hidden="">Pilih jenis ST</option>
+													<option value="1">Kepala Kantor</option>
+													<option value="10">Kepala Bagian Umum</option>
+												</select>
+											</div>
+										</div>
+										<div class="form-group row">
+											<label class="col-sm-2 form-control-label">Tanggal ST</label>
+											<div class="col-sm-4">
+												<div class='input-group date' ui-jp="datetimepicker" ui-options="{
+													format: 'DD-MM-YYYY',
+													icons: {
+														time: 'fa fa-clock-o',
+														date: 'fa fa-calendar',
+														up: 'fa fa-chevron-up',
+														down: 'fa fa-chevron-down',
+														previous: 'fa fa-chevron-left',
+														next: 'fa fa-chevron-right',
+														today: 'fa fa-screenshot',
+														clear: 'fa fa-trash',
+														close: 'fa fa-remove'
+													}
+												}">
+													<input id="srcTglStSta" type='text' name="tgl_st_start" class="col-sm-10 form-control" />
+													<span class="input-group-addon">
+														<span class="fa fa-calendar"></span>
+													</span>
+												</div>
+											</div>
+											<div class="col-sm-1 form-control-label text-center"> s.d. </div>
+											<div class="col-sm-4">
+												<div id="srcTglStEnd" class='input-group date' ui-jp="datetimepicker" ui-options="{
+													format: 'DD-MM-YYYY',
+													icons: {
+														time: 'fa fa-clock-o',
+														date: 'fa fa-calendar',
+														up: 'fa fa-chevron-up',
+														down: 'fa fa-chevron-down',
+														previous: 'fa fa-chevron-left',
+														next: 'fa fa-chevron-right',
+														today: 'fa fa-screenshot',
+														clear: 'fa fa-trash',
+														close: 'fa fa-remove'
+													}
+												}">
+													<input type='text' name="tgl_st_end" class="col-sm-10 form-control" />
+													<span class="input-group-addon">
+														<span class="fa fa-calendar"></span>
+													</span>
+												</div>
+											</div>
+										</div>
+										
+										<div class="form-group row">
+											<label for="srcDipa" class="col-sm-2 form-control-label">DIPA</label>
+											<div class="col-sm-9">
+												<select id="srcDipa" name="dipa" class="form-control c-select">
+													<option value="" selected="" disabled="" hidden="">Pilih DIPA</option>
+													<option value="1">KPU BC Soekarno Hatta</option>
+													<option value="2">Sekretariat DJBC</option>
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group row">
+											<label class="col-sm-2 form-control-label">Hal</label>
+											<div class="col-sm-9">
+												<input id="srcHal" class="form-control" type="text" name="hal">
+											</div>
+										</div>
+										<div class="form-group row">
+											<label class="col-sm-2 form-control-label">Lokasi tugas</label>
+											<div class="col-sm-6">
+												<input id="srcTempat" class="form-control" type="text" name="tempat" placeholder="tempat tugas">
+											</div>
+											<div class="col-sm-3">
+												<input id="srcKota" class="form-control" type="text" name="kota" placeholder="kota tugas">
+											</div>
+										</div>
+										<div class="form-group row">
+											<label class="col-sm-2 form-control-label">Nama pegawai</label>
+											<div class="col-sm-9">
+												<input id="srcNama" class="form-control" type="text" name="nama">
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-sm-11">
+												<button id="btn-adv-src" class="btn btn-md info pull-right ml-2">Search</button>
+												<button id="btn-clr-src" class="btn btn-md warning pull-right">Clear</button>
+											</div>
+										</div>
+									</div>
+								</form>
 							</div>
 
 							<table id="table-pfpd-data" class="table m-b-none">

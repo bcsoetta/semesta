@@ -4,12 +4,10 @@ class Umum_st_model extends CI_Model {
 	
 	public function GetStAll()
 	{
-
 		$query = $this->db->select("id, jenis_st, no, tanggal, tahun, hal, spd, created_at")
 			->from("umum_st_header")
 			->where("status", 1)
 			->get();
-
 		return $query->result();
 	}
 
@@ -293,7 +291,6 @@ class Umum_st_model extends CI_Model {
 
 	public function UpdateStDetail($id_st='', $new_detail='')
 	{
-
 		foreach ($new_detail as $key => $value) {
 			$value['id_st'] = $id_st;
 
@@ -308,6 +305,48 @@ class Umum_st_model extends CI_Model {
 		$this->db->set('status', 0);
 		$this->db->where('id', $id_st);
 		$this->db->update('umum_st_header');
+	}
+
+	public function AdvSearch($input='')
+	{
+		$this->db->select('a.id, a.jenis_st, a.no, a.tanggal, a.tahun, a.hal, a.spd, a.created_at');
+		$this->db->from('umum_st_header a');
+		$this->db->join('umum_st_detail b', 'a.id = b.id_st');
+		$this->db->join('profile c', 'b.id_pegawai = c.id');
+		$this->db->where('a.status', 1);
+		if (isset($input['jenis_st'])) {
+			if ($input['jenis_st'] == 1) {
+				$this->db->where('a.jenis_st', 'KK');
+			} elseif ($input['jenis_st'] == 10) {
+				$this->db->where('a.jenis_st', 'KBU');
+			} 
+		}
+		if ($input['tgl_st_start'] != '') {
+			$tgl_st_start = date("Y-m-d", strtotime($input['tgl_st_start']));
+			$this->db->where('a.tanggal >=', $tgl_st_start);
+		}
+		if ($input['tgl_st_end'] != '') {
+			$tgl_st_end = date("Y-m-d", strtotime($input['tgl_st_end']));
+			$this->db->where('a.tanggal >=', $tgl_st_end);
+		}
+		if ($input['hal'] != '') {
+			$this->db->like('a.hal', $input['hal']);
+		}
+		if (isset($input['dipa'])) {
+			$this->db->where('a.dipa', $input['dipa']);
+		}
+		if ($input['tempat'] != '') {
+			$this->db->like('a.tempat_tugas', $input['tempat']);
+		}
+		if ($input['kota'] != '') {
+			$this->db->like('a.kota_tugas', $input['kota']);
+		}
+		if ($input['nama'] != '') {
+			$this->db->like('c.nama', $input['nama']);
+		}
+		$this->db->group_by('a.id');
+		$query = $this->db->get();
+		return $query->result();
 	}
 
 }

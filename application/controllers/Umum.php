@@ -635,6 +635,14 @@ class Umum extends CI_Controller {
 		echo json_encode($list);
 	}
 
+	public function st_search()
+	{
+		$this->mainlib->logged_in();
+		$data = $this->Umum_st_model->AdvSearch($_POST);
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
+
 	// Halaman Monitor Aplikasi
 	public function aplikasi()
 	{
