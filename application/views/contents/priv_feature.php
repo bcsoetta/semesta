@@ -17,7 +17,7 @@
 							<div id="list-aplikasi" class="list-group m-b">
 							</div>
 							<div class="row px-3 mb-2">
-								<form id="form-simpan-fitur">
+								<form id="form-simpan-app">
 									<div class="form-group row">
 										<div class="col-md-1 col-sm-12">
 											<label class="form-group-label">Tambah aplikasi:</label>
@@ -48,7 +48,7 @@
 				<h5 class="modal-title">Edit Fitur</h5>
 			</div>
 			<div class="modal-body p-lg">
-				<form action="#" id="form-role" class="row mb-1 mx-2">
+				<form action="#" id="form-edit-app" class="row mb-1 mx-2">
 					<input id="inpId" type="hidden" name="id">
 					<div class="form-group row">
 						<label for="inpNama" class="col-sm-2 form-control-label">Nama Fitur</label>

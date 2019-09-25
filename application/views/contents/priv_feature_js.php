@@ -82,7 +82,7 @@
 		ListAplikasi();
 
 		// Menambah aplikasi
-		$(document).on('click', '#form-simpan-fitur #btn-simpan', function (e) {
+		$(document).on('click', '#form-simpan-app #btn-simpan', function (e) {
 			e.preventDefault();
 			var input = $('#form-simpan-fitur').serializeArray();
 			$.ajax({
@@ -133,7 +133,7 @@
 		// Menyimpan update aplikasi
 		$(document).on('click', '#modal-edit #btn-simpan', function (e) {
 			e.preventDefault();
-			var input = $('#formEdit').serializeArray();
+			var input = $('#form-edit-app').serializeArray();
 			$.ajax({
 				url: 'feature_update',
 				method: 'POST',

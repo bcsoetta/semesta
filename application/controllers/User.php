@@ -653,4 +653,53 @@ class User extends CI_Controller
 		echo json_encode($m);
 	}
 
+	// Halaman setting privilege
+	public function privilege()
+	{
+		$this->mainlib->logged_in();
+		// $this->mainlib->privilege();
+		$data['menus'] = $this->mainlib->menus();
+		$user_id = $_GET['uid'];
+		$this->load->model('User_model');
+		$this->load->model('User_priv_model');
+		$data['class'] = $this->router->fetch_class();
+		$data['hal'] = 'privileges';
+		$data['content'] = 'priv_user';
+		// $data['jr'] = $this->User_model->get_user_role_count();
+		// $data['js'] = $this->User_model->get_user_status_count();
+		// $data['udata'] = $this->User_model->get_user_detail();
+		$data['user'] = $this->User_model->get_user_detail_by_id($user_id);
+		$this->load->view('index', $data);
+	}
+
+	public function user_privilege_list()
+	{
+		$this->load->model('User_priv_model');
+		$data = $this->User_priv_model->GetPrivilegesByUser($_POST);
+		echo json_encode($data);
+	}
+
+	public function user_unregistered_app()
+	{
+		$this->load->model('User_priv_model');
+		$data = $this->User_priv_model->GetUnregisteredAppsByUser($_POST['uid']);
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
+
+	public function role_list_by_app()
+	{
+		$this->load->model('User_role_model');
+		$data = $this->User_role_model->GetUsedRoleByAppId($_POST['app_id']);
+		for ($i=0; $i < count($data); $i++) { 
+			unset($data[$i]['feature']);
+		}
+		echo json_encode($data);
+	}
+
+	public function user_privilege_save()
+	{
+		# code...
+	}
+
 }
