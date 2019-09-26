@@ -327,7 +327,7 @@ class Umum_st_model extends CI_Model {
 		}
 		if ($input['tgl_st_end'] != '') {
 			$tgl_st_end = date("Y-m-d", strtotime($input['tgl_st_end']));
-			$this->db->where('a.tanggal >=', $tgl_st_end);
+			$this->db->where('a.tanggal <=', $tgl_st_end);
 		}
 		if ($input['hal'] != '') {
 			$this->db->like('a.hal', $input['hal']);
