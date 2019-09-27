@@ -84,7 +84,7 @@
 		// Menambah aplikasi
 		$(document).on('click', '#form-simpan-app #btn-simpan', function (e) {
 			e.preventDefault();
-			var input = $('#form-simpan-fitur').serializeArray();
+			var input = $('#form-simpan-app').serializeArray();
 			$.ajax({
 				url: 'feature_save',
 				method: 'POST',
