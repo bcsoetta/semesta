@@ -127,6 +127,10 @@
 </style>
 
 <div ui-view class="app-body" id="view">
+	<!-- message -->
+	<div class="my-message btn btn-fw primary" style="position: fixed; left: 50%; z-index: 10000; display: none;"></div>
+
+	<!-- ############ PAGE START-->
 	<div class="row-col b-b">
 		<div class="col-md">
 			<div class="padding">
@@ -183,31 +187,31 @@
 
 					<div class="col-sm-8 lt light">
 						<div class="box-body">
-<!-- 							<div class="input-group m-b">
-								<input type="text" id="myInput" class="form-control" placeholder="masukkan nama privilege">
-								<span class="input-group-btn">
-									<button id="user_search_btn" class="btn white" type="button">Cari</button>
-								</span>
-							</div> -->
 							<form id="form-tambah-role">
 								<div class="form-group row">
+									<input id="inpUid" type="hidden" name="uid">
 									<div class="col-md-4">
 										<select id="selApp" class="form-control form-control-sm" name="app">
 											<!-- options from javascript -->
 										</select>
 									</div>
 									<div class="col-md-4">
-										<select id="selRole" class="form-control form-control-sm" name="role" placeholder="pilih role">
-											<option class="select-placeholder" value="" disabled="" selected="" hidden="">pilih role</option>
-											<option>info</option>
-											<option>analis</option>
+										<select id="selRole" class="form-control form-control-sm" name="role" placeholder="pilih role" disabled="">
+											<!-- options from javascript -->
 										</select>
 									</div>
 									<span id="btn-simpan-role" class="btn btn-sm warn btn-rounded m-b">Tambah Otoritas</span>
 								</div>
 							</form>
-							<ul class="list inset m-a-0" id="myList"></ul>
-							<div id="paginationx"></div>
+							<table id="table-priv-data" class="table m-b-none">
+								<thead>
+									<tr>
+										<th>Aplikasi</th>
+										<th>Role</th>
+										<th>Aksi</th>
+									</tr>
+								</thead>
+							</table>
 						</div>
 					</div>
 				</div>
