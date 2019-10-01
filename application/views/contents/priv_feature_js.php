@@ -61,7 +61,7 @@
 							} else {
 								var status = '<span class="label pos-rlt m-r-xs">disabled</span>';
 							}
-							var item = '<div class="list-group-item wrap">' + 
+							var item = '<div class="list-group-item wrap"><div>' + 
 									'<div class="col-sm-4">' + desc + '</div>' +
 									'<div class="col-sm-3">' + url + '</div>' +
 									'<div class="col-sm-2">' + view + '</div>' +
@@ -71,7 +71,7 @@
 											'<i class="fa fa-edit text-primary"></i>' +
 										'</a>' +
 									'</div>' +
-								'</div>';
+								'</div></div>';
 							$('#btn' + app_id).before(item);
 						})		
 					}
@@ -210,5 +210,100 @@
 			})
 		})
 
+		// Menampilkan menu edit feature
+		$(document).on('click', '.edit-subfitur', function (e) {
+			e.preventDefault();
+			var input = $(this).attr('id');
+			var feature_detail = $(this).parent().parent().parent();
+			$.ajax({
+				url: 'feature_show',
+				method: 'POST',
+				type: 'json',
+				data: {'id': input},
+				success: function (result) {
+					console.log(result);
+					var id = result[0]['id'];
+					var desc = result[0]['description'];
+					var view = result[0]['have_view'];
+					var url = result[0]['url'];
+					var status = result[0]['status'];
+					if (view == 1) {
+						var view_options = '<option value="0">Non-view</option>' +
+							'<option value="1" selected>View</option>';
+					} else {
+						var view_options = '<option value="0" selected>Non-view</option>' +
+							'<option value="1">View</option>';
+					}
+					if (status == 1) {
+						var active_options = '<option value="1" selected>Active</option>' +
+							'<option value="0">Disabled</option>';
+					} else {
+						var active_options = '<option value="1">Active</option>' +
+							'<option value="0" selected>Disabled</option>';
+					}
+					var form = '<form id="form-feature-edit">' +
+							'<input type="hidden" name="id" value="' + id + '">' +
+							'<div class="col-md-4">' +
+								'<input type="text" name="description" class="form-control form-control-sm" value="' + desc + '">' + 
+							'</div>' +
+							'<div class="col-md-3">' +
+								'<input type="text" name="url" class="form-control form-control-sm" value="' + url + '">' + 
+							'</div>' +
+							'<div class="col-md-2">' +
+								'<select type="text" name="have_view" class="form-control form-control-sm">' +
+									view_options +
+								'</select>' +
+							'</div>' +
+							'<div class="col-md-2">' +
+								'<select type="text" name="status" class="form-control form-control-sm">' +
+									active_options +
+								'</select>' +
+							'</div>' +
+							'<div class="col-md-1">' +
+								'<a class="btn-feature-simpan" title="Simpan">' +
+									'<i class="fa fa-save text-info"></i>' +
+								'</a>' +
+								'&nbsp&nbsp' +
+								'<a class="btn-feature-batal" title="Batal">' +
+									'<i class="fa fa-ban text-danger"></i>' +
+								'</a>' +
+							'</div>' +
+						'</form>';
+					feature_detail.find('div').css({'display': 'none'});
+					feature_detail.append(form);
+				}
+			})
+		})
+
+		// Menyimpan edit feature
+		$(document).on('click', '#form-feature-edit .btn-feature-simpan', function (e) {
+			e.preventDefault();
+			var input = $('#form-feature-edit').serializeArray();
+			$.ajax({
+				url: 'subfeature_update',
+				method: 'POST',
+				type: 'json',
+				data: input,
+				success: function (result) {
+					if (result['status'] == 1) {
+						$('.my-message').removeClass('primary danger').addClass('primary');
+					} else {
+						$('.my-message').removeClass('primary danger').addClass('danger');
+					}
+					$('.my-message').html(result['message']);
+					$('.my-message').css('display', 'block');
+					$('.my-message').delay(3000).fadeOut();
+					ListAplikasi();
+				}
+			})
+		})
+
+		// Membatalkan edit feature
+		$(document).on('click', '#form-feature-edit .btn-feature-batal', function (e) {
+			e.preventDefault();
+			var feature_detail = $(this).parent().parent().parent();
+			feature_detail.find('#form-feature-edit').remove();
+			feature_detail.find('div').css({'display': 'block'});
+		})
 	});
 </script>
