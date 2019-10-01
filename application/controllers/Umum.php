@@ -649,7 +649,7 @@ class Umum extends CI_Controller {
 
 	public function st_approve()
 	{
-		$st_id = $_POST['st_id'],
+		$st_id = $_POST['st_id'];
 		switch ($_POST['st_status']) {
 			case 10:
 				$new_stat = 20;
