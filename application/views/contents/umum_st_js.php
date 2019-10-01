@@ -4,12 +4,16 @@
 <script src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/datetime-moment.js"></script>
 
 <script type="text/javascript">
+$(document).ready(function() {
+	// Get user role
+	var role = '<?php echo $role; ?>';
+
 	// Display datatable
-	
 	function displayAllData() {
 		$.ajax({
 			url: "get_st_all",
 			method: "POST",
+			data: {'role': role},
 			success: function(result) {
 				$.fn.dataTable.moment( 'DD-MM-YYYY' );
 				DisplayDatatable(result);
@@ -23,102 +27,62 @@
 			"data": data,
 			"columns": [
 				{ "data": "jenis_st" },
-				{
-					"data": null,
-					"render": function function_name(data, type, row) {
-						switch(data.jenis_st) {
-							case 'KK':
-								var agenda = '/KPU.03/';
-								break;
-
-							case 'KBU':
-								var agenda = '/KPU.03/BG.01/';
-								break;
-							default:
-								var agenda = 'AGENDA TIDAK DITEMUKAN';
-						};
-						return 'ST-' + data.no + agenda + data.tahun;
-					}
-				},
-				{ "data": "tanggal" },
+				{ "data": "no_st" },
+				{ "data": "tgl" },
 				{ "data": "hal" },
+				{ "data": "status" },
+				{ "data": "button" },
 				{ 
-					"data": null, 
-					"render": function function_name(data, type, row) {
-						button_st = "<a href='preview_st/?id_st=" + data.id + "' id='btn-modal-preview' class='btn btn-sm blue' target='_blank'>ST</a>";
-
-						if (data.spd == '1') {
-							button_spd = "<a href='preview_spd/?id_st=" + data.id + "' id='btn-modal-preview' class='btn btn-sm blue' target='_blank' disabled=''>SPD</a>";
-						} else {
-							button_spd = "<button class='btn btn-sm dark' disabled=''>SPD</button>";
-						}
-
-						button_edit = "<a href='#' id='" + data.id + "' class='edit-st'><i class='fa fa-edit text-primary' data-toggle='modal' data-target='#modal-tambah'></i></a>";
-						button_del = "<a href='#' id='" + data.id + "' class='delete-st'><i class='fa fa-trash text-danger' data-toggle='modal' data-target='#modal-konfirmasi'></i></a>";
-
-						return button_st + '&nbsp;' + button_spd + '&nbsp;&nbsp;&nbsp;' + button_edit + '&nbsp;' + button_del;
-					}
-				},
-				{
 					"data": "created_at",
 					"visible": false
 				}
 			],
-			"order": [[ 5, "desc" ]]
+			"order": [[ 6, "desc" ]]
 		});
 	}
 
-	$(document).ready(function() {
-		displayAllData();
-	})
-</script>
+	displayAllData();
 
-<script type="text/javascript">
 	// Menampilkan modal untuk data baru
-	$(document).ready(function() {
-		$('#modal-tambah').on('shown.bs.modal', function (e) {
-			$('div#noSt').remove();
+	$('#modal-tambah').on('shown.bs.modal', function (e) {
+		exclude = ['0'];
+		i = 1;
+		$('div#noSt').remove();
 
-			$('#inpJenisSt').val('1');
-			GetPejabat();
-			$('#pejabat').attr('disabled', true);
-			// $("#inpPlh").prop("checked", false);
-			$('#inpHal').val('');
-			$("input[name='tgl_tugas_start'").val('');
-			$("input[name='tgl_tugas_end'").val('');
-			$("input[name='wkt_tugas_start'").val('');
-			$("input[name='wkt_tugas_end'").val('');
-			$('#inpTempat').val('');
-			$('#inpKota').val('');
-			$('#inpDipa').val(1);
-			$('#inpSpd').attr('checked', 'checked');
+		$('#inpJenisSt').val('1');
+		GetPejabat();
+		$('#pejabat').attr('disabled', true);
+		$('#inpHal').val('');
+		$("input[name='tgl_tugas_start'").val('');
+		$("input[name='tgl_tugas_end'").val('');
+		$("input[name='wkt_tugas_start'").val('');
+		$("input[name='wkt_tugas_end'").val('');
+		$('#inpTempat').val('');
+		$('#inpKota').val('');
+		$('#inpDipa').val(1);
+		$('#inpSpd').attr('checked', 'checked');
 
-			$('button.add-pegawai').siblings('div').remove();
+		$('button.add-pegawai').siblings('div').remove();
 
-			var field = 
-				'<div class="form-group row">' +
-					'<div class="col-sm-11 form-pegawai">' +
-						'<input type="text" class="form-control input-pegawai" id="pegawai_0" placeholder="Nama/NIP Pegawai" autocomplete="off">' +
-						'<input type="text" class="id-pegawai" name="id_pegawai_0" style="display: none">' +
-						'<div id="src_result_pegawai_0" class="src-result box"></div>' +
-					'</div>' +
-					'<div class="col-sm-1">' +
-						'<button class="btn btn-icon sub-pegawai"><i class="fa fa-remove"></i></button>' +
-					'</div>' +
-				'</div>';
+		var field = 
+			'<div class="form-group row">' +
+				'<div class="col-sm-11 form-pegawai">' +
+					'<input type="text" class="form-control input-pegawai" id="pegawai_0" placeholder="Nama/NIP Pegawai" autocomplete="off">' +
+					'<input type="text" class="id-pegawai" name="id_pegawai_0" style="display: none">' +
+					'<div id="src_result_pegawai_0" class="src-result box"></div>' +
+				'</div>' +
+				'<div class="col-sm-1">' +
+					'<button class="btn btn-icon sub-pegawai"><i class="fa fa-remove"></i></button>' +
+				'</div>' +
+			'</div>';
 
-			$(field).insertBefore($('.add-pegawai'));
+		$(field).insertBefore($('.add-pegawai'));
 
-			$('#btnSimpan').show();
-			$('#btnUpdate').hide();
-		})
+		$('#btnSimpan').show();
+		$('#btnUpdate').hide();
 	})
-</script>
 
-<script type="text/javascript">
 	// Modal form handling
-	i = 1;
-
 	function getFormData($form) {
 		var unindexed_array = $form.serializeArray();
 		var indexed_array = {};
@@ -130,89 +94,81 @@
 		return indexed_array;
 	}
 
-	$(document).ready(function() {
-		$(document).on('click', '.add-pegawai', function(e) {
-			e.preventDefault();
-			
-			var field = 
-				'<div class="form-group row">' +
-					'<div class="col-sm-11 form-pegawai">' +
-						'<input type="text" class="form-control input-pegawai" id="pegawai_' + i + '" placeholder="Nama/NIP Pegawai" autocomplete="off">' +
-						'<input type="text" class="id-pegawai" name="id_pegawai_' + i + '" style="display: none">' +
-						'<div id="src_result_pegawai_' + i + '" class="src-result box"></div>' +
-					'</div>' +
-					'<div class="col-sm-1">' +
-						'<button class="btn btn-icon sub-pegawai"><i class="fa fa-remove"></i></button>' +
-					'</div>' +
-				'</div>';
+	$(document).on('click', '.add-pegawai', function(e) {
+		e.preventDefault();
+		
+		var field = 
+			'<div class="form-group row">' +
+				'<div class="col-sm-11 form-pegawai">' +
+					'<input type="text" class="form-control input-pegawai" id="pegawai_' + i + '" placeholder="Nama/NIP Pegawai" autocomplete="off">' +
+					'<input type="text" class="id-pegawai" name="id_pegawai_' + i + '" style="display: none">' +
+					'<div id="src_result_pegawai_' + i + '" class="src-result box"></div>' +
+				'</div>' +
+				'<div class="col-sm-1">' +
+					'<button class="btn btn-icon sub-pegawai"><i class="fa fa-remove"></i></button>' +
+				'</div>' +
+			'</div>';
 
-			$(field).insertBefore(this);
-			i = i+1;
+		$(field).insertBefore(this);
+		i = i+1;
+	});
+
+	$(document).on('click', '.sub-pegawai', function() {
+		// Remove deleted input from 'exclude'
+		deletedId = $(this).parent().siblings(".form-pegawai").children("input[class='id-pegawai']").val();
+		exclude = jQuery.grep(exclude, function(value) {
+			return value != deletedId;
 		});
 
-		$(document).on('click', '.sub-pegawai', function() {
-			// Remove deleted input from 'exclude'
-			deletedId = $(this).parent().siblings(".form-pegawai").children("input[class='id-pegawai']").val();
-			exclude = jQuery.grep(exclude, function(value) {
-				return value != deletedId;
-			});
+		$(this).parent().parent().remove();
+	});
 
-			$(this).parent().parent().remove();
-		});
+	// Simpan ST baru
+	$(document).on('click', '#btnSimpan', function() {
+		header = getFormData($('#formStHeader'));
+		pegawai = getFormData($('#formStPegawai'));
 
-		// Simpan ST baru
-		$(document).on('click', '#btnSimpan', function() {
-			header = getFormData($('#formStHeader'));
-			pegawai = getFormData($('#formStPegawai'));
+		input = {'header': header, 'pegawai': pegawai};
 
-			input = {'header': header, 'pegawai': pegawai};
+		$.ajax({
+			url: 'simpan_st',
+			method: 'POST',
+			data: input,
+			success: function () {
+				$('#modal-tambah').modal('toggle');
 
-			$.ajax({
-				url: 'simpan_st',
-				method: 'POST',
-				data: input,
-				success: function () {
-					$('#modal-tambah').modal('toggle');
+				$('.my-message').html('ST berhasil disimpan');
+				$('.my-message').css('display', 'block');
+				$('.my-message').delay(3000).fadeOut();
 
-					$('#inpJenisSt').val('KK');
-
-					$('.my-message').html('ST berhasil disimpan');
-					$('.my-message').css('display', 'block');
-					$('.my-message').delay(3000).fadeOut();
-
-					displayAllData();
-				}
-			})
-		});
-
-		// Simpan ST update
-		$(document).on('click', '#btnUpdate', function() {
-			header = getFormData($('#formStHeader'));
-			pegawai = getFormData($('#formStPegawai'));
-
-			input = {'header': header, 'pegawai': pegawai};
-
-			$.ajax({
-				url: 'update_st',
-				method: 'POST',
-				data: input,
-				success: function () {
-					$('#modal-tambah').modal('toggle');
-
-					$('#inpJenisSt').val('KK');
-
-					$('.my-message').html('ST berhasil diupdate');
-					$('.my-message').css('display', 'block');
-					$('.my-message').delay(3000).fadeOut();
-
-					displayAllData();
-				}
-			})
+				displayAllData();
+			}
 		})
-	}); 
-</script>
+	});
 
-<script type="text/javascript">
+	// Simpan ST update
+	$(document).on('click', '#btnUpdate', function() {
+		header = getFormData($('#formStHeader'));
+		pegawai = getFormData($('#formStPegawai'));
+
+		input = {'header': header, 'pegawai': pegawai};
+
+		$.ajax({
+			url: 'update_st',
+			method: 'POST',
+			data: input,
+			success: function () {
+				$('#modal-tambah').modal('toggle');
+
+				$('.my-message').html('ST berhasil diupdate');
+				$('.my-message').css('display', 'block');
+				$('.my-message').delay(3000).fadeOut();
+
+				displayAllData();
+			}
+		})
+	})
+
 	// Menampilkan data ST untuk diedit
 	$(document).ready(function() {
 		$(document).on('click', '.edit-st', function(e) {
@@ -303,39 +259,46 @@
 			$('#btnUpdate').show();
 		})
 	})
-</script>
 
-<script type="text/javascript">
 	// Delete ST
-	exclude = ['0'];
+	$(document).on('click', '.delete-st', function(e) {
+		e.preventDefault();
 
-	$(document).ready(function() {
-		$(document).on('click', '.delete-st', function(e) {
-			e.preventDefault();
+		st_id = {'id_st': $(this).attr('id')};
+	});
 
-			st_id = {'id_st': $(this).attr('id')};
-		});
+	$(document).on('click', '#btnDelConfirm', function() {
+		$.ajax({
+			url: 'delete_st',
+			method: 'POST',
+			data: st_id,
+			success: function () {
+				$('#modal-konfirmasi').modal('toggle');
 
-		$(document).on('click', '#btnDelConfirm', function() {
-			$.ajax({
-				url: 'delete_st',
-				method: 'POST',
-				data: st_id,
-				success: function () {
-					$('#modal-konfirmasi').modal('toggle');
+				$('.my-message').html('ST berhasil dihapus');
+				$('.my-message').css('display', 'block');
+				$('.my-message').delay(3000).fadeOut();
 
-					$('.my-message').html('ST berhasil dihapus');
-					$('.my-message').css('display', 'block');
-					$('.my-message').delay(3000).fadeOut();
-
-					displayAllData();
-				}
-			});
+				displayAllData();
+			}
 		});
 	});
-</script>
 
-<script type="text/javascript">
+	// Approve ST
+	$(document).on('click', '.ok-st', function (e) {
+		e.preventDefault();
+		var st_id = $(this).attr('id');
+		var st_status = $(this).children('.status-st').val();
+		$.ajax({
+			url: 'st_approve',
+			method: 'POST',
+			data: {'st_id': st_id, 'st_status': st_status},
+			success: function (result) {
+				displayAllData();
+			}
+		})
+	})
+
 	// Edit pejabat ST
 	function GetPejabat() {
 		jabatan = $('#inpJenisSt').val();
@@ -361,17 +324,10 @@
 		});
 	};
 
-	$(document).ready(function() {
+	$('#inpJenisSt').change(function() {
 		GetPejabat();
-
-		$('#inpJenisSt').change(function() {
-			GetPejabat();
-		});
-
 	});
-</script>
 
-<script type="text/javascript">
 	// Edit detail petugas
 	$(document).ready(function() {
 		
@@ -436,9 +392,7 @@
 			SearchPegawai(element, input, exclude);
 		});
 	});
-</script>
 
-<script type="text/javascript">
 	// Advance search
 	$(document).ready(function (argument) {
 		// Open search form
@@ -483,4 +437,5 @@
 			displayAllData();
 		})
 	})
+});
 </script>
