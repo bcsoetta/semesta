@@ -51,7 +51,8 @@ class Umum_st_model extends CI_Model {
 				a.spd,
 				a.ppk,
 				c.nip nip_ppk,
-				c.nama nama_ppk
+				c.nama nama_ppk,
+				a.status
 			")
 			->from("umum_st_header a")
 			->join("profile b", "a.id_pejabat = b.id")
@@ -94,7 +95,7 @@ class Umum_st_model extends CI_Model {
 				break;
 		}
 
-		$result[0]->no_st = 'aaa';
+		$result[0]->no_st = $no_st;
 		$result[0]->jabatan = $jabatan;
 		$result[0]->ur_dipa = $ur_dipa;
 
@@ -103,7 +104,7 @@ class Umum_st_model extends CI_Model {
 
 	public function GetStDetail($id_st='')
 	{
-		$query = $this->db->select("a.id_pegawai, b.nama, b.nip, b.pangkatgolongan, c.pangkat, b.jabatan, a.no_spd, a.plh_kbu, d.nama pejabat_kbu, d.nip nip_kbu")
+		$query = $this->db->select("a.id, a.id_pegawai, b.nama, b.nip, b.pangkatgolongan, c.pangkat, b.jabatan, a.no_spd, a.plh_kbu, d.nama pejabat_kbu, d.nip nip_kbu")
 			->from("umum_st_detail a")
 			->join("profile b", "a.id_pegawai = b.id")
 			->join("dim_pangkat_gol c", "b.pangkatgolongan = c.gol")
@@ -225,7 +226,7 @@ class Umum_st_model extends CI_Model {
 		return $query->result();
 	}
 
-	public function CekJmlSpd($id_st='')
+	public function CekDetailSpd($id_st='')
 	{
 
 		$query = $this->db->select('id_pegawai, no_spd')
@@ -309,24 +310,28 @@ class Umum_st_model extends CI_Model {
 		$this->db->update('umum_st_header');
 	}
 
-	public function ApproveSt($id_st='', $status_st='')
+	public function ApproveSt($input='')
 	{
-		switch ($status_st) {
-			case 10:
-				$new_stat = 20;
-				break;
-
-			case 20:
-				$new_stat = 50;
-				break;
-			
-			default:
-				$new_stat = 0;
-				break;
+		$id_st = $input['id_st'];
+		$new_stat = $input['new_stat'];
+		if ($new_stat == 50) {
+			$no_st = $input['no_st'];
+			$this->db->set('no', $no_st);
 		}
 		$this->db->set('status', $new_stat);
 		$this->db->where('id', $id_st);
 		$this->db->update('umum_st_header');
+		if (isset($input['spd'])) {
+			foreach ($input['spd'] as $key => $value) {
+				$id_detail = $value['id_detail'];
+				$no_spd = $value['no_spd'];
+				$this->db->set('no_spd', $no_spd);
+				$this->db->where('id', $id_detail);
+				$this->db->update('umum_st_detail');
+			}
+		}
+
+		return $input;
 	}
 
 	public function AdvSearch($input='')

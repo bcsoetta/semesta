@@ -44,8 +44,11 @@ $(document).ready(function() {
 	displayAllData();
 
 	// Menampilkan modal untuk data baru
-	$('#modal-tambah').on('shown.bs.modal', function (e) {
+	// $('#modal-tambah').on('shown.bs.modal', function (e) {
+	$(document).on('click', '#btn-modal-tambah', function (e) {
+		e.preventDefault();
 		exclude = ['0'];
+
 		i = 1;
 		$('div#noSt').remove();
 
@@ -173,7 +176,8 @@ $(document).ready(function() {
 	$(document).ready(function() {
 		$(document).on('click', '.edit-st', function(e) {
 			e.preventDefault();
-
+			i = 1;
+			exclude = ['0'];
 			var st_id = {'id_st': $(this).attr('id')};
 
 			$.ajax({
@@ -205,14 +209,18 @@ $(document).ready(function() {
 
 					if (result['st_header']['plh'] == '0') {
 						$("#inpPlh").prop("checked", false);
-						$('#pejabat').attr('disabled', true);
-						GetPejabat();
+						// $('#pejabat').attr('disabled', true);
+						// GetPejabat();
 					} else {
 						$("#inpPlh").prop("checked", true);
-						$('#pejabat').attr('disabled', false);
-						$('#pejabat').val(result['st_header']['nip'] + ' - ' + result['st_header']['nama']);
-						$("input[name='id_pejabat']").val(result['st_header']['id_pejabat']);
+						// $('#pejabat').attr('disabled', false);
+						// $('#pejabat').val(result['st_header']['nip'] + ' - ' + result['st_header']['nama']);
+						// $("input[name='id_pejabat']").val(result['st_header']['id_pejabat']);
 					}
+					$('#pejabat').val(result['st_header']['nip'] + ' - ' + result['st_header']['nama']);
+					$("input[name='id_pejabat']").val(result['st_header']['id_pejabat']);
+
+					// console.log(result['st_header']['plh']);
 
 					$('#inpHal').val(result['st_header']['hal']);
 					$("input[name='tgl_tugas_start'").val(result['st_header']['tgl_tugas_start']);
@@ -232,6 +240,7 @@ $(document).ready(function() {
 					$('button.add-pegawai').siblings('div').remove();
 
 					$.each(result['st_detail'], function(key, val) {
+						exclude.push(val['id_pegawai']);
 						var field = 
 							'<div class="form-group row">' +
 								'<div class="col-sm-11 form-pegawai">' +
