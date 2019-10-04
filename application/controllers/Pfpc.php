@@ -33,4 +33,26 @@ class Pfpc extends CI_Controller {
 		echo json_encode($data);
 	}
 
+	//Halaman reekspor
+	public function reekspor()
+	{
+		$data['menus'] = $this->mainlib->menus();
+		$data['class'] = $this->router->fetch_class();
+		$data['hal'] = 'reekspor';
+		$data['content'] = 'pfpc_reekspor';
+		$this->load->view('index', $data);
+	}
+
+	public function reekspor_browse()
+	{
+		$layanan = ['Reekspor eks impor sementara', 'Reekspor', 'Reekspor eks pengeluaran sebagian'];
+		$data = [];
+		foreach ($layanan as $key => $value) {
+			$result = $this->Loket_model->GetDoksByLayanan($value);
+			$data = array_merge($data, $result);
+		}
+		
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
 }
