@@ -12,7 +12,6 @@
 					<div class="col-sm-12">
 						<div class="box-header">
 							<h3>Daftar Surat Tugas</h3>
-							<?php echo $role; ?>
 						</div>
 						<div class="box-divider m-a-0"></div>
 
@@ -134,7 +133,6 @@
 										<th>No</th>
 										<th>Tgl</th>
 										<th>Hal</th>
-										<th>Status</th>
 										<th>Aksi</th>
 										<th>created_at</th>
 									</tr>

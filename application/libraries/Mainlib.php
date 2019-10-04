@@ -57,7 +57,7 @@ class Mainlib {
 
 		$_this->load->model('User_priv_model');
 		$result = $_this->User_priv_model->GetUserRole($x);
-		$role = $result[0]['role'];
+		$role = $result[0]['role_id'];
 
 		return $role;
 	}

@@ -16,7 +16,7 @@ class User extends CI_Controller
 
 	public function browse() {
 		$this->mainlib->logged_in();
-		// $this->mainlib->privilege();
+		$this->mainlib->privilege();
 		$data['menus'] = $this->mainlib->menus();
 		$this->load->model('User_model');
 		$data['class'] = $this->router->fetch_class();
@@ -545,8 +545,6 @@ class User extends CI_Controller
 	// Halaman setting feature
 	public function feature()
 	{
-		$this->mainlib->logged_in();
-		$this->mainlib->privilege();
 		$data['menus'] = $this->mainlib->menus();
 		$data['class'] = $this->router->fetch_class();
 		$data['hal'] = 'aplikasi';
@@ -556,8 +554,6 @@ class User extends CI_Controller
 
 	public function feature_list()
 	{
-		$this->mainlib->logged_in();
-		$this->mainlib->privilege();
 		$this->load->model('User_feature_model');
 		$data = $this->User_feature_model->GetAllFeature();
 		header('Content-type:application/json');
@@ -566,8 +562,6 @@ class User extends CI_Controller
 
 	public function feature_save()
 	{
-		$this->mainlib->logged_in();
-		$this->mainlib->privilege();
 		$fitur = $_POST['nama-fitur'];
 		$this->load->model('User_feature_model');
 		$m = $this->User_feature_model->SaveFeature($fitur);
@@ -577,8 +571,6 @@ class User extends CI_Controller
 
 	public function feature_show()
 	{
-		$this->mainlib->logged_in();
-		$this->mainlib->privilege();
 		$id = $_POST['id'];
 		$this->load->model('User_feature_model');
 		$data = $this->User_feature_model->GetFeatureById($id);
@@ -588,8 +580,6 @@ class User extends CI_Controller
 
 	public function feature_update()
 	{
-		$this->mainlib->logged_in();
-		$this->mainlib->privilege();
 		$this->load->model('User_feature_model');
 		$m = $this->User_feature_model->UpdateFeature($_POST);
 		header('Content-type:application/json');
@@ -598,8 +588,6 @@ class User extends CI_Controller
 
 	public function subfeature_list()
 	{
-		$this->mainlib->logged_in();
-		$this->mainlib->privilege();
 		$this->load->model('User_feature_model');
 		$data = $this->User_feature_model->GetAllSubFeatureById($_POST['id']);
 		header('Content-type:application/json');
@@ -608,8 +596,6 @@ class User extends CI_Controller
 
 	public function subfeature_save()
 	{
-		$this->mainlib->logged_in();
-		$this->mainlib->privilege();
 		$this->load->model('User_feature_model');
 		$m = $this->User_feature_model->SaveSubFeature($_POST);
 		header('Content-type:application/json');
@@ -627,8 +613,6 @@ class User extends CI_Controller
 	// Halaman setting role
 	public function role()
 	{
-		$this->mainlib->logged_in();
-		$this->mainlib->privilege();
 		$data['menus'] = $this->mainlib->menus();
 		$data['class'] = $this->router->fetch_class();
 		$data['hal'] = 'role';
@@ -638,8 +622,6 @@ class User extends CI_Controller
 
 	public function role_list_unused()
 	{
-		$this->mainlib->logged_in();
-		$this->mainlib->privilege();
 		$this->load->model('User_role_model');
 		$data = $this->User_role_model->GetUnusedRoleByAppId($_POST['app_id']);
 		header('Content-type:application/json');
@@ -648,8 +630,6 @@ class User extends CI_Controller
 
 	public function role_list_used()
 	{
-		$this->mainlib->logged_in();
-		$this->mainlib->privilege();
 		$data = [];
 		$this->load->model('User_role_model');
 		$result = $this->User_role_model->GetUsedRoleByAppId($_POST['app_id']);
@@ -667,8 +647,6 @@ class User extends CI_Controller
 
 	public function role_save()
 	{
-		$this->mainlib->logged_in();
-		$this->mainlib->privilege();
 		$this->load->model('User_role_model');
 		$m = $this->User_role_model->SaveRole($_POST);
 		header('Content-type:application/json');
@@ -677,8 +655,6 @@ class User extends CI_Controller
 
 	public function role_feature_save()
 	{
-		$this->mainlib->logged_in();
-		$this->mainlib->privilege();
 		$this->load->model('User_role_model');
 		$m = $this->User_role_model->SaveRoleFeature($_POST);
 		header('Content-type:application/json');
@@ -719,7 +695,7 @@ class User extends CI_Controller
 	public function privilege()
 	{
 		$this->mainlib->logged_in();
-		$this->mainlib->privilege();
+		// $this->mainlib->privilege();
 		$data['menus'] = $this->mainlib->menus();
 		$user_id = $_GET['uid'];
 		$this->load->model('User_model');
@@ -733,8 +709,6 @@ class User extends CI_Controller
 
 	public function user_privilege_list()
 	{
-		$this->mainlib->logged_in();
-		$this->mainlib->privilege();
 		$this->load->model('User_priv_model');
 		$data = $this->User_priv_model->GetPrivilegesByUser($_POST['uid']);
 		header('Content-type:application/json');
@@ -743,8 +717,6 @@ class User extends CI_Controller
 
 	public function user_unregistered_app()
 	{
-		$this->mainlib->logged_in();
-		$this->mainlib->privilege();
 		$this->load->model('User_priv_model');
 		$data = $this->User_priv_model->GetUnregisteredAppsByUser($_POST['uid']);
 		header('Content-type:application/json');
@@ -753,8 +725,6 @@ class User extends CI_Controller
 
 	public function role_list_by_app()
 	{
-		$this->mainlib->logged_in();
-		$this->mainlib->privilege();
 		$this->load->model('User_role_model');
 		$data = $this->User_role_model->GetUsedRoleByAppId($_POST['app_id']);
 		for ($i=0; $i < count($data); $i++) { 
@@ -766,8 +736,6 @@ class User extends CI_Controller
 
 	public function user_privilege_save()
 	{
-		$this->mainlib->logged_in();
-		$this->mainlib->privilege();
 		$this->load->model('User_priv_model');
 		$m = $this->User_priv_model->SaveUserPrivilege($_POST);
 		header('Content-type:application/json');

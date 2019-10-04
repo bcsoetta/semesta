@@ -93,10 +93,9 @@ class User_priv_model extends CI_Model {
 	public function GetUserRole($app_url='')
 	{
 		$uid = $_SESSION['user_id'];
-		$query = $this->db->select('b.role_id, c.role')
+		$query = $this->db->select('b.role_id')
 			->from('priv_app_feature a')
 			->join('priv_user b', 'a.parent_id = b.app_id')
-			->join('priv_role c', 'b.role_id = c.id')
 			->where('a.url', $app_url)
 			->where('b.user_id', $uid)
 			->get();

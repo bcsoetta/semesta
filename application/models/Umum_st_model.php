@@ -4,11 +4,11 @@ class Umum_st_model extends CI_Model {
 	
 	public function GetStAll()
 	{
-		$query = $this->db->select("id, jenis_st, no, tanggal, tahun, hal, status, spd, created_at")
+		$query = $this->db->select("id, jenis_st, no, tanggal, tahun, hal, spd, created_at")
 			->from("umum_st_header")
-			->where("status <>", 0)
+			->where("status", 1)
 			->get();
-		return $query->result_array();
+		return $query->result();
 	}
 
 	public function GetSt($id_st='')
@@ -61,16 +61,14 @@ class Umum_st_model extends CI_Model {
 
 		$result = $query->result();
 
-		$no = is_null($result[0]->no) ? '   ' : $result[0]->no;
-
 		switch ($result[0]->jenis_st) {
 			case 'KK':
-				$no_st = 'ST-' . $no . '/KPU.03/' . $result[0]->tahun;
+				$no_st = 'ST-' . $result[0]->no . '/KPU.03/' . $result[0]->tahun;
 				$jabatan = 'Kepala Kantor';
 				break;
 
 			case 'KBU':
-				$no_st = 'ST-' . $no . '/KPU.03/BG.01/' . $result[0]->tahun;
+				$no_st = 'ST-' . $result[0]->no . '/KPU.03/BG.01/' . $result[0]->tahun;
 				$jabatan = 'Kepala Bagian Umum';
 				break;
 			
@@ -94,7 +92,7 @@ class Umum_st_model extends CI_Model {
 				break;
 		}
 
-		$result[0]->no_st = 'aaa';
+		$result[0]->no_st = $no_st;
 		$result[0]->jabatan = $jabatan;
 		$result[0]->ur_dipa = $ur_dipa;
 
@@ -121,11 +119,11 @@ class Umum_st_model extends CI_Model {
 		return $result;
 	}
 
-	public function SaveSt($input=[])
+	public function SaveSt($input=[], $no_st='')
 	{
 		$header = $input['header'];
 		$pegawai = $input['pegawai'];
-		// $header['no'] = $no_st;
+		$header['no'] = $no_st;
 
 		if (isset($header['spd'])) {
 			$header['ppk'] = $this->GetPpk($header['dipa']);
@@ -305,26 +303,6 @@ class Umum_st_model extends CI_Model {
 	public function DeleteSt($id_st='')
 	{
 		$this->db->set('status', 0);
-		$this->db->where('id', $id_st);
-		$this->db->update('umum_st_header');
-	}
-
-	public function ApproveSt($id_st='', $status_st='')
-	{
-		switch ($status_st) {
-			case 10:
-				$new_stat = 20;
-				break;
-
-			case 20:
-				$new_stat = 50;
-				break;
-			
-			default:
-				$new_stat = 0;
-				break;
-		}
-		$this->db->set('status', $new_stat);
 		$this->db->where('id', $id_st);
 		$this->db->update('umum_st_header');
 	}
