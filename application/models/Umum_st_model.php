@@ -110,7 +110,7 @@ class Umum_st_model extends CI_Model {
 			->join("dim_pangkat_gol c", "b.pangkatgolongan = c.gol")
 			->join("profile d", "a.pjb_kbu = d.id")
 			->where("a.id_st", $id_st)
-			->order_by("a.id")
+			->order_by("c.rank desc")
 			->get();
 		$result = $query->result();
 		for ($i=0; $i < count($result); $i++) { 

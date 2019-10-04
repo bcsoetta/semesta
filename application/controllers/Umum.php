@@ -561,12 +561,6 @@ class Umum extends CI_Controller {
 		// $no_st = $this->Penomoran_model->GetNo('ST', $agenda, $tahun);
 		// $this->Umum_st_model->SaveSt($_POST, $no_st);
 		$this->Umum_st_model->SaveSt($_POST);
-<<<<<<< Updated upstream
-		$tes = $_POST;
-		header('Content-type:application/json');
-		echo json_encode($tes);
-=======
->>>>>>> Stashed changes
 	}
 
 	public function edit_st()
