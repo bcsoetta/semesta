@@ -68,10 +68,6 @@
             width: 25mm;
         }
 
-        .naskah-dinas .ttd .ttd-img {
-            width: 50mm;
-        }
-
         .naskah-dinas .colon {
             width: 2mm;
         }
@@ -123,10 +119,6 @@
 
         .naskah-dinas .sppd .pernyataan {
             text-align: justify;
-        }
-
-        .naskah-dinas .sppd .paraf-img {
-            width: 2.5mm;
         }
 
     </style>
@@ -332,15 +324,11 @@
                         </tr>
                         <tr>
                             <td colspan="3">
-                                <?php if ($st_header->status == 50) { ?>
-                                    <img class="ttd-img" src="<?php echo base_url('assets/images/my_image/ttd-ksbsdm.png'); ?>">
-                                <?php } else { ?>
-                                    <br>
-                                    <br>
-                                    <br>
-                                    <br>
-                                    <br>
-                                <?php } ?>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
                             </td>
                         </tr>
                         <tr>
@@ -382,12 +370,7 @@
                                 <br>
                                 <div>Kepala Bagian Umum</div>
                                 <br><br><br><br>
-                                <div>
-                                    <?php echo $pegawai->pejabat_kbu; ?>
-                                    <?php if ($st_header->status == 50) { ?>
-                                        <img class="paraf-img" src="<?php echo base_url('assets/images/my_image/paraf-ksbsdm.png'); ?>">
-                                    <?php } ?>
-                                </div>
+                                <div><?php echo $pegawai->pejabat_kbu; ?></div>
                                 <div><?php echo 'NIP ' . $pegawai->nip_kbu; ?></div>
                             </td>
                         </tr>

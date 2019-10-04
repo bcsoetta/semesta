@@ -462,8 +462,6 @@ class Umum extends CI_Controller {
 					$status = 'penelitian Kasubbag';
 					if ($role == 'kepala seksi' || $role == 'developer') {
 						$button = $button_st . '&nbsp' . $button_spd . '&nbsp&nbsp&nbsp' . $button_ok . '&nbsp' . $button_edit . '&nbsp' . $button_del;
-					} elseif ($role == 'staff') {
-						$button = $button_st . '&nbsp' . $button_spd . '&nbsp&nbsp&nbsp' . $button_edit . '&nbsp' . $button_del;
 					} else {
 						$button = $button_st . '&nbsp' . $button_spd;
 					}
@@ -480,9 +478,7 @@ class Umum extends CI_Controller {
 				case 50:
 					$status = 'persetujuan';
 					if ($role == 'kepala seksi' || $role == 'developer') {
-						$button = $button_st . '&nbsp' . $button_spd . '&nbsp&nbsp&nbsp' . $button_edit . '&nbsp' . $button_del;
-					} elseif ($role == 'staff') {
-						$button = $button_st . '&nbsp' . $button_spd . '&nbsp&nbsp&nbsp' . $button_edit;
+						$button = $button_st . '&nbsp' . $button_spd . '&nbsp&nbsp&nbsp' . $button_ok . '&nbsp' . $button_edit . '&nbsp' . $button_del;
 					} else {
 						$button = $button_st . '&nbsp' . $button_spd;
 					}
@@ -561,12 +557,6 @@ class Umum extends CI_Controller {
 		// $no_st = $this->Penomoran_model->GetNo('ST', $agenda, $tahun);
 		// $this->Umum_st_model->SaveSt($_POST, $no_st);
 		$this->Umum_st_model->SaveSt($_POST);
-<<<<<<< Updated upstream
-		$tes = $_POST;
-		header('Content-type:application/json');
-		echo json_encode($tes);
-=======
->>>>>>> Stashed changes
 	}
 
 	public function edit_st()
@@ -589,11 +579,11 @@ class Umum extends CI_Controller {
 		$this->mainlib->logged_in();
 		$tahun = date("Y");
 
-		$st = $this->Umum_st_model->GetSt($_POST['header']['id_st']);
+		$current_detail = $this->Umum_st_model->CekJmlSpd($_POST['header']['id_st']);
 
 		$del_detail = [];
 
-		foreach ($st['st_detail'] as $key => $value) {
+		foreach ($current_detail as $key => $value) {
 			if (!in_array($value->id_pegawai, $_POST['pegawai'])) {
 				$del_detail[] = $value->id_pegawai;
 			}
@@ -622,26 +612,10 @@ class Umum extends CI_Controller {
 			// 	$no_spd = null;
 			// }
 
-			
-
-			// if ($st['st_header']->status == 50) {
-				if ($st['st_header']->status == 50 && $st['st_header']->spd == 1 && $st['st_header']->dipa == 1) {
-					$cek_no_spd = $this->Umum_st_model->CekSpd($_POST['header']['id_st'], $value);
-					if ($cek_no_spd != null) {
-						$no_spd = $cek_no_spd;
-					} else {
-						$no_spd = $this->Penomoran_model->GetNo('SPD', 'KPU.03', $tahun);	
-					}
-				} else {
-					$no_spd = null;
-				}
-			// }
-
 			$new_detail[] = [
 				'id_pegawai' => $value,
 				'plh_kbu' => $plhKbu,
-				'pjb_kbu' => $kbu,
-				'no_spd' => $no_spd
+				'pjb_kbu' => $kbu
 			];
 		}
 
@@ -675,42 +649,22 @@ class Umum extends CI_Controller {
 
 	public function st_approve()
 	{
-		$this->mainlib->logged_in();
-		$input['id_st'] = $_POST['st_id'];
+		$st_id = $_POST['st_id'];
 		switch ($_POST['st_status']) {
 			case 10:
-				$input['new_stat'] = 20;
+				$new_stat = 20;
 				break;
 
 			case 20:
-				$input['new_stat'] = 50;
-
-				$st = $this->Umum_st_model->GetSt($_POST['st_id']);
-				$tahun = $st['st_header']->tahun;
-				if ($st['st_header']->jenis_st == 'KK') {
-					$agenda = 'KPU.03';
-				} else {
-					$agenda = 'KPU.03/BG.01';
-				}
-				$input['no_st'] = $this->Penomoran_model->GetNo('ST', $agenda, $tahun);	
-
-				if ($st['st_header']->spd == 1 && $st['st_header']->dipa == 1) {
-					foreach ($st['st_detail'] as $key => $value) {
-						$no_spd = $this->Penomoran_model->GetNo('SPD', 'KPU.03', $tahun);
-						$input['spd'][] = [
-							'id_detail' => $value->id,
-							'no_spd' => $no_spd
-						];
-					}
-				}
+				$new_stat = 50;
 				break;
 			
 			default:
-				$input['new_stat'] = 0;
+				$new_stat = 0;
 				break;
 		}
-		
-		$this->Umum_st_model->ApproveSt($input);
+		$this->mainlib->logged_in();
+		$this->Umum_st_model->ApproveSt($st_id, $new_stat);
 	}
 
 	public function preview_st()
