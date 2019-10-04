@@ -33,7 +33,7 @@ class Pfpc extends CI_Controller {
 		echo json_encode($data);
 	}
 
-	//Halaman reekspor
+	// Halaman reekspor
 	public function reekspor()
 	{
 		$data['menus'] = $this->mainlib->menus();
@@ -52,6 +52,24 @@ class Pfpc extends CI_Controller {
 			$data = array_merge($data, $result);
 		}
 		
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
+
+	// Halaman pengeluaran sebagian
+	public function pengeluaran_sebagian()
+	{
+		$data['menus'] = $this->mainlib->menus();
+		$data['class'] = $this->router->fetch_class();
+		$data['hal'] = 'pengeluaran sebagian';
+		$data['content'] = 'pfpc_pengeluaran_sebagian';
+		$this->load->view('index', $data);
+	}
+
+	public function pengeluaran_sebagian_browse()
+	{
+		$layanan = 'Pengeluaran Sebagian';
+		$data = $this->Loket_model->GetDoksByLayanan($layanan);
 		header('Content-type:application/json');
 		echo json_encode($data);
 	}
