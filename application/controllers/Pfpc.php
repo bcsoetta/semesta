@@ -73,4 +73,22 @@ class Pfpc extends CI_Controller {
 		header('Content-type:application/json');
 		echo json_encode($data);
 	}
+
+	// Halaman pembatalan PEB
+	public function pembatalan_peb()
+	{
+		$data['menus'] = $this->mainlib->menus();
+		$data['class'] = $this->router->fetch_class();
+		$data['hal'] = 'pembatalan PEB';
+		$data['content'] = 'pfpc_pembatalan_peb';
+		$this->load->view('index', $data);
+	}
+
+	public function pembatalan_peb_browse()
+	{
+		$layanan = 'Pembatalan PEB';
+		$data = $this->Loket_model->GetDoksByLayanan($layanan);
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
 }
