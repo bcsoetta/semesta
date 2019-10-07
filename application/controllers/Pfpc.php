@@ -91,4 +91,22 @@ class Pfpc extends CI_Controller {
 		header('Content-type:application/json');
 		echo json_encode($data);
 	}
+
+	// Halaman reimpor
+	public function reimpor()
+	{
+		$data['menus'] = $this->mainlib->menus();
+		$data['class'] = $this->router->fetch_class();
+		$data['hal'] = 'reimpor';
+		$data['content'] = 'pfpc_reimpor';
+		$this->load->view('index', $data);
+	}
+
+	public function reimpor_browse()
+	{
+		$layanan = 'Reimpor';
+		$data = $this->Loket_model->GetDoksByLayanan($layanan);
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
 }
