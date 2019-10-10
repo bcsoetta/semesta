@@ -65,10 +65,10 @@ class Mainlib {
 	// generate menu
 	public function menus() {
 		$_this =& get_instance();
-		// $_this->load->model('User_model');
-		// $result = $_this->User_model->get_priv_menu();
-		$_this->load->model('User_priv_model');
-		$result = $_this->User_priv_model->GetMenu();
+		$_this->load->model('User_model');
+		$result = $_this->User_model->get_priv_menu();
+		// $_this->load->model('User_priv_model');
+		// $result = $_this->User_priv_model->GetMenu();
 
 		$privs = array();
 		foreach ($result as $val) {
