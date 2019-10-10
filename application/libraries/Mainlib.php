@@ -25,15 +25,15 @@ class Mainlib {
 	// check user privileges
 	public function privilege() {
 		$_this =& get_instance();
-		// $_this->load->model('User_model');
-		$_this->load->model('User_priv_model');
-		// $result = $_this->User_model->get_privsx();
-		$result = $_this->User_priv_model->GetPrivilege();
+		$_this->load->model('User_model');
+		// $_this->load->model('User_priv_model');
+		$result = $_this->User_model->get_privsx();
+		// $result = $_this->User_priv_model->GetPrivilege();
 
 		$r = [];
 		foreach ($result as $key => $value) {
-			// $r[] = $value['menu_url'];
-			$r[] = $value['url'];
+			$r[] = $value['menu_url'];
+			// $r[] = $value['url'];
 		}
 
 		$class = $_this->router->fetch_class();
