@@ -461,7 +461,7 @@ class Umum extends CI_Controller {
 				case 20:
 					$status = 'penelitian Kasubbag';
 					if ($role == 'kepala seksi' || $role == 'developer') {
-						$button = $button_st . '&nbsp' . $button_spd . '&nbsp&nbsp&nbsp' . $button_ok . '&nbsp' . $button_edit . '&nbsp' . $button_del;
+						$button = $button_st . '&nbsp' . $button_spd . '&nbsp&nbsp&nbsp' . $button_ok;
 					} elseif ($role == 'staff') {
 						$button = $button_st . '&nbsp' . $button_spd . '&nbsp&nbsp&nbsp' . $button_edit . '&nbsp' . $button_del;
 					} else {
@@ -480,9 +480,9 @@ class Umum extends CI_Controller {
 				case 50:
 					$status = 'persetujuan';
 					if ($role == 'kepala seksi' || $role == 'developer') {
-						$button = $button_st . '&nbsp' . $button_spd . '&nbsp&nbsp&nbsp' . $button_edit . '&nbsp' . $button_del;
+						$button = $button_st . '&nbsp' . $button_spd;
 					} elseif ($role == 'staff') {
-						$button = $button_st . '&nbsp' . $button_spd . '&nbsp&nbsp&nbsp' . $button_edit;
+						$button = $button_st . '&nbsp' . $button_spd . '&nbsp&nbsp&nbsp' . $button_edit . '&nbsp' . $button_del;
 					} else {
 						$button = $button_st . '&nbsp' . $button_spd;
 					}
