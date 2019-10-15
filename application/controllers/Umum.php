@@ -2,6 +2,9 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 class Umum extends CI_Controller {
 
 	public function __construct() {
@@ -655,6 +658,30 @@ class Umum extends CI_Controller {
 		$data = $this->Umum_st_model->AdvSearch($_POST);
 		header('Content-type:application/json');
 		echo json_encode($data);
+	}
+
+	public function st_export_xlsx()
+	{
+		$spreadsheet = new Spreadsheet();
+		$spreadsheet->setActiveSheetIndex(0)
+			->setCellValue('A1', 'JENIS ST')
+			->setCellValue('B1', 'NO ST')
+			->setCellValue('C1', 'TGL ST')
+			->setCellValue('D1', 'HAL ST')
+			->setCellValue('E1', 'MULAI TUGAS')
+			->setCellValue('F1', 'AKHIR TUGAS')
+			->setCellValue('G1', 'TEMPAT')
+			->setCellValue('H1', 'KOTA')
+			->setCellValue('I1', 'NO SPD')
+			->setCellValue('J1', 'NIP PEGAWAI')
+			->setCellValue('K1', 'NAMA PEGAWAI');
+		$writer = new Xlsx($spreadsheet);
+		$filename = 'name-of-the-generated-file';
+		 
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="'. $filename .'.xlsx"');
+		header('Cache-Control: max-age=0');
+		$writer->save('php://output'); // download file
 	}
 
 	// Halaman Monitor Aplikasi
