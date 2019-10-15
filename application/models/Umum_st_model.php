@@ -336,11 +336,14 @@ class Umum_st_model extends CI_Model {
 
 	public function AdvSearch($input='')
 	{
+		$tgl_tugas_start = ($input['tgl_tugas_start'] != '') ? date("Y-m-d", strtotime($input['tgl_tugas_start'])) : '';
+		$tgl_tugas_end = ($input['tgl_tugas_end'] != '') ? date("Y-m-d", strtotime($input['tgl_tugas_end'])) : '';
+
 		$this->db->select('a.id, a.jenis_st, a.no, a.tanggal, a.tahun, a.hal, a.spd, a.created_at');
 		$this->db->from('umum_st_header a');
 		$this->db->join('umum_st_detail b', 'a.id = b.id_st');
 		$this->db->join('profile c', 'b.id_pegawai = c.id');
-		$this->db->where('a.status', 1);
+		$this->db->where('a.status <>', 0);
 		if (isset($input['jenis_st'])) {
 			if ($input['jenis_st'] == 1) {
 				$this->db->where('a.jenis_st', 'KK');
@@ -370,6 +373,38 @@ class Umum_st_model extends CI_Model {
 		}
 		if ($input['nama'] != '') {
 			$this->db->like('c.nama', $input['nama']);
+		}
+		if ($tgl_tugas_start != '' && $tgl_tugas_end != '') {
+			$this->db->group_start();
+				$this->db->group_start();
+					$this->db->where('a.tgl_tugas_start >=', $tgl_tugas_start);
+					$this->db->where('a.tgl_tugas_start <=', $tgl_tugas_end);
+				$this->db->group_end();
+				$this->db->or_group_start();
+					$this->db->where('a.tgl_tugas_start <=', $tgl_tugas_start);
+					$this->db->where('a.tgl_tugas_end >=', $tgl_tugas_start);
+				$this->db->group_end();
+			$this->db->group_end();
+		} elseif ($tgl_tugas_start != '') {
+			$this->db->group_start();
+				$this->db->group_start();
+					$this->db->where('a.tgl_tugas_start >=', $tgl_tugas_start);
+				$this->db->group_end();
+				$this->db->or_group_start();
+					$this->db->where('a.tgl_tugas_start <=', $tgl_tugas_start);
+					$this->db->where('a.tgl_tugas_end >=', $tgl_tugas_start);
+				$this->db->group_end();
+			$this->db->group_end();
+		} elseif ($tgl_tugas_end != '') {
+			$this->db->group_start();
+				$this->db->group_start();
+					$this->db->where('a.tgl_tugas_end <=', $tgl_tugas_end);
+				$this->db->group_end();
+				$this->db->or_group_start();
+					$this->db->where('a.tgl_tugas_start <=', $tgl_tugas_end);
+					$this->db->where('a.tgl_tugas_end >=', $tgl_tugas_end);
+				$this->db->group_end();
+			$this->db->group_end();
 		}
 		$this->db->group_by('a.id');
 		$query = $this->db->get();

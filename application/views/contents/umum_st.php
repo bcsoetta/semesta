@@ -36,6 +36,7 @@
 												</select>
 											</div>
 										</div>
+
 										<div class="form-group row">
 											<label class="col-sm-2 form-control-label">Tanggal ST</label>
 											<div class="col-sm-4">
@@ -93,12 +94,59 @@
 												</select>
 											</div>
 										</div>
-									</div>
-									<div class="col-md-6">
+
 										<div class="form-group row">
 											<label class="col-sm-2 form-control-label">Hal</label>
 											<div class="col-sm-9">
 												<input id="srcHal" class="form-control" type="text" name="hal">
+											</div>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group row">
+											<label class="col-sm-2 form-control-label">Tanggal ST</label>
+											<div class="col-sm-4">
+												<div class='input-group date' ui-jp="datetimepicker" ui-options="{
+													format: 'DD-MM-YYYY',
+													icons: {
+														time: 'fa fa-clock-o',
+														date: 'fa fa-calendar',
+														up: 'fa fa-chevron-up',
+														down: 'fa fa-chevron-down',
+														previous: 'fa fa-chevron-left',
+														next: 'fa fa-chevron-right',
+														today: 'fa fa-screenshot',
+														clear: 'fa fa-trash',
+														close: 'fa fa-remove'
+													}
+												}">
+													<input type='text' name="tgl_tugas_start" class="col-sm-10 form-control" />
+													<span class="input-group-addon">
+														<span class="fa fa-calendar"></span>
+													</span>
+												</div>
+											</div>
+											<div class="col-sm-1 form-control-label text-center"> s.d. </div>
+											<div class="col-sm-4">
+												<div id="srcTglStEnd" class='input-group date' ui-jp="datetimepicker" ui-options="{
+													format: 'DD-MM-YYYY',
+													icons: {
+														time: 'fa fa-clock-o',
+														date: 'fa fa-calendar',
+														up: 'fa fa-chevron-up',
+														down: 'fa fa-chevron-down',
+														previous: 'fa fa-chevron-left',
+														next: 'fa fa-chevron-right',
+														today: 'fa fa-screenshot',
+														clear: 'fa fa-trash',
+														close: 'fa fa-remove'
+													}
+												}">
+													<input type='text' name="tgl_tugas_end" class="col-sm-10 form-control" />
+													<span class="input-group-addon">
+														<span class="fa fa-calendar"></span>
+													</span>
+												</div>
 											</div>
 										</div>
 										<div class="form-group row">
