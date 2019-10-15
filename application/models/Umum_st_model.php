@@ -122,11 +122,11 @@ class Umum_st_model extends CI_Model {
 		return $result;
 	}
 
-	public function SaveSt($input=[])
+	public function SaveSt($input=[], $no_st='')
 	{
 		$header = $input['header'];
 		$pegawai = $input['pegawai'];
-		// $header['no'] = $no_st;
+		$header['no'] = $no_st;
 
 		if (isset($header['spd'])) {
 			$header['ppk'] = $this->GetPpk($header['dipa']);

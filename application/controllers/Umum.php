@@ -491,6 +491,7 @@ class Umum extends CI_Controller {
 		
 		$no_st = $this->Penomoran_model->GetNo('ST', $agenda, $tahun);
 		$this->Umum_st_model->SaveSt($_POST, $no_st);
+		echo $no_st;
 	}
 
 	public function edit_st()
