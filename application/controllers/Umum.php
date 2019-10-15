@@ -513,14 +513,25 @@ class Umum extends CI_Controller {
 		$this->mainlib->logged_in();
 		$tahun = date("Y");
 
-		$current_detail = $this->Umum_st_model->CekJmlSpd($_POST['header']['id_st']);
+		$st = $this->Umum_st_model->GetSt($_POST['header']['id_st']);
 
 		$del_detail = [];
 
-		foreach ($current_detail as $key => $value) {
+		foreach ($st['st_detail'] as $key => $value) {
 			if (!in_array($value->id_pegawai, $_POST['pegawai'])) {
 				$del_detail[] = $value->id_pegawai;
 			}
+		}
+
+		$pejabatKbu = $this->Admin_model->GetPlh(date("Y-m-d"), 10);
+
+		if (count($pejabatKbu) > 0) {
+			$plhKbu = 1;
+			$kbu = $pejabatKbu[0]->plh;
+		} else {
+			$plhKbu = 0;
+			$kbu = $this->Umum_st_model->GetPejabat(10);
+			$kbu = $kbu[0]->id;
 		}
 
 		foreach ($_POST['pegawai'] as $key => $value) {
@@ -537,6 +548,8 @@ class Umum extends CI_Controller {
 
 			$new_detail[] = [
 				'id_pegawai' => $value,
+				'plh_kbu' => $plhKbu,
+				'pjb_kbu' => $kbu,
 				'no_spd' => $no_spd
 			];
 		}
