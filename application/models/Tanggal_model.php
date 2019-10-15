@@ -23,7 +23,12 @@ class Tanggal_model extends CI_Model {
 
 		setlocale(LC_ALL, 'id_ID.utf-8');
 
-		if ($end_date != null || $end_date != '') {
+		if ($end_date == null || $end_date == '' || $start_date == $end_date) {
+
+			$hari = strftime("%A", strtotime($start_date));
+			$tanggal = strftime("%d %B %Y", strtotime($start_date));
+
+		} else {
 
 			$hari_start = strftime("%A", strtotime($start_date));
 			$hari_end = strftime("%A", strtotime($end_date));
@@ -46,13 +51,6 @@ class Tanggal_model extends CI_Model {
 				$tanggal = $tanggal_start . ' ' . $bulan_start . ' ' . $tahun_start . ' s.d. ' . $tanggal_end . ' ' . $bulan_end . ' ' . $tahun_end;
 			}
 
-			return $hari . ' / ' . $tanggal;
-
-		} else {
-
-			$hari = strftime("%A", strtotime($start_date));
-			$tanggal = strftime("%d %B %Y", strtotime($start_date));
-
 		}
 
 		return $hari . ' / ' . $tanggal;
@@ -63,10 +61,10 @@ class Tanggal_model extends CI_Model {
 	{
 		$waktu = '';
 
-		if ($end_waktu != null || $end_waktu != '') {
-			$waktu = $start_waktu . ' s.d. ' . $end_waktu . ' WIB';
-		} else {
+		if ($end_waktu == null || $end_waktu == '' || $start_waktu == $end_waktu) {
 			$waktu = $start_waktu . ' WIB s.d. selesai';
+		} else {
+			$waktu = $start_waktu . ' s.d. ' . $end_waktu . ' WIB';
 		}
 
 		return $waktu;
