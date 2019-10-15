@@ -104,7 +104,7 @@
 									</div>
 									<div class="col-md-6">
 										<div class="form-group row">
-											<label class="col-sm-2 form-control-label">Tanggal ST</label>
+											<label class="col-sm-2 form-control-label">Tanggal tugas</label>
 											<div class="col-sm-4">
 												<div class='input-group date' ui-jp="datetimepicker" ui-options="{
 													format: 'DD-MM-YYYY',
