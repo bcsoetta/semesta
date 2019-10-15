@@ -71,6 +71,11 @@
 			text-indent: 35pt;
 		}
 
+		.naskah-dinas .content .waktu-tempat .text-tempat {
+			word-break: break-word;
+			width: 150mm;
+		}
+
 		.naskah-dinas .daftar-pegawai table {
 			width: 180mm;
 			border-collapse:collapse;
@@ -225,7 +230,7 @@
 						<tr>
 							<td class="row-name col col-25">tempat</td>
 							<td class="colon col">:</td>
-							<td class="row-text col"><?php echo $st_header->tempat_tugas . ', ' . $st_header->kota_tugas; ?></td>
+							<td class="row-text col text-tempat"><?php echo $st_header->tempat_tugas . ', ' . $st_header->kota_tugas; ?></td>
 						</tr>
 					</table>
 					<br>
