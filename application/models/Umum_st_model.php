@@ -4,11 +4,11 @@ class Umum_st_model extends CI_Model {
 	
 	public function GetStAll()
 	{
-		$query = $this->db->select("id, jenis_st, no, tanggal, tahun, hal, spd, created_at")
+		$query = $this->db->select("id, jenis_st, no, tanggal, tahun, hal, status, spd, created_at")
 			->from("umum_st_header")
-			->where("status", 1)
+			->where("status <>", 0)
 			->get();
-		return $query->result();
+		return $query->result_array();
 	}
 
 	public function GetSt($id_st='')
@@ -51,7 +51,8 @@ class Umum_st_model extends CI_Model {
 				a.spd,
 				a.ppk,
 				c.nip nip_ppk,
-				c.nama nama_ppk
+				c.nama nama_ppk,
+				a.status
 			")
 			->from("umum_st_header a")
 			->join("profile b", "a.id_pejabat = b.id")
@@ -61,14 +62,16 @@ class Umum_st_model extends CI_Model {
 
 		$result = $query->result();
 
+		$no = is_null($result[0]->no) ? '   ' : $result[0]->no;
+
 		switch ($result[0]->jenis_st) {
 			case 'KK':
-				$no_st = 'ST-' . $result[0]->no . '/KPU.03/' . $result[0]->tahun;
+				$no_st = 'ST-' . $no . '/KPU.03/' . $result[0]->tahun;
 				$jabatan = 'Kepala Kantor';
 				break;
 
 			case 'KBU':
-				$no_st = 'ST-' . $result[0]->no . '/KPU.03/BG.01/' . $result[0]->tahun;
+				$no_st = 'ST-' . $no . '/KPU.03/BG.01/' . $result[0]->tahun;
 				$jabatan = 'Kepala Bagian Umum';
 				break;
 			
@@ -101,13 +104,13 @@ class Umum_st_model extends CI_Model {
 
 	public function GetStDetail($id_st='')
 	{
-		$query = $this->db->select("a.id_pegawai, b.nama, b.nip, b.pangkatgolongan, c.pangkat, b.jabatan, a.no_spd, a.plh_kbu, d.nama pejabat_kbu, d.nip nip_kbu")
+		$query = $this->db->select("a.id, a.id_pegawai, b.nama, b.nip, b.pangkatgolongan, c.pangkat, b.jabatan, a.no_spd, a.plh_kbu, d.nama pejabat_kbu, d.nip nip_kbu")
 			->from("umum_st_detail a")
 			->join("profile b", "a.id_pegawai = b.id")
 			->join("dim_pangkat_gol c", "b.pangkatgolongan = c.gol")
 			->join("profile d", "a.pjb_kbu = d.id")
 			->where("a.id_st", $id_st)
-			->order_by("a.id")
+			->order_by("c.rank desc")
 			->get();
 		$result = $query->result();
 		for ($i=0; $i < count($result); $i++) { 
@@ -119,11 +122,11 @@ class Umum_st_model extends CI_Model {
 		return $result;
 	}
 
-	public function SaveSt($input=[], $no_st='')
+	public function SaveSt($input=[])
 	{
 		$header = $input['header'];
 		$pegawai = $input['pegawai'];
-		$header['no'] = $no_st;
+		// $header['no'] = $no_st;
 
 		if (isset($header['spd'])) {
 			$header['ppk'] = $this->GetPpk($header['dipa']);
@@ -223,7 +226,7 @@ class Umum_st_model extends CI_Model {
 		return $query->result();
 	}
 
-	public function CekJmlSpd($id_st='')
+	public function CekDetailSpd($id_st='')
 	{
 
 		$query = $this->db->select('id_pegawai, no_spd')
@@ -305,6 +308,30 @@ class Umum_st_model extends CI_Model {
 		$this->db->set('status', 0);
 		$this->db->where('id', $id_st);
 		$this->db->update('umum_st_header');
+	}
+
+	public function ApproveSt($input='')
+	{
+		$id_st = $input['id_st'];
+		$new_stat = $input['new_stat'];
+		if ($new_stat == 50) {
+			$no_st = $input['no_st'];
+			$this->db->set('no', $no_st);
+		}
+		$this->db->set('status', $new_stat);
+		$this->db->where('id', $id_st);
+		$this->db->update('umum_st_header');
+		if (isset($input['spd'])) {
+			foreach ($input['spd'] as $key => $value) {
+				$id_detail = $value['id_detail'];
+				$no_spd = $value['no_spd'];
+				$this->db->set('no_spd', $no_spd);
+				$this->db->where('id', $id_detail);
+				$this->db->update('umum_st_detail');
+			}
+		}
+
+		return $input;
 	}
 
 	public function AdvSearch($input='')
