@@ -655,13 +655,16 @@ class Umum extends CI_Controller {
 	public function st_search()
 	{
 		$this->mainlib->logged_in();
-		$data = $this->Umum_st_model->AdvSearch($_POST);
+		$data = $this->Umum_st_model->AdvSearch($_POST, 'header');
 		header('Content-type:application/json');
 		echo json_encode($data);
 	}
 
 	public function st_export_xlsx()
 	{
+		$this->mainlib->logged_in();
+		$data = $this->Umum_st_model->AdvSearch($_POST, 'detail');
+
 		$spreadsheet = new Spreadsheet();
 		$spreadsheet->setActiveSheetIndex(0)
 			->setCellValue('A1', 'JENIS ST')
@@ -675,8 +678,24 @@ class Umum extends CI_Controller {
 			->setCellValue('I1', 'NO SPD')
 			->setCellValue('J1', 'NIP PEGAWAI')
 			->setCellValue('K1', 'NAMA PEGAWAI');
+		$r = 2;
+		foreach ($data as $key => $value) {
+			$spreadsheet->setActiveSheetIndex(0)
+				->setCellValue('A'.$r, $value->jenis_st)
+				->setCellValue('B'.$r, $value->no)
+				->setCellValue('C'.$r, $value->tanggal)
+				->setCellValue('D'.$r, $value->hal)
+				->setCellValue('E'.$r, $value->tgl_tugas_start)
+				->setCellValue('F'.$r, $value->tgl_tugas_end)
+				->setCellValue('G'.$r, $value->tempat_tugas)
+				->setCellValue('H'.$r, $value->kota_tugas)
+				->setCellValue('I'.$r, $value->no_spd)
+				->setCellValue('J'.$r, $value->nip)
+				->setCellValue('K'.$r, $value->nama);
+			$r++;
+		}
 		$writer = new Xlsx($spreadsheet);
-		$filename = 'name-of-the-generated-file';
+		$filename = 'rekap_surat_tugas';
 		 
 		header('Content-Type: application/vnd.ms-excel');
 		header('Content-Disposition: attachment;filename="'. $filename .'.xlsx"');

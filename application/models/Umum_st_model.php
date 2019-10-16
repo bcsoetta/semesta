@@ -334,12 +334,29 @@ class Umum_st_model extends CI_Model {
 		return $input;
 	}
 
-	public function AdvSearch($input='')
+	public function AdvSearch($input='', $usage='header')
 	{
 		$tgl_tugas_start = ($input['tgl_tugas_start'] != '') ? date("Y-m-d", strtotime($input['tgl_tugas_start'])) : '';
 		$tgl_tugas_end = ($input['tgl_tugas_end'] != '') ? date("Y-m-d", strtotime($input['tgl_tugas_end'])) : '';
 
-		$this->db->select('a.id, a.jenis_st, a.no, a.tanggal, a.tahun, a.hal, a.spd, a.created_at');
+		$this->db->select('
+			a.id, 
+			a.jenis_st, 
+			a.no, 
+			a.tanggal, 
+			a.tahun, 
+			a.hal, 
+			a.spd,
+			a.tgl_tugas_start,
+			a.tgl_tugas_end,
+			a.tempat_tugas,
+			a.kota_tugas,
+			a.created_at, 
+			b.id, 
+			b.no_spd, 
+			c.nip, 
+			c.nama
+		');
 		$this->db->from('umum_st_header a');
 		$this->db->join('umum_st_detail b', 'a.id = b.id_st');
 		$this->db->join('profile c', 'b.id_pegawai = c.id');
@@ -406,7 +423,12 @@ class Umum_st_model extends CI_Model {
 				$this->db->group_end();
 			$this->db->group_end();
 		}
-		$this->db->group_by('a.id');
+		if ($usage=='header') {
+			$this->db->group_by('a.id');
+		} else {
+			$this->db->order_by('a.id, b.id');
+		}
+		
 		$query = $this->db->get();
 		return $query->result();
 	}

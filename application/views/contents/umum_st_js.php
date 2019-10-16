@@ -475,6 +475,8 @@
 			$('#form-adv-src #srcJenisSt').val('');
 			$('#form-adv-src #srcTglStSta').val('');
 			$('#form-adv-src #srcTglStEnd').val('');
+			$('#form-adv-src #srcTglTugasStart').val('');
+			$('#form-adv-src #srcTglTugasEnd').val('');
 			$('#form-adv-src #srcDipa').val('');
 			$('#form-adv-src #srcHal').val('');
 			$('#form-adv-src #srcTempat').val('');
@@ -482,5 +484,6 @@
 			$('#form-adv-src #srcNama').val('');
 			displayAllData();
 		})
+
 	})
 </script>

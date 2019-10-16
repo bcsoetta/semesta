@@ -24,7 +24,7 @@
 							</div>
 
 							<div id="adv-src" class="row light p-3" style="display: none;">
-								<form id="form-adv-src">
+								<form id="form-adv-src" action="st_export_xlsx" target="_blank" method="POST">
 									<div class="col-md-6">
 										<div class="form-group row">
 											<label for="srcJenisSt" class="col-sm-2 form-control-label">Jenis ST</label>
@@ -62,7 +62,7 @@
 											</div>
 											<div class="col-sm-1 form-control-label text-center"> s.d. </div>
 											<div class="col-sm-4">
-												<div id="srcTglStEnd" class='input-group date' ui-jp="datetimepicker" ui-options="{
+												<div class='input-group date' ui-jp="datetimepicker" ui-options="{
 													format: 'DD-MM-YYYY',
 													icons: {
 														time: 'fa fa-clock-o',
@@ -76,7 +76,7 @@
 														close: 'fa fa-remove'
 													}
 												}">
-													<input type='text' name="tgl_st_end" class="col-sm-10 form-control" />
+													<input id="srcTglStEnd" type='text' name="tgl_st_end" class="col-sm-10 form-control" />
 													<span class="input-group-addon">
 														<span class="fa fa-calendar"></span>
 													</span>
@@ -120,7 +120,7 @@
 														close: 'fa fa-remove'
 													}
 												}">
-													<input type='text' name="tgl_tugas_start" class="col-sm-10 form-control" />
+													<input id="srcTglTugasStart" type='text' name="tgl_tugas_start" class="col-sm-10 form-control" />
 													<span class="input-group-addon">
 														<span class="fa fa-calendar"></span>
 													</span>
@@ -142,7 +142,7 @@
 														close: 'fa fa-remove'
 													}
 												}">
-													<input type='text' name="tgl_tugas_end" class="col-sm-10 form-control" />
+													<input id="srcTglTugasEnd" type='text' name="tgl_tugas_end" class="col-sm-10 form-control" />
 													<span class="input-group-addon">
 														<span class="fa fa-calendar"></span>
 													</span>
@@ -166,6 +166,7 @@
 										</div>
 										<div class="row">
 											<div class="col-sm-11">
+												<button id="btn-dl-xls" class="btn btn-md primary pull-right ml-2">Download</button>
 												<button id="btn-adv-src" class="btn btn-md info pull-right ml-2">Search</button>
 												<button id="btn-clr-src" class="btn btn-md warning pull-right">Clear</button>
 											</div>
