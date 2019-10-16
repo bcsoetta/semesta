@@ -19,6 +19,7 @@ class Admin_model extends CI_Model {
 			->join("jabatan b", "a.jabatan = b.k_jbtn")
 			->join("profile c", "a.plh = c.id")
 			->where("a.tgl", $date)
+			->where("a.status <>", null)
 			->get();
 
 		return $query->result();
@@ -114,6 +115,15 @@ class Admin_model extends CI_Model {
 		} else {
 			$message = 'Isikan pejabat plh dulu';
 		}
+		return $message;
+	}
+
+	public function DeletePlh($id_plh='')
+	{
+		$query = $this->db->set('status', null)
+			->where('id', $id_plh)
+			->update('admin_plh');
+		$message = 'Plh telah dihapus';
 		return $message;
 	}
 }

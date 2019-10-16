@@ -52,7 +52,7 @@ class Admin extends CI_Controller {
 		echo json_encode($list);
 	}
 
-	public function plh_edit()
+	public function plh_show()
 	{
 		$this->mainlib->logged_in();
 		$result = $this->Admin_model->GetPlhById($_POST['id']);
@@ -65,6 +65,14 @@ class Admin extends CI_Controller {
 	{
 		$this->mainlib->logged_in();
 		$m = $this->Admin_model->UpdatePlh($_POST['id_plh'], $_POST['id_pejabat']);
+		header('Content-type:application/json');
+		echo json_encode($m);
+	}
+
+	public function plh_delete()
+	{
+		$this->mainlib->logged_in();
+		$m = $this->Admin_model->DeletePlh($_POST['id']);
 		header('Content-type:application/json');
 		echo json_encode($m);
 	}

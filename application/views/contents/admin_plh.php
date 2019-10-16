@@ -183,4 +183,23 @@
 </div>
 <!-- /modal edit data -->
 
+<!-- modal konfirmasi delete data -->
+<div id="modal-konfirmasi" class="modal" data-backdrop="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Hapus Pejabat Plh</h5>
+			</div>
+			<div class="modal-body p-lg">
+				<p>Yakin untuk menghapus pejabat Plh?</p>
+			</div>
+			<div class="modal-footer">
+				<button id="btnDelConfirm" type="button" class="btn primary p-x-md">Ya</button>
+				<button type="button" class="btn danger p-x-md" data-dismiss="modal">Batal</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /modal konfirmasi deleta data -->
+
 <!-- / content -->

@@ -102,7 +102,7 @@
 			e.preventDefault();
 			var id_plh = $(this).attr('id');
 			$.ajax({
-				url: 'plh_edit',
+				url: 'plh_show',
 				method: 'POST',
 				data: {'id': id_plh},
 				success: function (result) {
@@ -123,9 +123,38 @@
 				method: 'POST',
 				data: input,
 				success: function (result) {
-					console.log(result);
 					$('#modal-edit').modal('toggle');
 					$('.my-message').html('ST berhasil disimpan');
+					$('.my-message').css('display', 'block');
+					$('.my-message').delay(3000).fadeOut();
+					showListPlh();
+				}
+			})
+		})
+
+		// Menampilkan konfirmasi hapus plh
+		$(document).on('click', '.delete-plh', function (e) {
+			e.preventDefault();
+			del_id = $(this).attr('id');
+			$.ajax({
+				url: 'plh_show',
+				method: 'POST',
+				data: {'id': del_id},
+				success: function (result) {
+					$('#modal-konfirmasi .modal-body p').html('Yakin untuk menghapus pejabat Plh <strong>' + result['ur_jabatan'] + '</strong> tanggal <strong>' + result['tgl'] + '</strong> ?');
+				}
+			})
+		})
+
+		// Menghapus plh
+		$(document).on('click', '#modal-konfirmasi #btnDelConfirm', function (e) {
+			$.ajax({
+				url: 'plh_delete',
+				method: 'POST',
+				data: {'id': del_id},
+				success: function (result) {
+					$('#modal-konfirmasi').modal('toggle');
+					$('.my-message').html(result);
 					$('.my-message').css('display', 'block');
 					$('.my-message').delay(3000).fadeOut();
 					showListPlh();
