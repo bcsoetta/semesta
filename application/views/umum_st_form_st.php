@@ -247,9 +247,9 @@
 					<?php if ($st_header->plh == '1') { ?>
 						<p class="plh">Plh.</p>
 					<?php } ?>
-					<p><?php echo $st_header->jabatan; ?></p>
+					<p><?php echo strtoupper($st_header->jabatan); ?></p>
 					<br><br><br><br>
-					<p><?php echo $st_header->nama; ?></p>
+					<p><?php echo strtoupper($st_header->nama); ?></p>
 				</div>
 			</div>
 		</div>
