@@ -31,6 +31,7 @@ class Admin_model extends CI_Model {
 			->from('admin_plh')
 			->where('tgl', $date)
 			->where('jabatan', $jabatan)
+			->where('status <>', null)
 			->get();
 
 		return $query->result();
