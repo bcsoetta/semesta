@@ -257,6 +257,10 @@
 					$('#pejabat').val(result['st_header']['nip'] + ' - ' + result['st_header']['nama']);
 					$("input[name='id_pejabat']").val(result['st_header']['id_pejabat']);
 
+					if (result['st_header']['diff_pjb'] == 1) {
+						
+					}
+
 					$('#inpHal').val(result['st_header']['hal']);
 					$("input[name='tgl_tugas_start'").val(result['st_header']['tgl_tugas_start']);
 					$("input[name='tgl_tugas_end'").val(result['st_header']['tgl_tugas_end']);

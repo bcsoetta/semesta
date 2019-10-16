@@ -501,6 +501,17 @@ class Umum extends CI_Controller {
 	{
 		$this->mainlib->logged_in();
 		$data = $this->Umum_st_model->GetSt($_POST['id_st']);
+		if ($data['st_header']->jenis_st == 'KK') {
+			$id_jabatan = 1;
+		} else {
+			$id_jabatan = 10;
+		}
+		$current_pjb = $this->Admin_model->GetPlh($data['st_header']->tanggal, $id_jabatan);
+		if (!empty($current_pjb) && $current_pjb[0]->plh != $data['st_header']->id_pejabat) {
+			$data['st_header']->diff_pjb = 1;
+		} else {
+			$data['st_header']->diff_pjb = 0;
+		}
 
 		$tgl_tugas_start = $this->Tanggal_model->ConvertTanggal($data['st_header']->tgl_tugas_start, '%d-%m-%Y');
 		$tgl_tugas_end = $this->Tanggal_model->ConvertTanggal($data['st_header']->tgl_tugas_end, '%d-%m-%Y');
