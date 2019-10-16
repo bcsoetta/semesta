@@ -96,7 +96,7 @@ class User_feature_model extends CI_Model {
 
 	public function GetFeatureById($input='')
 	{
-		$query = $this->db->select('a.id, a.description, a.`status`')
+		$query = $this->db->select('a.id, a.description, a.have_view, a.url, a.`status`')
 			->from('priv_app_feature a')
 			->where('a.id', $input)
 			->get();
@@ -141,5 +141,29 @@ class User_feature_model extends CI_Model {
 		$message['message'] = $m_content;
 		$message['status'] = $m_status;
 		return $message;
+	}
+
+	public function UpdateSubFeature($input='')
+	{
+		$message = [];
+		if ($input['url'] == '') {
+			$m_content = 'URL harus diisi';
+			$m_status = 0;
+		} else {
+			$checkSubfeature = $this->GetSubFeatureByUrl($input['url']);
+			if (count($checkSubfeature) > 0 && $input['id'] <> $checkSubfeature[0]['id']) {
+				$m_content = 'URL fitur sudah ada';
+				$m_status = 0;
+			} else {
+				$this->db->where('id', $input['id']);
+				$this->db->update('priv_app_feature', $input);
+				$m_content = 'Fitur berhasil disimpan';
+				$m_status = 1;
+			}
+		}
+		$message['message'] = $m_content;
+		$message['status'] = $m_status;
+		return $message;
+		// return $checkSubfeature;
 	}
 }

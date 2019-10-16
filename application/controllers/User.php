@@ -602,6 +602,14 @@ class User extends CI_Controller
 		echo json_encode($m);
 	}
 
+	public function subfeature_update()
+	{
+		$this->load->model('User_feature_model');
+		$m = $this->User_feature_model->UpdateSubFeature($_POST);
+		header('Content-type:application/json');
+		echo json_encode($m);
+	}
+
 	// Halaman setting role
 	public function role()
 	{
@@ -649,6 +657,36 @@ class User extends CI_Controller
 	{
 		$this->load->model('User_role_model');
 		$m = $this->User_role_model->SaveRoleFeature($_POST);
+		header('Content-type:application/json');
+		echo json_encode($m);
+	}
+
+	public function role_feature_list()
+	{
+		$this->load->model('User_role_model');
+		$this->load->model('User_feature_model');
+		$active_features = $this->User_role_model->GetRoleFeatures($_POST['app_id'], $_POST['role_id']);
+		$all_features = $this->User_feature_model->GetAllSubFeatureById($_POST['app_id']);
+		$active_features_id = [];
+		foreach ($active_features as $key => $value) {
+			$active_features_id[] = $value['feature_id'];
+		}
+		for ($i=0; $i < count($all_features); $i++) { 
+			if (in_array($all_features[$i]['id'], $active_features_id)) {
+				$all_features[$i]['selected'] = 1;
+			} else {
+				$all_features[$i]['selected'] = 0;
+			}
+		}
+		$data = $all_features;
+		header('Content-type:application/json');
+		echo json_encode($data);	
+	}
+
+	public function role_feature_update()
+	{
+		$this->load->model('User_role_model');
+		$m = $this->User_role_model->UpdateRoleFeature($_POST);
 		header('Content-type:application/json');
 		echo json_encode($m);
 	}

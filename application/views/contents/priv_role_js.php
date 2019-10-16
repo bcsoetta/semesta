@@ -11,40 +11,48 @@
 					$('#list-aplikasi').empty();
 					$.each(result, function (key, val) {
 						var desc = val['description'];
-						var id = val['id'];
+						var app_id = val['id'];
 						var status = val['status'];
 						if (status == 1) {
 							var label = '<span class="label success pos-rlt m-r-xs">active</span>';
 						} else {
 							var label = '<span class="label pos-rlt m-r-xs">disabled</span>';
 						}
-						var roles = ListAppRole(id);
+						var roles = ListAppRole(app_id);
 						if (roles.length > 0) {
 							role_ls = '';
 							$.each(roles, function (key, val) {
+								role_id = val['id'];
 								feature_ls = '';
 								$.each(val['features'], function (key, val) {
 									feature_item = '<span class="label pos-rlt m-r-xs dark">' + val + '</span>'
 									feature_ls = feature_ls + feature_item;
 								})
-								role_item = '<div class="list-group-item wrap default-feature">' +
+								role_item = '<div id="' + role_id + '" class="list-group-item wrap detail-role">' +
 										'<div class="col-md-2">' + val['role'] + '</div>' +
-										'<div class="col-md-10">' + feature_ls + '</div>' +
+										'<div class="col-md-9 feature_url"><div>' + 
+											feature_ls + 
+										'</div></div>' +
+										'<div class="col-md-1 feature_button">' +
+											'<a class="edit-role-features">' +
+												'<i class="fa fa-edit text-primary"></i>' +
+											'</a>' +
+										'</div>' +
 									'</div>';
 								role_ls = role_ls + role_item;
 							})
 						} else {
 							role_ls = '<div class="list-group-item wrap default-feature">Aplikasi ini tidak memiliki role</div>';
 						}
-						var item = '<div id="feature_' + id + '" class="list-group-item b-l-primary" data-toggle="collapse" data-target="#subfeature_' + id + '">' +
+						var item = '<div id="feature_' + app_id + '" class="list-group-item b-l-primary" data-toggle="collapse" data-target="#detail_feature_' + app_id + '">' +
 								'<span class="list-description">' + label + '&nbsp' + desc + '</span>' +
 								'<span class="pull-right text-primary">' +
-									'<a id="' + id + '" class="edit-fitur">' +
+									'<a id="' + app_id + '" class="edit-fitur">' +
 										'<i class="fa fa-edit text-primary"></i>' +
 									'</a>' +
 								'</span>' +
 							'</div>' +
-							'<div id="subfeature_' + id + '" class="collapse list-subfeature" >' + 
+							'<div id="detail_feature_' + app_id + '" class="collapse list-subfeature" >' + 
 								role_ls + 
 								'<div id="btn" class="list-group-item wrap">' +
 									'<button class="btn btn-sm info btn-tambah">+ Tambah role</button>' +
@@ -110,7 +118,7 @@
 			var role_opt = '';
 			var feat_opt = '';
 			var app_id = $(this).parent().parent().attr('id');
-			var app_id = app_id.replace('subfeature_', '');
+			var app_id = app_id.replace('detail_feature_', '');
 			var roles = ListRoles(app_id);
 			$.each(roles, function (key, val) {
 				var role_id = val['id'];
@@ -142,7 +150,10 @@
 					'</form>'
 				'</div>';
 			$(form).insertBefore($(this).parent());
-			$('#inpFeature').select2();
+			$('#form-feature #inpFeature').select2({
+				closeOnSelect:false,
+				placeholder:'Pilih feature'
+			});
 		});
 
 		// Mendapatkan semua role yang belum didaftarkan dalam aplikasi
@@ -198,6 +209,109 @@
 					$('.my-message').delay(3000).fadeOut();
 				}
 			})
+		})
+
+		// Menampilkan menu edit role's features
+		$(document).on('click', '.edit-role-features', function (e) {
+			e.preventDefault();
+			var role_detail = $(this).parent().parent();
+			var app_id = $(this).parent().parent().parent().attr('id').replace('detail_feature_', '');
+			var role_id = $(this).parent().parent().attr('id');
+			var input = {'app_id': app_id, 'role_id': role_id};
+			$.ajax({
+				url: 'role_feature_list',
+				method: 'POST',
+				type: 'json',
+				data: input,
+				success: function (result) {
+					var feat_opt = '';
+					
+					$.each(result, function (key, val) {
+						var feat_id = val['id'];
+						var feat_nm = val['url'];
+						if (val['selected'] == 1) {
+							var selected = 'selected';
+						} else {
+							var selected = '';
+						}
+						var option = '<option value="' + feat_id +'" ' + selected + '>' + feat_nm + '</option>'
+						feat_opt = feat_opt + option;
+					})
+					var form = '<form id="form-edit-role">' + 
+							'<div class="form-group mb-0">' + 
+								'<select id="inpFeature" name="feature[]" class="form-control form-control-sm" multiple="multiple">' +
+									feat_opt +
+								'</select>' +
+							'</div>' +
+						'</form>';
+					var button = '<div class="btn-role-group">' +
+							'<a class="btn-role-simpan" title="Simpan">' +
+								'<i class="fa fa-save text-info"></i>' +
+							'</a>' +
+							'&nbsp&nbsp' +
+							'<a class="btn-role-batal" title="Batal">' +
+								'<i class="fa fa-ban text-danger"></i>' +
+							'</a>' +
+						'</div>';
+					role_detail.children('.feature_url').children('div').css({'display': 'none'});
+					role_detail.children('.feature_url').append(form);
+					role_detail.children('.feature_button').children('.edit-role-features').css({'display': 'none'});
+					role_detail.children('.feature_button').append(button);
+					$('#form-edit-role #inpFeature').select2({closeOnSelect:false});
+				}
+			})
+		})
+
+		// Menyimpan edit role
+		$(document).on('click', '.btn-role-simpan', function (e) {
+			e.preventDefault();
+			var role = $(this).parent().parent().parent();
+			var app_id = role.parent().attr('id').replace('detail_feature_', '');
+			var role_id = role.attr('id');
+			var features = role.find('#form-edit-role').serializeArray();
+			var input = [
+				{
+					'name': 'app_id',
+					'value': app_id
+				},
+				{
+					'name': 'role_id',
+					'value': role_id
+				}
+			];
+			$.each(features, function (key, val) {
+				var name = val.name;
+				var value = val.value;
+				input.push({'name': name, 'value': value});
+			})
+			console.log(input);
+			$.ajax({
+				url: 'role_feature_update',
+				method: 'POST',
+				type: 'json',
+				data: input,
+				success: function (result) {
+					if (result['status'] == 1) {
+						$('.my-message').removeClass('primary danger').addClass('primary');
+						ListAplikasi();
+					} else {
+						$('.my-message').removeClass('primary danger').addClass('danger');
+					}
+					$('.my-message').html(result['message']);
+					$('.my-message').css('display', 'block');
+					$('.my-message').delay(3000).fadeOut();
+				}
+			})
+		})
+
+		// Membatalkan edit role
+		$(document).on('click', '.btn-role-batal', function (e) {
+			e.preventDefault();
+			var role_detail = $(this).parent().parent().parent();
+			role_detail.find('#form-edit-role').remove();
+			role_detail.find('.feature_url').children('div').css({'display': 'block'});
+			role_detail.find('.btn-role-group').remove();
+			role_detail.find('.feature_button').children('.edit-role-features').css({'display': 'block'});
 		})
 
 	});

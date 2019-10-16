@@ -14,11 +14,12 @@ class Admin_model extends CI_Model {
 
 	public function GetPlhAll($date='')
 	{
-		$query = $this->db->select("b.nama jabatan, c.nama, c.nip")
+		$query = $this->db->select("a.id, a.tgl, b.nama jabatan, c.nama, c.nip")
 			->from("admin_plh a")
 			->join("jabatan b", "a.jabatan = b.k_jbtn")
 			->join("profile c", "a.plh = c.id")
 			->where("a.tgl", $date)
+			->where("a.status <>", null)
 			->get();
 
 		return $query->result();
@@ -33,6 +34,18 @@ class Admin_model extends CI_Model {
 			->get();
 
 		return $query->result();
+	}
+
+	public function GetPlhById($id='')
+	{
+		$query = $this->db->select('a.id, a.tgl, a.jabatan, b.nama ur_jabatan, a.plh, c.nip, c.nama')
+			->from('admin_plh a')
+			->join('jabatan b', 'a.jabatan = b.k_jbtn')
+			->join('profile c', 'a.plh = c.id')
+			->where('a.id', $id)
+			->get();
+
+		return $query->result_array();
 	}
 
 	public function SavePlh($input='')
@@ -90,5 +103,27 @@ class Admin_model extends CI_Model {
 		");
 
 		return $query->result();
+	}
+
+	public function UpdatePlh($id_plh='', $id_pejabat='')
+	{
+		if ($id_pejabat != '') {
+			$query = $this->db->set('plh', $id_pejabat)
+				->where('id', $id_plh)
+				->update('admin_plh');
+			$message = 'Plh berhasil diupdate';
+		} else {
+			$message = 'Isikan pejabat plh dulu';
+		}
+		return $message;
+	}
+
+	public function DeletePlh($id_plh='')
+	{
+		$query = $this->db->set('status', null)
+			->where('id', $id_plh)
+			->update('admin_plh');
+		$message = 'Plh telah dihapus';
+		return $message;
 	}
 }
