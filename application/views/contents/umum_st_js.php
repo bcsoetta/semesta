@@ -76,13 +76,13 @@
 <script type="text/javascript">
 	// Menampilkan modal untuk data baru
 	$(document).ready(function() {
-		$('#modal-tambah').on('shown.bs.modal', function (e) {
+		$(document).on('click', '#btn-modal-tambah', function (e) {
+			e.preventDefault();
 			$('div#noSt').remove();
 
 			$('#inpJenisSt').val('1');
 			GetPejabat();
 			$('#pejabat').attr('disabled', true);
-			// $("#inpPlh").prop("checked", false);
 			$('#inpHal').val('');
 			$("input[name='tgl_tugas_start'").val('');
 			$("input[name='tgl_tugas_end'").val('');
@@ -225,6 +225,7 @@
 				method: 'POST',
 				data: st_id,
 				success: function(result) {
+					console.log(result);
 
 					$('div#noSt').remove();
 
@@ -249,14 +250,12 @@
 
 					if (result['st_header']['plh'] == '0') {
 						$("#inpPlh").prop("checked", false);
-						$('#pejabat').attr('disabled', true);
-						GetPejabat();
 					} else {
 						$("#inpPlh").prop("checked", true);
-						$('#pejabat').attr('disabled', false);
-						$('#pejabat').val(result['st_header']['nip'] + ' - ' + result['st_header']['nama']);
-						$("input[name='id_pejabat']").val(result['st_header']['id_pejabat']);
 					}
+					$('#pejabat').attr('disabled', true);
+					$('#pejabat').val(result['st_header']['nip'] + ' - ' + result['st_header']['nama']);
+					$("input[name='id_pejabat']").val(result['st_header']['id_pejabat']);
 
 					$('#inpHal').val(result['st_header']['hal']);
 					$("input[name='tgl_tugas_start'").val(result['st_header']['tgl_tugas_start']);
