@@ -1,4 +1,5 @@
 <div ui-view class="app-body" id="view">
+	<div class="my-message btn btn-fw primary" style="position: fixed; left: 50%; z-index: 100; display: none;"></div>
 	<!-- ############ PAGE START-->
 	<div class="row-col b-b">
 		<div class="col-md">
@@ -74,9 +75,9 @@
 									<div class="form-group row">
 										<label for="pejabat" class="col-sm-3 form-control-label">Pejabat</label>
 										<div class="col-sm-9">
-											<input type="text" class="form-control input-pejabat" id="pejabat" placeholder="Nama/NIP Pegawai" autocomplete="off">	
+											<input type="text" class="form-control src-input" id="pejabat" placeholder="Nama/NIP Pegawai" autocomplete="off">	
 											<div id="src_result_pejabat" class="src-result box"></div>
-											<input type="text" class="id-pejabat" name="id_pejabat" style="display: none">
+											<input type="text" class="id-pejabat src-submit" name="id_pejabat" style="display: none">
 										</div>
 									</div>
 									<div class="form-group row">
@@ -127,9 +128,11 @@
 									<table id="table-plh" class="table m-b-none">
 										<thead>
 											<tr>
+												<th>Tanggal</th>
 												<th>Jabatan</th>
 												<th>Plh</th>
 												<th>NIP</th>
+												<th>Aksi</th>
 											</tr>
 										</thead>
 									</table>
@@ -143,4 +146,41 @@
 	<!-- ############ PAGE END-->
 	</div>
 </div>
+
+<!-- modal edit data -->
+<div id="modal-edit" class="modal" data-backdrop="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Edit Pejabat Plh</h5>
+			</div>
+			<div class="modal-body p-lg">
+				<form action="#" id="formEditPlh" class="row mb-1 mx-2">
+					<input id="inpIdPlh" type="hidden" name="id_plh">
+					<div class="form-group row">
+						<label for="inpJabatan" class="col-sm-2 form-control-label">Jabatan</label>
+						<div class="col-sm-10">
+							<input id="inpJabatan" type="text" class="form-control" disabled="">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="inpPlh" class="col-sm-2 form-control-label">Pejabat</label>
+
+						<div class="col-sm-10">
+							<input id="inpPlh" type="text" class="form-control src-input" placeholder="Nama/NIP Pegawai" autocomplete="off">	
+							<div id="src_result_pejabat" class="src-result box"></div>
+							<input id="inpIdPejabat" type="hidden" class="id-pejabat src-submit" name="id_pejabat">
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button id="btnUpdate" type="button" class="btn primary p-x-md">Update</button>
+				<button type="button" class="btn danger p-x-md" data-dismiss="modal">Batal</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /modal edit data -->
+
 <!-- / content -->
