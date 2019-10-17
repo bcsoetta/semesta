@@ -83,6 +83,7 @@
 			$('#inpJenisSt').val('1');
 			$('#inpJenisSt').attr('disabled', false);
 			GetPejabat();
+			$(".confirm-pjb-st").hide();
 			$('#inpHal').val('');
 			$("input[name='tgl_tugas_start'").val('');
 			$("input[name='tgl_tugas_end'").val('');
