@@ -145,7 +145,7 @@ class Umum_st_model extends CI_Model {
 
 	public function SaveStHeader($header=[])
 	{
-		$header['tanggal'] = date('Y-m-d');
+		$header['tanggal'] = date('Y-m-d', strtotime($header['tanggal']));
 		$header['tahun'] = date('Y');
 		$header['tgl_tugas_start'] = ($header['tgl_tugas_start'] == '' ? NULL : date('Y-m-d', strtotime($header['tgl_tugas_start'])));
 		$header['tgl_tugas_end'] = ($header['tgl_tugas_end'] == '' ? NULL : date('Y-m-d', strtotime($header['tgl_tugas_end'])));

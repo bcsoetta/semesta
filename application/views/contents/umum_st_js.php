@@ -80,6 +80,15 @@
 			e.preventDefault();
 			$('div#noSt').remove();
 
+			var today = new Date();
+			var dd = String(today.getDate()).padStart(2, '0');
+			var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+			var yyyy = today.getFullYear();
+			var tgl = dd + '-' + mm + '-' + yyyy;
+
+			$('#formTglSt').show();
+			$('#inpTanggalSt').attr('disabled', false);
+			$('#inpTanggalSt').val(tgl);
 			$('#inpJenisSt').val('1');
 			$('#inpJenisSt').attr('disabled', false);
 			GetPejabat();
@@ -251,7 +260,8 @@
 					}
 
 					$('#formStHeader').prepend(inpStId);
-
+					$('#formTglSt').hide();
+					$('#inpTanggalSt').attr('disabled', true);
 					$('#inpJenisSt').val(jenis_st);
 					$('#inpJenisSt').attr('disabled', true);
 					if (result['st_header']['plh'] == '0') {
@@ -341,9 +351,7 @@
 		GetKBU(st_tgl);
 		$(".confirm-pjb-kbu").hide();
 	})
-</script>
 
-<script type="text/javascript">
 	// Delete ST
 	exclude = ['0'];
 
@@ -371,9 +379,7 @@
 			});
 		});
 	});
-</script>
 
-<script type="text/javascript">
 	// Edit pejabat ST
 	function GetPejabat(tgl='') {
 		jabatan = $('#inpJenisSt').val();

@@ -445,17 +445,6 @@ class Umum extends CI_Controller {
 		$this->mainlib->logged_in();
 		$tahun = date("Y");
 
-		// $pejabatKbu = $this->Admin_model->GetPlh(date("Y-m-d"), 10);
-
-		// if (count($pejabatKbu) > 0) {
-		// 	$plhKbu = 1;
-		// 	$kbu = $pejabatKbu[0]->plh;
-		// } else {
-		// 	$plhKbu = 0;
-		// 	$kbu = $this->Umum_st_model->GetPejabat(10);
-		// 	$kbu = $kbu[0]->id;
-		// }
-
 		switch ($_POST['header']['jenis_st']) {
 			case '1':
 				$agenda = 'KPU.03';
@@ -484,8 +473,6 @@ class Umum extends CI_Controller {
 			$pegawai[] = [
 				'id_pegawai' => $p,
 				'no_spd' => $no_spd
-				// 'plh_kbu' => $plhKbu,
-				// 'pjb_kbu' => $kbu
 			];
 
 		}

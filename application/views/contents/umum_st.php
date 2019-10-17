@@ -207,6 +207,30 @@
 			</div>
 			<div class="modal-body p-lg">
 				<form action="#" id="formStHeader" class="row mb-1 mx-2">
+					<div id="formTglSt" class="form-group row">
+						<label for="inpTanggal" class="col-sm-2 form-control-label">Tanggal ST</label>
+						<div class="col-sm-4">
+							<div class='input-group date' ui-jp="datetimepicker" ui-options="{
+								format: 'DD-MM-YYYY',
+								icons: {
+									time: 'fa fa-clock-o',
+									date: 'fa fa-calendar',
+									up: 'fa fa-chevron-up',
+									down: 'fa fa-chevron-down',
+									previous: 'fa fa-chevron-left',
+									next: 'fa fa-chevron-right',
+									today: 'fa fa-screenshot',
+									clear: 'fa fa-trash',
+									close: 'fa fa-remove'
+								}
+							}">
+								<input id="inpTanggalSt" type='text' name="tanggal" class="col-sm-10 form-control" />
+								<span class="input-group-addon">
+									<span class="fa fa-calendar"></span>
+								</span>
+							</div>
+						</div>
+					</div>
 					<div class="form-group row">
 						<label for="inpJenisSt" class="col-sm-2 form-control-label">Jenis ST</label>
 						<div class="col-sm-10">
@@ -343,10 +367,10 @@
 					<div class="form-group row">
 						<label for="inpTempat" class="col-sm-2 form-control-label">Tempat</label>
 						<div class="col-sm-7">
-							<input id="inpTempat" name="tempat_tugas" type="text" class="form-control">
+							<input id="inpTempat" name="tempat_tugas" type="text" class="form-control" placeholder="tempat tugas">
 						</div>
 						<div class="col-sm-3">
-							<input id="inpKota" name="kota_tugas" type="text" class="form-control">
+							<input id="inpKota" name="kota_tugas" type="text" class="form-control" placeholder="kota tugas">
 						</div>
 					</div>
 					<div class="form-group row">
