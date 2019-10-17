@@ -229,7 +229,19 @@
 							<input type="hidden" id="inpHidPlh" name="plh" value="0">
 							<label>Plh</label>
 						</div>
+						<div class="confirm-pjb-st" style="display: none;">
+							<div class="col-sm-2"></div>
+							<div class="col-sm-10">
+								<span class="label warning">
+									Pejabat aktif berbeda. Apakah akan diubah?
+								</span>	
+								<button class="btn label primary confirm-pjb-yes">
+									Ya
+								</button>
+							</div>
+						</div>
 					</div>
+					
 					<div class="form-group row">
 						<label for="inpHal" class="col-sm-2 form-control-label">Hal</label>
 						<div class="col-sm-10">

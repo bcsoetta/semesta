@@ -217,7 +217,7 @@
 	$(document).ready(function() {
 		$(document).on('click', '.edit-st', function(e) {
 			e.preventDefault();
-
+			$(".confirm-pjb-st").hide();
 			var st_id = {'id_st': $(this).attr('id')};
 
 			$.ajax({
@@ -226,16 +226,20 @@
 				data: st_id,
 				success: function(result) {
 					console.log(result);
+					st_tgl = result['st_header']['tanggal'];
 
 					$('div#noSt').remove();
 
 					var inpStId = 
 						'<div id="noSt" class="form-group row">' +
 							'<label for="inpHal" class="col-sm-2 form-control-label">No ST</label>' +
-							'<div class="col-sm-10">' +
+							'<div class="col-sm-7">' +
 								'<input name="inpNoSt" type="text" class="form-control" disabled="" value="' + result['st_header']['no_st'] + '">' +
 							'</div>' +
 							'<input name="id_st" type="text" value="' + result['st_header']['id'] + '" style="display: none;">' +
+							'<div class="col-sm-3">' +
+								'<input name="inpTglSt" type="text" class="form-control" disabled="" value="' + result['st_header']['tanggal'] + '">' +
+							'</div>' +
 						'</div>';
 
 					if (result['st_header']['jenis_st'] == 'KK') {
@@ -258,7 +262,7 @@
 					$("input[name='id_pejabat']").val(result['st_header']['id_pejabat']);
 
 					if (result['st_header']['diff_pjb'] == 1) {
-						
+						$(".confirm-pjb-st").show();
 					}
 
 					$('#inpHal').val(result['st_header']['hal']);
@@ -306,6 +310,12 @@
 			$('#btnUpdate').show();
 		})
 	})
+
+	$(document).on('click', '.confirm-pjb-yes', function (e) {
+		e.preventDefault();
+		GetPejabat(st_tgl);
+		$(".confirm-pjb-st").hide();
+	})
 </script>
 
 <script type="text/javascript">
@@ -340,10 +350,17 @@
 
 <script type="text/javascript">
 	// Edit pejabat ST
-	function GetPejabat() {
+	function GetPejabat(tgl='') {
 		jabatan = $('#inpJenisSt').val();
+		if (tgl == '') {
+			var today = new Date();
+			var dd = String(today.getDate()).padStart(2, '0');
+			var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+			var yyyy = today.getFullYear();
+			tgl = yyyy + '-' + mm + '-' + dd;
+		}
 
-		input = {'jabatan': jabatan};
+		input = {'jabatan': jabatan, 'tanggal': tgl};
 
 		$.ajax({
 			url: "get_pejabat",

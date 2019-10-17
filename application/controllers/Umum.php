@@ -637,9 +637,8 @@ class Umum extends CI_Controller {
 	public function get_pejabat()
 	{
 		$this->mainlib->logged_in();
-		// $pejabat = $this->Umum_st_model->GetPejabat($_POST['jabatan']);
 
-		$pejabatPlh = $this->Admin_model->GetPlh(date("Y-m-d"), $_POST['jabatan']);
+		$pejabatPlh = $this->Admin_model->GetPlh($_POST['tanggal'], $_POST['jabatan']);
 
 		if (count($pejabatPlh) > 0) {
 			$pjb = $this->Umum_sdm_model->GetPegawaiById($pejabatPlh[0]->plh);
