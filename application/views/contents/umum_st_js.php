@@ -91,7 +91,9 @@
 			$('#inpTempat').val('');
 			$('#inpKota').val('');
 			$('#inpDipa').val(1);
-			$('#inpSpd').attr('checked', 'checked');
+			$('#inpSpd').prop("checked", true);
+			GetKBU();
+			$(".confirm-pjb-kbu").hide();
 
 			$('button.add-pegawai').siblings('div').remove();
 
@@ -225,7 +227,6 @@
 				method: 'POST',
 				data: st_id,
 				success: function(result) {
-					console.log(result);
 					st_tgl = result['st_header']['tanggal'];
 
 					$('div#noSt').remove();
@@ -257,7 +258,7 @@
 					} else {
 						$("#inpPlh").prop("checked", true);
 					}
-					$('#pejabat').attr('disabled', true);
+					// $('#pejabat').attr('disabled', true);
 					$('#pejabat').val(result['st_header']['nip'] + ' - ' + result['st_header']['nama']);
 					$("input[name='id_pejabat']").val(result['st_header']['id_pejabat']);
 
@@ -275,10 +276,27 @@
 					$('#inpDipa').val(result['st_header']['dipa']);
 
 					if (result['st_header']['spd'] == '0') {
-						$('#inpSpd').removeAttr('checked');
+						$('#inpSpd').prop("checked", false);
+						$("#inpPlhKbu").prop("checked", false);
+						$('#kbu').val('');
+						$("input[name='id_pejabat_kbu']").val(null);
 					} else {
-						$('#inpSpd').attr('checked', 'checked');
+						$('#inpSpd').prop("checked", true);
+						if (result['st_header']['plh_kbu'] == '0') {
+							$("#inpPlhKbu").prop("checked", false);
+						} else {
+							$("#inpPlhKbu").prop("checked", true);
+						}
+						$('#kbu').val(result['st_header']['nip_kbu'] + ' - ' + result['st_header']['nama_kbu']);
+						$("input[name='id_pejabat_kbu']").val(result['st_header']['id_pejabat_kbu']);
+
+						if (result['st_header']['diff_kbu'] == 1) {
+							$(".confirm-pjb-kbu").show();
+						} else {
+							$(".confirm-pjb-kbu").hide();
+						}
 					}
+					
 
 					$('button.add-pegawai').siblings('div').remove();
 
@@ -301,6 +319,7 @@
 						$("input[name='id_pegawai_" + i + "']").val(val['id_pegawai']);
 
 						i = i+1;
+						exclude.push(val['id_pegawai']);
 					});
 
 				}
@@ -315,6 +334,12 @@
 		e.preventDefault();
 		GetPejabat(st_tgl);
 		$(".confirm-pjb-st").hide();
+	})
+
+	$(document).on('click', '.confirm-kbu-yes', function (e) {
+		e.preventDefault();
+		GetKBU(st_tgl);
+		$(".confirm-pjb-kbu").hide();
 	})
 </script>
 
@@ -381,12 +406,53 @@
 		});
 	};
 
+	function GetKBU(tgl='') {
+		jabatan = 10;
+		if (tgl == '') {
+			var today = new Date();
+			var dd = String(today.getDate()).padStart(2, '0');
+			var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+			var yyyy = today.getFullYear();
+			tgl = yyyy + '-' + mm + '-' + dd;
+		}
+
+		input = {'jabatan': jabatan, 'tanggal': tgl};
+
+		$.ajax({
+			url: "get_pejabat",
+			method: "POST",
+			data: input,
+			success: function (result) {
+				$('#kbu').val(result.nip + ' - ' + result.nama);
+				$("input[name='id_pejabat_kbu']").val(result.id);
+
+				if (result.plh == 1) {
+					$('#inpPlhKbu').prop('checked', true);
+					$('#inpHidPlhKbu').val(1);
+				} else {
+					$('#inpPlhKbu').prop('checked', false);
+					$('#inpHidPlhKbu').val(0);
+				}
+			}
+		});
+	};
+
 	$(document).ready(function() {
 		GetPejabat();
 
 		$('#inpJenisSt').change(function() {
 			GetPejabat();
 		});
+
+		$(document).on('change', '#inpSpd', function () {
+			if($(this).is(":not(:checked)")) {
+				$("#inpPlhKbu").prop("checked", false);
+				$('#kbu').val('');
+				$("input[name='id_pejabat_kbu']").val(null);
+			} else {
+				GetKBU();
+			}
+		})
 
 	});
 </script>

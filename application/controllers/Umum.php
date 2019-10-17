@@ -445,16 +445,16 @@ class Umum extends CI_Controller {
 		$this->mainlib->logged_in();
 		$tahun = date("Y");
 
-		$pejabatKbu = $this->Admin_model->GetPlh(date("Y-m-d"), 10);
+		// $pejabatKbu = $this->Admin_model->GetPlh(date("Y-m-d"), 10);
 
-		if (count($pejabatKbu) > 0) {
-			$plhKbu = 1;
-			$kbu = $pejabatKbu[0]->plh;
-		} else {
-			$plhKbu = 0;
-			$kbu = $this->Umum_st_model->GetPejabat(10);
-			$kbu = $kbu[0]->id;
-		}
+		// if (count($pejabatKbu) > 0) {
+		// 	$plhKbu = 1;
+		// 	$kbu = $pejabatKbu[0]->plh;
+		// } else {
+		// 	$plhKbu = 0;
+		// 	$kbu = $this->Umum_st_model->GetPejabat(10);
+		// 	$kbu = $kbu[0]->id;
+		// }
 
 		switch ($_POST['header']['jenis_st']) {
 			case '1':
@@ -483,9 +483,9 @@ class Umum extends CI_Controller {
 
 			$pegawai[] = [
 				'id_pegawai' => $p,
-				'no_spd' => $no_spd,
-				'plh_kbu' => $plhKbu,
-				'pjb_kbu' => $kbu
+				'no_spd' => $no_spd
+				// 'plh_kbu' => $plhKbu,
+				// 'pjb_kbu' => $kbu
 			];
 
 		}
@@ -494,7 +494,8 @@ class Umum extends CI_Controller {
 		
 		$no_st = $this->Penomoran_model->GetNo('ST', $agenda, $tahun);
 		$this->Umum_st_model->SaveSt($_POST, $no_st);
-		echo $no_st;
+		header('Content-type:application/json');
+		echo json_encode($_POST);
 	}
 
 	public function edit_st()
@@ -506,11 +507,19 @@ class Umum extends CI_Controller {
 		} else {
 			$id_jabatan = 10;
 		}
-		$current_pjb = $this->Admin_model->GetPlh($data['st_header']->tanggal, $id_jabatan);
-		if (!empty($current_pjb) && $current_pjb[0]->plh != $data['st_header']->id_pejabat) {
+
+		$current_pjb = $this->Admin_model->GetActivePejabat($data['st_header']->tanggal, $id_jabatan);
+		if ($current_pjb[0]->id != $data['st_header']->id_pejabat) {
 			$data['st_header']->diff_pjb = 1;
 		} else {
 			$data['st_header']->diff_pjb = 0;
+		}
+
+		$current_kbu = $this->Admin_model->GetActivePejabat($data['st_header']->tanggal, 10);
+		if ($current_kbu[0]->id != $data['st_header']->id_pejabat_kbu) {
+			$data['st_header']->diff_kbu = 1;
+		} else {
+			$data['st_header']->diff_kbu = 0;
 		}
 
 		$tgl_tugas_start = $this->Tanggal_model->ConvertTanggal($data['st_header']->tgl_tugas_start, '%d-%m-%Y');
@@ -538,17 +547,6 @@ class Umum extends CI_Controller {
 			}
 		}
 
-		$pejabatKbu = $this->Admin_model->GetPlh(date("Y-m-d"), 10);
-
-		if (count($pejabatKbu) > 0) {
-			$plhKbu = 1;
-			$kbu = $pejabatKbu[0]->plh;
-		} else {
-			$plhKbu = 0;
-			$kbu = $this->Umum_st_model->GetPejabat(10);
-			$kbu = $kbu[0]->id;
-		}
-
 		foreach ($_POST['pegawai'] as $key => $value) {
 			if (isset($_POST['header']['spd']) && $_POST['header']['spd'] == 1 && $_POST['header']['dipa'] == 1) {
 				$cek_no_spd = $this->Umum_st_model->CekSpd($_POST['header']['id_st'], $value);
@@ -563,25 +561,20 @@ class Umum extends CI_Controller {
 
 			$new_detail[] = [
 				'id_pegawai' => $value,
-				'plh_kbu' => $plhKbu,
-				'pjb_kbu' => $kbu,
 				'no_spd' => $no_spd
 			];
 		}
 
 		switch ($_POST['header']['jenis_st']) {
 			case '1':
-				// $agenda = 'KPU.03';
 				$jenis_st = 'KK';
 				break;
 
 			case '10':
-				// $agenda = 'KPU.03/BG.01';
 				$jenis_st = 'KBU';
 				break;
 			
 			default:
-				// $agenda = '';
 				$jenis_st = '';
 				break;
 		}
@@ -637,19 +630,8 @@ class Umum extends CI_Controller {
 	public function get_pejabat()
 	{
 		$this->mainlib->logged_in();
-
-		$pejabatPlh = $this->Admin_model->GetPlh($_POST['tanggal'], $_POST['jabatan']);
-
-		if (count($pejabatPlh) > 0) {
-			$pjb = $this->Umum_sdm_model->GetPegawaiById($pejabatPlh[0]->plh);
-			$data = $pjb[0];
-			$data->plh = 1;
-		} else {
-			$pjb = $this->Umum_sdm_model->GetPejabat($_POST['jabatan']);
-			$data = $pjb[0];
-			$data->plh = 0;
-		}
-
+		$pejabat = $this->Admin_model->GetActivePejabat($_POST['tanggal'], $_POST['jabatan']);
+		$data = $pejabat[0];
 		header('Content-type:application/json');
 		echo json_encode($data);
 	}

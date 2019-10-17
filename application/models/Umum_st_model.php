@@ -52,11 +52,16 @@ class Umum_st_model extends CI_Model {
 				a.ppk,
 				c.nip nip_ppk,
 				c.nama nama_ppk,
+				a.plh_kbu,
+				a.id_pejabat_kbu,
+				d.nip nip_kbu,
+				d.nama nama_kbu,
 				a.status
 			")
 			->from("umum_st_header a")
 			->join("profile b", "a.id_pejabat = b.id")
 			->join("dim_pejabat_tambahan c", "a.ppk = c.id", "left")
+			->join("profile d", "a.id_pejabat_kbu = d.id", "left")
 			->where("a.id", $id_st)
 			->get();
 
@@ -104,11 +109,10 @@ class Umum_st_model extends CI_Model {
 
 	public function GetStDetail($id_st='')
 	{
-		$query = $this->db->select("a.id, a.id_pegawai, b.nama, b.nip, b.pangkatgolongan, c.pangkat, b.jabatan, a.no_spd, a.plh_kbu, d.nama pejabat_kbu, d.nip nip_kbu")
+		$query = $this->db->select("a.id, a.id_pegawai, b.nama, b.nip, b.pangkatgolongan, c.pangkat, b.jabatan, a.no_spd")
 			->from("umum_st_detail a")
 			->join("profile b", "a.id_pegawai = b.id")
 			->join("dim_pangkat_gol c", "b.pangkatgolongan = c.gol")
-			->join("profile d", "a.pjb_kbu = d.id")
 			->where("a.id_st", $id_st)
 			->order_by("c.rank desc")
 			->get();

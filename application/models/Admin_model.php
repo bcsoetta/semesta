@@ -2,12 +2,41 @@
 
 class Admin_model extends CI_Model {
 
+	public function GetActivePejabat($date='', $kd_jabatan='')
+	{
+		$plh = $this->GetPlh($date, $kd_jabatan);
+		if (empty($plh)) {
+			$pejabat = $this->GetPejabat($kd_jabatan);
+			$pejabat[0]->plh = 0;
+		} else {
+			$pejabat = $plh;
+			$pejabat[0]->plh = 1;
+		}
+		return $pejabat;
+	}
+
 	public function GetJabatanAll()
 	{
 		$query = $this->db->select("k_jbtn, nama")
 			->from("jabatan")
 			->order_by("k_jbtn")
 			->get();
+
+		return $query->result();
+	}
+
+	public function GetPejabat($jabatan='')
+	{
+		$query = $this->db->query("
+			SELECT
+				a.id,
+				a.nama,
+				a.nip,
+				a.jabatan
+			FROM db_semesta.profile a
+			INNER JOIN db_semesta.jabatan b ON b.nama = a.jabatan COLLATE utf8_unicode_ci
+			WHERE b.k_jbtn = '" . $jabatan . "'
+		");
 
 		return $query->result();
 	}
@@ -27,11 +56,12 @@ class Admin_model extends CI_Model {
 
 	public function GetPlh($date='', $jabatan='0')
 	{
-		$query = $this->db->select('plh')
-			->from('admin_plh')
-			->where('tgl', $date)
-			->where('jabatan', $jabatan)
-			->where('status <>', null)
+		$query = $this->db->select('b.id, b.nama, b.nip, b.jabatan')
+			->from('admin_plh a')
+			->join('profile b', 'a.plh = b.id')
+			->where('a.tgl', $date)
+			->where('a.jabatan', $jabatan)
+			->where('a.status <>', null)
 			->get();
 
 		return $query->result();

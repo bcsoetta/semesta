@@ -364,14 +364,14 @@
                         <tr>
                             <td class="numbering no-border-top">
                                 <br>
-                                <?php if ($pegawai->plh_kbu == '1') { echo "Plh."; } ?>
+                                <?php if ($st_header->plh_kbu == '1') { echo "Plh."; } ?>
                             </td>
                             <td class="numbered no-border-top" colspan="3">
                                 <br>
                                 <div>Kepala Bagian Umum</div>
                                 <br><br><br><br>
-                                <div><?php echo $pegawai->pejabat_kbu; ?></div>
-                                <div><?php echo 'NIP ' . $pegawai->nip_kbu; ?></div>
+                                <div><?php echo $st_header->nama_kbu; ?></div>
+                                <div><?php echo 'NIP ' . $st_header->nip_kbu; ?></div>
                             </td>
                         </tr>
                         <tr>

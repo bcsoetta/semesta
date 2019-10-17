@@ -360,24 +360,41 @@
 					</div>
 					<div class="form-group row">
 						<label for="inpSpd" class="col-sm-1 form-control-label">SPD</label>
-						<label class="ui-switch m-t-xs m-r">
-							<input id="inpSpd" name="spd" type="checkbox" value="1" checked>
-							<i></i>
-						</label>
+						<div class="col-sm-1">
+							<label class="ui-switch m-t-xs m-r">
+								<input id="inpSpd" name="spd" type="checkbox" value="1" checked>
+								<i></i>
+							</label>	
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="inpKbu" class="col-sm-2 form-control-label">KBU</label>
+
+						<div class="col-sm-9">
+							<input type="text" class="form-control input-pejabat" id="kbu" placeholder="Nama/NIP Pegawai" autocomplete="off" disabled="">	
+							<div id="src_result_pejabat" class="src-result box"></div>
+							<input type="hidden" class="id-pejabat" name="id_pejabat_kbu">
+						</div>
+						<div class="col-sm-1 form-control-label">
+							<input class="form-control-label" id="inpPlhKbu" type="checkbox" disabled="">
+							<input type="hidden" id="inpHidPlhKbu" name="plh_kbu" value="0">
+							<label>Plh</label>
+						</div>
+						<div class="confirm-pjb-kbu" style="display: none;">
+							<div class="col-sm-2"></div>
+							<div class="col-sm-10">
+								<span class="label warning">
+									Pejabat aktif berbeda. Apakah akan diubah?
+								</span>	
+								<button class="btn label primary confirm-kbu-yes">
+									Ya
+								</button>
+							</div>
+						</div>
 					</div>
 				</form>
 				<form id="formStPegawai" class="row mb-1 mx-2">
 					<h6 class="_600">Daftar Pegawai</h6>
-					<!-- <div class="form-group row">
-						<div class="col-sm-11 form-pegawai">
-							<input type="text" class="form-control input-pegawai" id="pegawai_0" placeholder="Nama/NIP Pegawai" autocomplete="off">
-							<input type="text" class="id-pegawai" name="id_pegawai_0" style="display: none">
-							<div id="src_result_pegawai_0" class="src-result box"></div>
-						</div>
-						<div class="col-sm-1">
-							<button class="btn btn-icon sub-pegawai"><i class="fa fa-remove"></i></button>
-						</div>
-					</div> -->
 					<button class="btn btn-icon add-pegawai"><i class="fa fa-plus"></i></button>
 				</form>
 			</div>
