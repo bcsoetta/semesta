@@ -81,8 +81,8 @@
 			$('div#noSt').remove();
 
 			$('#inpJenisSt').val('1');
+			$('#inpJenisSt').attr('disabled', false);
 			GetPejabat();
-			$('#pejabat').attr('disabled', true);
 			$('#inpHal').val('');
 			$("input[name='tgl_tugas_start'").val('');
 			$("input[name='tgl_tugas_end'").val('');
@@ -252,13 +252,12 @@
 					$('#formStHeader').prepend(inpStId);
 
 					$('#inpJenisSt').val(jenis_st);
-
+					$('#inpJenisSt').attr('disabled', true);
 					if (result['st_header']['plh'] == '0') {
 						$("#inpPlh").prop("checked", false);
 					} else {
 						$("#inpPlh").prop("checked", true);
 					}
-					// $('#pejabat').attr('disabled', true);
 					$('#pejabat').val(result['st_header']['nip'] + ' - ' + result['st_header']['nama']);
 					$("input[name='id_pejabat']").val(result['st_header']['id_pejabat']);
 

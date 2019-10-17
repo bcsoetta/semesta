@@ -565,22 +565,6 @@ class Umum extends CI_Controller {
 			];
 		}
 
-		switch ($_POST['header']['jenis_st']) {
-			case '1':
-				$jenis_st = 'KK';
-				break;
-
-			case '10':
-				$jenis_st = 'KBU';
-				break;
-			
-			default:
-				$jenis_st = '';
-				break;
-		}
-
-		$_POST['header']['jenis_st'] = $jenis_st;
-
 		$this->Umum_st_model->UpdateSt($_POST['header'], $new_detail, $del_detail);
 	}
 
