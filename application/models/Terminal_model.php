@@ -116,7 +116,7 @@ class Terminal_model extends CI_Model {
 			'yAxis' => [
 				[
 					'type' => 'value',
-					'name' => 'Bea Masuk (jutaaan Rp)',
+					'name' => 'Penerimaan (jutaan Rp)',
 					'nameLocation' => 'center',
 					'nameGap' => 55,
 					'splitNumber' => 4
@@ -186,7 +186,7 @@ class Terminal_model extends CI_Model {
 			'yAxis' => [
 				[
 					'type' => 'value',
-					'name' => 'Penerimaan (jutaaan Rp)',
+					'name' => 'Bea Masuk (jutaan Rp)',
 					'nameLocation' => 'center',
 					'nameGap' => 55,
 					'splitNumber' => 4
