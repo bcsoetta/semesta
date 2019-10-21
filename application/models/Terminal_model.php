@@ -213,4 +213,93 @@ class Terminal_model extends CI_Model {
 		return $jsonObject;
 	}
 
+	public function PenerimaanPungutanNettoChart($date='')
+	{
+		$date_ly = [
+			'start' => date("Y-m-d", strtotime($date['start'] . " -1 year")),
+			'end' => date("Y-12-31", strtotime($date['end'] . " -1 year"))
+		];
+		$query_this_year = $this->PenerimaanPungutanPerBulan($date);
+		$query_last_year = $this->PenerimaanPungutanPerBulan($date_ly);
+
+		foreach ($query_this_year as $row) {
+			$data['curr']['year'] = $row['year'];
+			$data['curr']['bm'][] = round($row['bm']/1000000,2);
+			$data['curr']['berat'][] = round($row['berat']/1000,2);
+		}
+		foreach ($query_last_year as $row) {
+			$dateObj   = DateTime::createFromFormat('!m', $row['month']);
+			$data['last']['tgl'][] = $dateObj->format('M');
+			$data['last']['year'] = $row['year'];
+
+			$data['last']['bm'][] = round($row['bm']/1000000,2);
+			$data['last']['berat'][] = round($row['berat']/1000,2);
+		}
+
+		$jsonObject = [
+			'tooltip' => [
+				'trigger' => 'axis'
+			],
+			'legend' => [
+				
+			],
+			'calculable' => false,
+			'grid' => [
+				'left' => 75,
+				'top' => 45,
+				'right' => 75,
+				'bottom' => 45
+			],
+			'xAxis' => [
+				[
+					'type' => 'category',
+					'name' => 'Bulan',
+					'nameLocation' => 'center',
+					'nameGap' => 35,
+					'data' => $data['last']['tgl']
+				]
+			],
+			'yAxis' => [
+				[
+					'type' => 'value',
+					'name' => 'Berat (ton)',
+					'nameLocation' => 'center',
+					'nameGap' => 55,
+					'splitNumber' => 4
+				],
+				[
+					'type' => 'value',
+					'name' => 'Bea Masuk (jutaan Rp)',
+					'nameLocation' => 'center',
+					'nameGap' => 55,
+					'splitNumber' => 4
+				],
+			],
+			'color' => ['#FF4136', '#2ECC40', '#0074D9', '#FF851B'],
+			'series' => [
+
+			]
+		];
+
+		$series_berat_curr = [
+			'name' => 'berat ' . $data['curr']['year'],
+			'type' => 'bar',
+			'data' => $data['curr']['berat']
+		];
+
+		// foreach ($data['dok'] as $key => $value) {
+		// 	$series = [
+		// 		'name' => strtoupper($value),
+		// 		'type' => 'line',
+		// 		'smooth' => true,
+		// 		'data' => $data[$value]
+		// 	];
+		// 	$jsonObject['legend']['data'][] = strtoupper($value);
+
+		// 	$jsonObject['series'][] = $series;
+		// }
+
+		return $data;
+	}
+
 }
