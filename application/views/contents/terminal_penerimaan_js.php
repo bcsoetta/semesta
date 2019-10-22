@@ -115,6 +115,42 @@
 				}
 			});
 
+			// chart perbandingan netto - bm
+			$.ajax({
+				url: "terminal_penerimaan_berat",
+				method: "POST",
+				type: 'json',
+				data: input,
+				success: function(data) {
+
+					// Initialize after dom ready
+					var myChart = echarts.init(document.getElementById('chart-netto-bm'));
+
+					// Get data from ajax
+					var option = data;
+
+					// Load data into the ECharts instance 
+					myChart.setOption(option, true);
+
+					// Resize chart
+					$(function () {
+
+						// Resize chart on menu width change and window resize
+						$(window).on('resize', resize);
+						$(".menu-toggle").on('click', resize);
+
+						// Resize function
+						function resize() {
+							setTimeout(function() {
+
+								// Resize chart
+								myChart.resize();
+							}, 200);
+						}
+					});
+				}
+			});
+
 		}
 
 		main();

@@ -82,7 +82,7 @@ class Tanggal_model extends CI_Model {
 		}
 
 		if ($end == null) {
-			$date['end'] = date('Y-m-d');
+			$date['end'] = date('Y-12-31');
 		} else {
 			$end = str_replace('/', '-', $end);
 			$date['end'] = date('Y-m-d', strtotime($end));
