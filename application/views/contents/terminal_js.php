@@ -151,6 +151,62 @@
 				}
 			});
 
+			// total jumlah per dokumen
+			$.ajax({
+				url: "terminal_jumlah_dok_total",
+				method: "POST",
+				type: 'json',
+				data: input,
+				success: function(result) {
+					$('#table-dokumen-total tbody').empty();
+					$.each(result, function (key, val) {
+						var data = `
+							<tr>
+								<td>${key}</td>
+								<td>${val}</td>
+							</tr>
+						`;
+						$('#table-dokumen-total tbody').append(data);
+					})
+				}
+			});
+
+			// chart perbandingan netto - bm
+			$.ajax({
+				url: "terminal_jumlah_dok_bulan",
+				method: "POST",
+				type: 'json',
+				data: input,
+				success: function(data) {
+
+					// Initialize after dom ready
+					var myChart = echarts.init(document.getElementById('chart-dokumen-bulan'));
+
+					// Get data from ajax
+					var option = data;
+
+					// Load data into the ECharts instance 
+					myChart.setOption(option, true);
+
+					// Resize chart
+					$(function () {
+
+						// Resize chart on menu width change and window resize
+						$(window).on('resize', resize);
+						$(".menu-toggle").on('click', resize);
+
+						// Resize function
+						function resize() {
+							setTimeout(function() {
+
+								// Resize chart
+								myChart.resize();
+							}, 200);
+						}
+					});
+				}
+			});
+
 		}
 
 		main();

@@ -12,13 +12,13 @@ class P2 extends CI_Controller {
 	}
 
 	// Halaman penerimaan terminal
-	public function terminal_penerimaan()
+	public function terminal()
 	{
 		$this->mainlib->logged_in();
 		$data['menus'] = $this->mainlib->menus();
 		$data['class'] = $this->router->fetch_class();
-		$data['hal'] = 'penerimaan terminal';
-		$data['content'] = 'terminal_penerimaan';
+		$data['hal'] = 'penerimaan';
+		$data['content'] = 'terminal';
 		$this->load->view('index', $data);
 	}
 
@@ -69,6 +69,29 @@ class P2 extends CI_Controller {
 		$this->mainlib->logged_in();
 		$date = $this->Tanggal_model->PrepFilterDate($_POST['start_date'], $_POST['end_date']);
 		$data = $this->Terminal_model->PenerimaanPungutanNettoChart($date);
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
+
+	public function terminal_jumlah_dok_total()
+	{
+		$this->mainlib->logged_in();
+		$_POST['start_date'] = null;
+		$_POST['end_date'] = null;
+		$date = $this->Tanggal_model->PrepFilterDate($_POST['start_date'], $_POST['end_date']);
+		$query_result = $this->Terminal_model->JumlahDokumenTotal($date);
+		foreach ($query_result as $key => $value) {
+			$data[$value['dokumen']] = number_format($value['jml_dok'], 0, '', '.');
+		}
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
+
+	public function terminal_jumlah_dok_bulan()
+	{
+		$this->mainlib->logged_in();
+		$date = $this->Tanggal_model->PrepFilterDate($_POST['start_date'], $_POST['end_date']);
+		$data = $this->Terminal_model->JumlahDokumenPerBulanChart($date);
 		header('Content-type:application/json');
 		echo json_encode($data);
 	}

@@ -98,7 +98,7 @@
 						<table id="table-penerimaan-dokumen-total" class="table m-b-none">
 							<thead>
 								<tr>
-									<th>Pungutan</th>
+									<th>Dokumen</th>
 									<th>Nilai</th>
 								</tr>
 							<thead>
@@ -112,6 +112,33 @@
 						</div>
 						<div class="box-body" id="ccc">
 							<div id="chart-penerimaan-dokumen" style="width: 100%; height: 40vh;"></div>
+						</div>
+					</div>
+				</div>
+				<div class="row-col box">
+					<div class="col-sm-12 col-md-4">
+						<div class="box-header">
+							<h3>Total Dokumen</h3>
+							<!-- <small>Total penerimaan Terminal</small> -->
+						</div>
+						<div class="box-divider m-a-0"></div>
+						<table id="table-dokumen-total" class="table m-b-none">
+							<thead>
+								<tr>
+									<th>Dokumen</th>
+									<th>Jumlah</th>
+								</tr>
+							<thead>
+							<tbody></tbody>
+						</table>
+					</div>
+					<div class="col-sm-12 col-md-8 light lt">
+						<div class="box-header">
+							<h3>Jumlah Dokumen per Bulan</h3>
+							<!-- <small>Total penerimaan terminal per bulan</small> -->
+						</div>
+						<div class="box-body" id="ccc">
+							<div id="chart-dokumen-bulan" style="width: 100%; height: 40vh;"></div>
 						</div>
 					</div>
 				</div>

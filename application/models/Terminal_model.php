@@ -5,6 +5,7 @@ class Terminal_model extends CI_Model {
 	public function __construct()
 	{
 		$this->dok_penerimaan = array('CD', 'PIBK-SPP', 'PIBK-ST');
+		$this->dok_jumlah = array('CD', 'SPP', 'ST');
 	}
 
 	public function PenerimaanPungutanPerBulan($date='')
@@ -58,13 +59,13 @@ class Terminal_model extends CI_Model {
 				SUM(a.bm) bm,
 				SUM(a.jml_dok) jml_dok
 			")
-		->from("db_semesta.fact_term_penerimaan a")
-		->join("db_semesta.dim_date b", "a.tgl = b.id")
-		->where("b.date >=", $date['start'])
-		->where("b.date <=", $date['end'])
-		->where_in("a.dokumen", $this->dok_penerimaan)
-		->group_by("b.year, b.month, a.dokumen")
-		->get();
+			->from("db_semesta.fact_term_penerimaan a")
+			->join("db_semesta.dim_date b", "a.tgl = b.id")
+			->where("b.date >=", $date['start'])
+			->where("b.date <=", $date['end'])
+			->where_in("a.dokumen", $this->dok_penerimaan)
+			->group_by("b.year, b.month, a.dokumen")
+			->get();
 		return $query->result_array();
 	}
 
@@ -74,13 +75,47 @@ class Terminal_model extends CI_Model {
 				a.dokumen,
 				SUM(a.bm) bm
 			")
-		->from("db_semesta.fact_term_penerimaan a")
-		->join("db_semesta.dim_date b", "a.tgl = b.id")
-		->where("b.date >=", $date['start'])
-		->where("b.date <=", $date['end'])
-		->where_in("a.dokumen", $this->dok_penerimaan)
-		->group_by("a.dokumen")
-		->get();
+			->from("db_semesta.fact_term_penerimaan a")
+			->join("db_semesta.dim_date b", "a.tgl = b.id")
+			->where("b.date >=", $date['start'])
+			->where("b.date <=", $date['end'])
+			->where_in("a.dokumen", $this->dok_penerimaan)
+			->group_by("a.dokumen")
+			->get();
+		return $query->result_array();
+	}
+
+	public function JumlahDokumenTotal($date='')
+	{
+		$query = $this->db->select("
+				a.dokumen,
+				SUM(a.jml_dok) jml_dok
+			")
+			->from("db_semesta.fact_term_penerimaan a")
+			->join("db_semesta.dim_date b", "a.tgl = b.id")
+			->where("b.date >=", $date['start'])
+			->where("b.date <=", $date['end'])
+			->where_in("a.dokumen", $this->dok_jumlah)
+			->group_by("a.dokumen")
+			->get();
+		return $query->result_array();
+	}
+
+	public function JumlahDokumenPerBulan($date='')
+	{
+		$query = $this->db->select("
+				b.year,
+				b.month,
+				a.dokumen,
+				SUM(a.jml_dok) jml_dok
+			")
+			->from("db_semesta.fact_term_penerimaan a")
+			->join("db_semesta.dim_date b", "a.tgl = b.id")
+			->where("b.date >=", $date['start'])
+			->where("b.date <=", $date['end'])
+			->where_in("a.dokumen", $this->dok_jumlah)
+			->group_by("b.year, b.month, a.dokumen")
+			->get();
 		return $query->result_array();
 	}
 
@@ -313,6 +348,76 @@ class Terminal_model extends CI_Model {
 				$jsonObject['series'][] = $series;
 			}
 			
+		}
+
+		return $jsonObject;
+	}
+
+	public function JumlahDokumenPerBulanChart($date='')
+	{
+		$query_res = $this->JumlahDokumenPerBulan($date);
+
+		foreach ($query_res as $row) {
+			$tgl = $row['year'] . '-' . $row['month'];
+			$tgl = date('M-Y',strtotime($tgl));
+			$list_tgl[] = $tgl;
+
+			$list_dok[] = $row['dokumen'];
+
+			$data[$row['dokumen']][] = $row['jml_dok'];
+		}
+
+		$data['tgl'] = array_values(array_unique($list_tgl));
+		$data['dok'] = array_unique($list_dok);
+
+		$jsonObject = [
+			'tooltip' => [
+				'trigger' => 'axis'
+			],
+			'legend' => [
+				
+			],
+			'calculable' => false,
+			'grid' => [
+				'left' => 75,
+				'top' => 45,
+				'right' => 75,
+				'bottom' => 45
+			],
+			'xAxis' => [
+				[
+					'type' => 'category',
+					'name' => 'Bulan',
+					'nameLocation' => 'center',
+					'nameGap' => 35,
+					'data' => $data['tgl']
+				]
+			],
+			'yAxis' => [
+				[
+					'type' => 'value',
+					'name' => 'Jumlah Dokumen',
+					'nameLocation' => 'center',
+					'nameGap' => 55,
+					'splitNumber' => 4
+				]
+			],
+			'color' => ['#FF4136', '#2ECC40', '#0074D9', '#FF851B'],
+			'series' => [
+
+			]
+		];
+
+		foreach ($data['dok'] as $key => $value) {
+			$series = [
+				'name' => strtoupper($value),
+				'type' => 'line',
+				'smooth' => true,
+				'data' => $data[$value]
+			];
+			$jsonObject['legend']['data'][] = strtoupper($value);
+
+			$jsonObject['series'][] = $series;
 		}
 
 		return $jsonObject;
