@@ -76,8 +76,6 @@ class P2 extends CI_Controller {
 	public function terminal_jumlah_dok_total()
 	{
 		$this->mainlib->logged_in();
-		$_POST['start_date'] = null;
-		$_POST['end_date'] = null;
 		$date = $this->Tanggal_model->PrepFilterDate($_POST['start_date'], $_POST['end_date']);
 		$query_result = $this->Terminal_model->JumlahDokumenTotal($date);
 		foreach ($query_result as $key => $value) {

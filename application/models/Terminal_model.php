@@ -272,18 +272,33 @@ class Terminal_model extends CI_Model {
 			$data['last']['tgl']['year'] = $row['year'];
 
 			$data['last']['value']['bm'][] = round($row['bm']/1000000,2);
+			$data['last']['value']['nilai pabean'][] = round($row['nilai']/1000000,2);
 			$data['last']['value']['berat'][] = round($row['berat']/1000,2);
 		}
 		foreach ($query_this_year as $row) {
 			$data['curr']['tgl']['year'] = $row['year'];
 			$data['curr']['value']['bm'][] = round($row['bm']/1000000,2);
+			$data['curr']['value']['nilai pabean'][] = round($row['nilai']/1000000,2);
 			$data['curr']['value']['berat'][] = round($row['berat']/1000,2);
+		}
+
+		$list_value = array('bm', 'nilai pabean', 'berat');
+		foreach ($list_value as $key => $value) {
+			$list[$value] = array_merge($data['last']['value'][$value], $data['curr']['value'][$value]);
+			$max[$value] = max($list[$value]);
+			$level[$value] = pow(10, strlen(round($max[$value]))-1);
+			$first[$value] = (int)substr($max[$value], 0, 1)+1;
+			if($first[$value] % 2 == 1) $first[$value]++;
+			$max[$value] = $first[$value]*$level[$value];
 		}
 
 		$jsonObject = [
 			'tooltip' => [
 				'trigger' => 'axis'
 			],
+			// 'axisPointer' => [
+			// 	'axis' => 'y'
+			// ],
 			'legend' => [
 				
 			],
@@ -291,7 +306,7 @@ class Terminal_model extends CI_Model {
 			'grid' => [
 				'left' => 75,
 				'top' => 45,
-				'right' => 75,
+				'right' => 165,
 				'bottom' => 45
 			],
 			'xAxis' => [
@@ -309,17 +324,40 @@ class Terminal_model extends CI_Model {
 					'name' => 'Berat (ton)',
 					'nameLocation' => 'center',
 					'nameGap' => 55,
-					'splitNumber' => 4
+					'min' => 0,
+					'max' => $max['berat'],
+					'interval' => $max['berat']/4,
+					'axisPointer' => [
+						'show' => true
+					]
 				],
 				[
 					'type' => 'value',
 					'name' => 'Bea Masuk (jutaan Rp)',
 					'nameLocation' => 'center',
 					'nameGap' => 55,
-					'splitNumber' => 4
+					'min' => 0,
+					'max' => $max['bm'],
+					'interval' => $max['bm']/4,
+					'axisPointer' => [
+						'show' => true
+					]
+				],
+				[
+					'type' => 'value',
+					'name' => 'Nilai Pabean (jutaan Rp)',
+					'nameLocation' => 'center',
+					'offset' => 85,
+					'nameGap' => 55,
+					'min' => 0,
+					'max' => $max['nilai pabean'],
+					'interval' => $max['nilai pabean']/4,
+					'axisPointer' => [
+						'show' => true
+					]
 				],
 			],
-			'color' => ['#2F89FC', '#52DE97', '#FF5733', '#FFC30F'],
+			'color' => ['#2F89FC', '#2F89FC', '#52DE97', '#FF5733', '#FF5733', '#FFC30F'],
 			'series' => [
 
 			]
@@ -338,9 +376,15 @@ class Terminal_model extends CI_Model {
 					$series['type'] = 'bar';
 					$series['yAxisIndex'] = 0;
 					$series['barGap'] = '0%';
-				} else {
+				} elseif ($k == 'bm') {
 					$series['type'] = 'line';
 					$series['yAxisIndex'] = 1;
+				} else {
+					$series['type'] = 'line';
+					$series['yAxisIndex'] = 2;
+					$series['symbol'] = 'diamond';
+					$series['symbolSize'] = 8;
+					$series['lineStyle']['type'] = 'dotted';
 				}
 
 				$jsonObject['legend']['data'][] = strtoupper($k) . ' ' . $year;
