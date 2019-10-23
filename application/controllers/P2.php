@@ -37,7 +37,9 @@ class P2 extends CI_Controller {
 		$date = $this->Tanggal_model->PrepFilterDate($_POST['start_date'], $_POST['end_date']);
 		$query_result = $this->Terminal_model->PenerimaanPungutanTotal($date);
 		foreach ($query_result as $key => $value) {
-			$data[$key] = number_format($value, 2, ',', '.');
+			if (in_array($key, array('bm', 'ppn', 'pph', 'ppnbm'))) {
+				$data[$key] = number_format($value, 2, ',', '.');
+			}
 		}
 		header('Content-type:application/json');
 		echo json_encode($data);
@@ -64,15 +66,6 @@ class P2 extends CI_Controller {
 		echo json_encode($data);
 	}
 
-	public function terminal_penerimaan_berat()
-	{
-		$this->mainlib->logged_in();
-		$date = $this->Tanggal_model->PrepFilterDate($_POST['start_date'], $_POST['end_date']);
-		$data = $this->Terminal_model->PenerimaanPungutanNettoChart($date);
-		header('Content-type:application/json');
-		echo json_encode($data);
-	}
-
 	public function terminal_jumlah_dok_total()
 	{
 		$this->mainlib->logged_in();
@@ -90,6 +83,24 @@ class P2 extends CI_Controller {
 		$this->mainlib->logged_in();
 		$date = $this->Tanggal_model->PrepFilterDate($_POST['start_date'], $_POST['end_date']);
 		$data = $this->Terminal_model->JumlahDokumenPerBulanChart($date);
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
+
+	public function terminal_penerimaan_berat()
+	{
+		$this->mainlib->logged_in();
+		$date = $this->Tanggal_model->PrepFilterDate($_POST['start_date'], $_POST['end_date']);
+		$data = $this->Terminal_model->PenerimaanPungutanNettoChart($date);
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
+
+	public function terminal_penerimaan_berat_detail()
+	{
+		$this->mainlib->logged_in();
+		$date = $this->Tanggal_model->PrepFilterDate($_POST['start_date'], $_POST['end_date']);
+		$data = $this->Terminal_model->PenerimaanPungutanNettoTable($date);
 		header('Content-type:application/json');
 		echo json_encode($data);
 	}

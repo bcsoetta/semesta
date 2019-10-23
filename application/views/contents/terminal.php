@@ -153,6 +153,42 @@
 						</div>
 					</div>
 				</div>
+				<div class="row-col box">
+					<div class="col-sm-12">
+						<div class="box-header">
+							<h3>Detail Perbandingan BM - Nilai Pabean - Netto</h3>
+							<!-- <small>Total penerimaan terminal per bulan</small> -->
+						</div>
+						<div class="box-body" id="ccc">
+							<table id="table-netto-bm" class="table m-b-none">
+								<thead>
+									<tr>
+										<th></th>
+										<th></th>
+										<th id="tbl-last-detail" colspan="6"></th>
+										<th id="tbl-curr-detail" colspan="6"></th>
+									</tr>
+									<tr>
+										<th></th>
+										<th>Bulan</th>
+										<th>BM<br>(juta Rp)</th>
+										<th>BM Kumulatif<br>(juta Rp)</th>
+										<th>Nilai Pabean<br>(juta Rp)</th>
+										<th>Nilai Pabean Kumulatif<br>(juta Rp)</th>
+										<th>Berat<br>(ton)</th>
+										<th>Berat Kumulatif<br>(ton)</th>
+										<th>BM<br>(juta Rp)</th>
+										<th>BM Kumulatif<br>(juta Rp)</th>
+										<th>Nilai Pabean<br>(juta Rp)</th>
+										<th>Nilai Pabean Kumulatif<br>(juta Rp)</th>
+										<th>Berat<br>(ton)</th>
+										<th>Berat Kumulatif<br>(ton)</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

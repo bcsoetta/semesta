@@ -33,6 +33,8 @@ class Terminal_model extends CI_Model {
 	public function PenerimaanPungutanTotal($date='')
 	{
 		$query = $this->db->select("
+				SUM(a.nilai_pabean) nilai,
+				SUM(a.brt_koli) berat,
 				SUM(a.bm) bm,
 				SUM(a.ppn) ppn,
 				SUM(a.pph) pph,
@@ -267,7 +269,7 @@ class Terminal_model extends CI_Model {
 		$query_last_year = $this->PenerimaanPungutanPerBulan($date_ly);
 
 		foreach ($query_last_year as $row) {
-			$dateObj   = DateTime::createFromFormat('!m', $row['month']);
+			$dateObj = DateTime::createFromFormat('!m', $row['month']);
 			$data['last']['tgl']['month'][] = $dateObj->format('M');
 			$data['last']['tgl']['year'] = $row['year'];
 
@@ -296,9 +298,6 @@ class Terminal_model extends CI_Model {
 			'tooltip' => [
 				'trigger' => 'axis'
 			],
-			// 'axisPointer' => [
-			// 	'axis' => 'y'
-			// ],
 			'legend' => [
 				
 			],
@@ -465,6 +464,70 @@ class Terminal_model extends CI_Model {
 		}
 
 		return $jsonObject;
+	}
+
+	public function PenerimaanPungutanNettoTable($date='')
+	{
+		$date_ly = [
+			'start' => date("Y-m-d", strtotime($date['start'] . " -1 year")),
+			'end' => date("Y-m-d", strtotime($date['end'] . " -1 year"))
+		];
+		$query_this_year = $this->PenerimaanPungutanPerBulan($date);
+		$query_last_year = $this->PenerimaanPungutanPerBulan($date_ly);
+
+		$data = [];
+		$nilai_curr_kum = 0;
+		$berat_curr_kum = 0;
+		$bm_curr_kum = 0;
+		$nilai_last_kum = 0;
+		$berat_last_kum = 0;
+		$bm_last_kum = 0;
+		for ($i=0; $i < count($query_this_year); $i++) { 
+			$dateObj = DateTime::createFromFormat('!m', $query_this_year[$i]['month']);
+			$data['value'][$i]['bulan'] = $dateObj->format('M');
+
+			$nilai = $query_this_year[$i]['nilai']/1000000;
+			$nilai_curr_kum += $nilai;
+			
+			$berat = $query_this_year[$i]['berat']/1000;
+			$berat_curr_kum += $berat;
+
+			$bm = $query_this_year[$i]['bm']/1000000;
+			$bm_curr_kum += $bm;
+
+			$data['value'][$i]['order'] = $i;
+			$data['value'][$i]['nilai_curr'] = number_format($nilai, 2, ',', '.');
+			$data['value'][$i]['nilai_curr_kum'] = number_format($nilai_curr_kum, 2, ',', '.');
+			$data['value'][$i]['berat_curr'] = number_format($berat, 2, ',', '.');
+			$data['value'][$i]['berat_curr_kum'] = number_format($berat_curr_kum, 2, ',', '.');
+			$data['value'][$i]['bm_curr'] = number_format($bm, 2, ',', '.');
+			$data['value'][$i]['bm_curr_kum'] = number_format($bm_curr_kum, 2, ',', '.');
+			$data['year']['curr'] = $query_this_year[$i]['year'];
+		}
+		for ($i=0; $i < count($query_last_year); $i++) { 
+			$dateObj = DateTime::createFromFormat('!m', $query_last_year[$i]['month']);
+			$data['value'][$i]['bulan'] = $dateObj->format('M');
+
+			$nilai = $query_last_year[$i]['nilai']/1000000;
+			$nilai_last_kum += $nilai;
+			
+			$berat = $query_last_year[$i]['berat']/1000;
+			$berat_last_kum += $berat;
+
+			$bm = $query_last_year[$i]['bm']/1000000;
+			$bm_last_kum += $bm;
+
+			$data['value'][$i]['order'] = $i;
+			$data['value'][$i]['nilai_last'] = number_format($nilai, 2, ',', '.');
+			$data['value'][$i]['nilai_last_kum'] = number_format($nilai_last_kum, 2, ',', '.');
+			$data['value'][$i]['berat_last'] = number_format($berat, 2, ',', '.');
+			$data['value'][$i]['berat_last_kum'] = number_format($berat_last_kum, 2, ',', '.');
+			$data['value'][$i]['bm_last'] = number_format($bm, 2, ',', '.');
+			$data['value'][$i]['bm_last_kum'] = number_format($bm_last_kum, 2, ',', '.');
+			$data['year']['last'] = $query_last_year[$i]['year'];
+		}
+
+		return $data;
 	}
 
 }

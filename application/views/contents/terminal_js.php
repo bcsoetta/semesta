@@ -1,5 +1,6 @@
 <!-- echarts -->
 <script src="<?php echo base_url('assets/libs/echarts/echarts.min.js'); ?>"></script>
+<script src="<?php echo base_url('assets/libs/jquery/datatables/js/datatables.js'); ?>"></script>
 
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -204,6 +205,83 @@
 							}, 200);
 						}
 					});
+				}
+			});
+
+			// table detail penerimaan - berat
+			$.ajax({
+				url: "terminal_penerimaan_berat_detail",
+				method: "POST",
+				type: 'json',
+				data: input,
+				success: function(result) {
+					$('#tbl-last-detail').html(result['year']['last']);
+					$('#tbl-curr-detail').html(result['year']['curr']);
+					$('#table-netto-bm').DataTable({
+						"destroy": true,
+						"paging": false,
+						"searching": false,
+						"bInfo" : false,
+						"data": result['value'],
+						"columns": [
+							{ 
+								"data": "order",
+								"visible": false
+							},
+							{ "data": "bulan" },
+							{ 
+								"data": "bm_last",
+								"defaultContent": ""
+							},
+							{ 
+								"data": "bm_last_kum",
+								"defaultContent": ""
+							},
+							{ 
+								"data": "nilai_last",
+								"defaultContent": ""
+							},
+							{ 
+								"data": "nilai_last_kum",
+								"defaultContent": ""
+							},
+							{ 
+								"data": "berat_last",
+								"defaultContent": ""
+							},
+							{ 
+								"data": "berat_last_kum",
+								"defaultContent": ""
+							},
+							{ 
+								"data": "bm_curr",
+								"defaultContent": ""
+							},
+							{ 
+								"data": "bm_curr_kum",
+								"defaultContent": ""
+							},
+							{ 
+								"data": "nilai_curr",
+								"defaultContent": ""
+							},
+							{ 
+								"data": "nilai_curr_kum",
+								"defaultContent": ""
+							},
+							{ 
+								"data": "berat_curr",
+								"defaultContent": ""
+							},
+							{ 
+								"data": "berat_curr_kum",
+								"defaultContent": ""
+							}
+							
+						],
+						"order": [[ 0, "asc" ]]
+					});
+					// console.log(result);
 				}
 			});
 
