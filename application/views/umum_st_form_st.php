@@ -236,8 +236,10 @@
 					<br>
 				</div>
 				<div class="text">
-					<p><?php echo 'Segala biaya yang timbul sebagai akibat dilaksanakannya surat tugas ini dibebankan pada DIPA ' . $st_header->ur_dipa . ' TA ' . $st_header->tahun; ?></p>
-					<br>
+					<?php if ($st_header->spd == 1) { ?>
+						<p><?php echo 'Segala biaya yang timbul sebagai akibat dilaksanakannya surat tugas ini dibebankan pada DIPA ' . $st_header->ur_dipa . ' TA ' . $st_header->tahun; ?></p>
+						<br>
+					<?php } ?>
 					<p>Surat tugas ini disusun untuk dilaksanakan dan setelah selesai dilaksanakan, Pejabat/Pegawai segera menyampaikan laporan. Kepada instansi terkait, kami mohon bantuan demi kelancaran pelaksanaan tugas tersebut.</p>
 				</div>
 				<br><br><br>
