@@ -377,8 +377,6 @@
 						<label for="inpDipa" class="col-sm-2 form-control-label">DIPA</label>
 						<div class="col-sm-10">
 							<select id="inpDipa" name="dipa" class="form-control c-select">
-								<option value="1">KPU BC Soekarno Hatta</option>
-								<option value="2">Sekretariat DJBC</option>
 							</select>
 						</div>
 					</div>
@@ -414,6 +412,13 @@
 									Ya
 								</button>
 							</div>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="inpPpk" class="col-sm-2 form-control-label">PPK</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control input-ppk" id="ppk" disabled="">	
+							<input type="hidden" class="id-pejabat" name="ppk">
 						</div>
 					</div>
 				</form>

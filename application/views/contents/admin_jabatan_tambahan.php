@@ -77,42 +77,6 @@
 	</div>
 </div>
 
-<!-- modal edit data -->
-<!-- <div id="modal-edit" class="modal" data-backdrop="true">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">Edit Pejabat Plh</h5>
-			</div>
-			<div class="modal-body p-lg">
-				<form action="#" id="formEditPlh" class="row mb-1 mx-2">
-					<input id="inpIdPlh" type="hidden" name="id_plh">
-					<div class="form-group row">
-						<label for="inpJabatan" class="col-sm-2 form-control-label">Jabatan</label>
-						<div class="col-sm-10">
-							<input id="inpJabatan" type="text" class="form-control" disabled="">
-						</div>
-					</div>
-					<div class="form-group row">
-						<label for="inpPlh" class="col-sm-2 form-control-label">Pejabat</label>
-
-						<div class="col-sm-10">
-							<input id="inpPlh" type="text" class="form-control src-input" placeholder="Nama/NIP Pegawai" autocomplete="off">	
-							<div id="src_result_pejabat" class="src-result box"></div>
-							<input id="inpIdPejabat" type="hidden" class="id-pejabat src-submit" name="id_pejabat">
-						</div>
-					</div>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button id="btnUpdate" type="button" class="btn primary p-x-md">Update</button>
-				<button type="button" class="btn danger p-x-md" data-dismiss="modal">Batal</button>
-			</div>
-		</div>
-	</div>
-</div> -->
-<!-- /modal edit data -->
-
 <!-- modal konfirmasi delete data -->
 <div id="modal-konfirmasi" class="modal" data-backdrop="true">
 	<div class="modal-dialog modal-lg">

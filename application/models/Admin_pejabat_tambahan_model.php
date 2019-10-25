@@ -12,6 +12,15 @@ class Admin_pejabat_tambahan_model extends CI_Model {
 		return $result[0];
 	}
 
+	public function GetPejabatByJabatan($jabatan='')
+	{
+		$query = $this->db->select("id, level, jabatan, nip, nama")
+			->from("db_semesta.dim_pejabat_tambahan")
+			->where("jabatan", $jabatan)
+			->get();
+		return $query->result_array();
+	}
+
 	public function GetActivePejabat()
 	{
 		$query = $this->db->select("id, level, jabatan, nip, nama")

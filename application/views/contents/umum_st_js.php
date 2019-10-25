@@ -1,11 +1,11 @@
-
 <script src="<?php echo base_url('assets/libs/jquery/datatables/js/datatables.js'); ?>"></script>
 <script src="<?php echo base_url('assets/libs/jquery/moment/moment.js'); ?>"></script>
 <script src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/datetime-moment.js"></script>
 
 <script type="text/javascript">
+	var base_url = "<?php echo base_url(); ?>";
+
 	// Display datatable
-	
 	function displayAllData() {
 		$.ajax({
 			url: "get_st_all",
@@ -68,8 +68,36 @@
 		});
 	}
 
+	function GetPpkAktif() {
+		$.ajax({
+			url: base_url + 'admin/jabatan_tambahan_jab',
+			method: "POST",
+			data: {'jab': 'ppk'},
+			success: function (result) {
+				$.each(result, function (key, val) {
+					$('#inpDipa').append(`<option value="${val['id']}">${val['level']}</option>`)
+				})
+			}
+		})
+	}
+
+	function GetPpk() {
+		id_ppk = $('#inpDipa').val();
+		console.log(id_ppk);
+		$.ajax({
+			url: base_url + 'admin/jabatan_tambahan_show',
+			method: 'POST',
+			data: {'id': id_ppk},
+			success: function (result) {
+				$('#ppk').val(result.nip + ' - ' + result.nama);
+				$("input[name='ppk']").val(result.id);
+			}
+		});
+	}
+
 	$(document).ready(function() {
 		displayAllData();
+		GetPpkAktif();
 	})
 </script>
 
@@ -104,6 +132,7 @@
 			$('#inpSpd').prop("checked", true);
 			GetKBU();
 			$(".confirm-pjb-kbu").hide();
+			GetPpk();
 
 			$('button.add-pegawai').siblings('div').remove();
 
@@ -306,6 +335,7 @@
 							$(".confirm-pjb-kbu").hide();
 						}
 					}
+					GetPpk();
 					
 
 					$('button.add-pegawai').siblings('div').remove();
@@ -455,9 +485,17 @@
 				$("#inpPlhKbu").prop("checked", false);
 				$('#kbu').val('');
 				$("input[name='id_pejabat_kbu']").val(null);
+
+				$('#ppk').val('');
+				$("input[name='ppk']").val(null);
 			} else {
 				GetKBU();
+				GetPpk();
 			}
+		})
+
+		$(document).on('change', '#inpDipa', function () {
+			GetPpk();
 		})
 
 	});

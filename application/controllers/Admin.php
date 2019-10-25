@@ -136,4 +136,12 @@ class Admin extends CI_Controller {
 		header('Content-type:application/json');
 		echo json_encode($msg);
 	}
+
+	public function jabatan_tambahan_jab()
+	{
+		$this->mainlib->logged_in();
+		$data = $this->Admin_pejabat_tambahan_model->GetPejabatByJabatan($_POST['jab']);
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
 }

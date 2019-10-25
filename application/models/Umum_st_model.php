@@ -1,12 +1,6 @@
 <?php
 
 class Umum_st_model extends CI_Model {
-
-	public function __construct()
-	{
-		parent::__construct();
-		$this->load->model('Pejabat_tambahan_model');
-	}
 	
 	public function GetStAll()
 	{

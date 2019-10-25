@@ -32,51 +32,6 @@
 
 		showDataTable();
 
-		// $('#formFilter').submit(function(e) {
-		// 	e.preventDefault();
-		// 	date = $('#select_date').val();
-
-		// 	showListPlh(date);
-		// })
-
-		// Mencari pegawai
-		// $(document).on("paste keyup", ".src-input", function() {
-		// 	pegawai = $(this).val();
-		// 	var input = $(this);
-		// 	var submit = $(this).siblings('.src-submit');
-		// 	var display = $(this).siblings('.src-result');
-			
-		// 	$.ajax({
-		// 		url: 'cari_pegawai',
-		// 		method: 'POST',
-		// 		data: {'pegawai' : pegawai},
-		// 		success: function(result) {
-		// 			if (input.val() == ""){
-		// 				display.empty();
-		// 				display.css('display', 'none');	
-		// 			} else {
-		// 				display.empty();
-		// 				display.css('display', 'block');
-
-		// 				$.each(result, function(key, val) {
-		// 					display.append("<div class='src-list' id='" + val.id + "'>" + val.nip + " - " + val.nama + "</div>");
-		// 				});
-
-		// 				display.children('.src-list').click(function() {
-				
-		// 					var selected = $(this).html();
-		// 					var id = $(this).attr('id');
-
-		// 					input.val(selected);
-		// 					submit.val(id);
-		// 					display.css('display', 'none');
-
-		// 				})
-		// 			}
-		// 		}
-		// 	})
-		// });
-
 		// Menyimpan Plh
 		$(document).on('click', '#formPejabatTambahan #btnSubmit', function(e) {
 			e.preventDefault();
