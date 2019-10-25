@@ -59,7 +59,10 @@ class Admin_pejabat_tambahan_model extends CI_Model {
 
 	public function DeletePejabatById($id='')
 	{
+		$timestamp = date("Y-m-d H:i:s");
+
 		$this->db->set('status', null);
+		$this->db->set('deleted_at', $timestamp);
 		$this->db->where('id', $id);
 		$this->db->update('dim_pejabat_tambahan');
 		return $this->db->affected_rows();

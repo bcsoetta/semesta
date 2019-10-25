@@ -122,7 +122,7 @@ class Admin extends CI_Controller {
 		$this->mainlib->logged_in();
 		$row = $this->Admin_pejabat_tambahan_model->DeletePejabatById($_POST['id']);
 
-		if ($row > 1) {
+		if ($row > 0) {
 			$msg = [
 				'status' => 1,
 				'message' => 'Data berhasil dihapus'
@@ -134,6 +134,6 @@ class Admin extends CI_Controller {
 			];
 		}
 		header('Content-type:application/json');
-		echo json_encode($row);
+		echo json_encode($msg);
 	}
 }
