@@ -1,6 +1,12 @@
 <?php
 
 class Umum_st_model extends CI_Model {
+
+	public function __construct()
+	{
+		parent::__construct();
+		$this->load->model('Pejabat_tambahan_model');
+	}
 	
 	public function GetStAll()
 	{
@@ -52,6 +58,7 @@ class Umum_st_model extends CI_Model {
 				a.ppk,
 				c.nip nip_ppk,
 				c.nama nama_ppk,
+				c.level ur_dipa,
 				a.plh_kbu,
 				a.id_pejabat_kbu,
 				d.nip nip_kbu,
@@ -81,28 +88,30 @@ class Umum_st_model extends CI_Model {
 				break;
 			
 			default:
-				$no_st = 'NO TIDAK TERDAFTAR';
-				$jabatan = 'PEJABAT TIDAK TERDAFTAR';
+				$no_st = 'ST-';
+				$jabatan = '';
 				break;
 		}
 
-		switch ($result[0]->dipa) {
-			case 1:
-				$ur_dipa = 'KPU BC Tipe C Soekarno Hatta';
-				break;
+		// $dipa = $this->Pejabat_tambahan_model->GetPejabatById($result[0]->dipa);
 
-			case 2:
-				$ur_dipa = 'Sekretariat DJBC';
-				break;
+		// switch ($result[0]->dipa) {
+		// 	case 1:
+		// 		$ur_dipa = 'KPU BC Tipe C Soekarno Hatta';
+		// 		break;
+
+		// 	case 2:
+		// 		$ur_dipa = 'Sekretariat DJBC';
+		// 		break;
 			
-			default:
-				$ur_dipa = 'DIPA TIDAK TERDAFTAR';
-				break;
-		}
+		// 	default:
+		// 		$ur_dipa = '';
+		// 		break;
+		// }
 
 		$result[0]->no_st = $no_st;
 		$result[0]->jabatan = $jabatan;
-		$result[0]->ur_dipa = $ur_dipa;
+		// $result[0]->ur_dipa = $ur_dipa;
 
 		return $result[0];
 	}

@@ -10,8 +10,10 @@ class Admin extends CI_Controller {
 		$this->load->library(array('mainlib', 'pagination'));
 		
 		$this->load->model('Admin_model');
+		$this->load->model('Admin_pejabat_tambahan_model');
 	}
 
+	// Halaman setting plh
 	public function plh($value='')
 	{
 		$this->mainlib->logged_in();
@@ -77,4 +79,61 @@ class Admin extends CI_Controller {
 		echo json_encode($m);
 	}
 
+	// Halaman setting pejabat tambahan
+	public function jabatan_tambahan($value='')
+	{
+		$this->mainlib->logged_in();
+		// $this->mainlib->privilege();
+
+		$data['menus'] = $this->mainlib->menus();
+		$data['class'] = $this->router->fetch_class();
+		$data['lsJabatan'] = $this->Admin_model->GetJabatanAll();
+		$data['hal'] = 'jabatan tambahan';
+		$data['content'] = 'admin_jabatan_tambahan';
+		$this->load->view('index', $data);
+	}
+
+	public function jabatan_tambahan_list()
+	{
+		$this->mainlib->logged_in();
+		$data = $this->Admin_pejabat_tambahan_model->GetActivePejabat();
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
+
+	public function jabatan_tambahan_save()
+	{
+		$this->mainlib->logged_in();
+		$msg = $this->Admin_pejabat_tambahan_model->SavePejabatTambahan($_POST);
+		header('Content-type:application/json');
+		echo json_encode($msg);
+	}
+
+	public function jabatan_tambahan_show()
+	{
+		$this->mainlib->logged_in();
+		$data = $this->Admin_pejabat_tambahan_model->GetPejabatById($_POST['id']);
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
+
+	public function jabatan_tambahan_delete()
+	{
+		$this->mainlib->logged_in();
+		$row = $this->Admin_pejabat_tambahan_model->DeletePejabatById($_POST['id']);
+
+		if ($row > 1) {
+			$msg = [
+				'status' => 1,
+				'message' => 'Data berhasil dihapus'
+			];
+		} else {
+			$msg = [
+				'status' => 0,
+				'message' => 'Error'
+			];
+		}
+		header('Content-type:application/json');
+		echo json_encode($row);
+	}
 }
