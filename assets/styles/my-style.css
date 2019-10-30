@@ -29,6 +29,22 @@
    clear: both;
 }
 
+.dataTable .dt-body-left {
+  text-align: left;
+}
+
+.dataTable .dt-body-right {
+  text-align: right;
+}
+
+.dataTable .dt-body-center {
+  text-align: center;
+}
+
+.dataTable .dt-body-justify {
+  text-align: justify;
+}
+
 .w-20 {
   line-height: 20px;
   text-align: center;

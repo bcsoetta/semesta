@@ -8,6 +8,7 @@ class P2 extends CI_Controller {
 		$this->load->library(array('mainlib'));
 
 		$this->load->model('Terminal_model');
+		$this->load->model('Terminal_komoditi_model');
 		$this->load->model('Tanggal_model');
 	}
 
@@ -106,6 +107,16 @@ class P2 extends CI_Controller {
 	}
 
 	// Halaman kategori terminal
+	public function terminal_komoditi()
+	{
+		$this->mainlib->logged_in();
+		$data['menus'] = $this->mainlib->menus();
+		$data['class'] = $this->router->fetch_class();
+		$data['hal'] = 'komoditi';
+		$data['content'] = 'terminal_komoditi';
+		$this->load->view('index', $data);
+	}
+
 	public function terminal_kategori()
 	{
 		$this->mainlib->logged_in();
@@ -120,6 +131,17 @@ class P2 extends CI_Controller {
 		$this->mainlib->logged_in();
 		// $date = $this->Tanggal_model->PrepFilterDate($_POST['start_date'], $_POST['end_date']);
 		$data = $this->Terminal_model->SummaryKategoriBulananChart();
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
+
+	public function terminal_komoditi_summary()
+	{
+		$this->mainlib->logged_in();
+		$_POST['start_date'] = null;
+		$_POST['end_date'] = null;
+		$date = $this->Tanggal_model->PrepFilterDate($_POST['start_date'], $_POST['end_date']);
+		$data = $this->Terminal_komoditi_model->SummaryKategoriTable($date);
 		header('Content-type:application/json');
 		echo json_encode($data);
 	}
