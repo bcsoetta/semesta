@@ -530,4 +530,256 @@ class Terminal_model extends CI_Model {
 		return $data;
 	}
 
+	public function SummaryKategoriHarian()
+	{
+		$query = $this->db->query("
+			SELECT
+				a.tgl,
+				a.kategori,
+				SUM(a.jml_dok) jml_dok,
+				SUM(a.nilai_pabean) nilai,
+				SUM(a.bm) bm
+			FROM 
+				db_semesta.fact_term_kategori a
+			INNER JOIN (
+				SELECT
+					a.kategori
+				FROM
+					db_semesta.fact_term_kategori a
+				WHERE
+					a.subkategori IS null
+				GROUP BY
+					1
+				ORDER BY
+					SUM(a.jml_dok) desc
+				LIMIT 10
+			) filter
+			ON
+				filter.kategori = a.kategori
+			WHERE
+				a.subkategori IS NULL
+			GROUP BY
+				a.tgl,
+				a.kategori
+		");
+		return $query->result_array();
+	}
+
+	public function SummaryKategoriBulanan()
+	{
+		$query = $this->db->query("
+			SELECT
+				year(a.tgl) year,
+				month(a.tgl) month,
+				a.kategori,
+				SUM(a.jml_dok) jml_dok,
+				SUM(a.nilai_pabean) nilai,
+				SUM(a.bm) bm
+			FROM 
+				db_semesta.fact_term_kategori a
+			INNER JOIN (
+				SELECT
+					a.kategori
+				FROM
+					db_semesta.fact_term_kategori a
+				WHERE
+					a.subkategori IS null
+				GROUP BY
+					1
+				ORDER BY
+					SUM(a.jml_dok) desc
+				LIMIT 10
+			) filter
+			ON
+				filter.kategori = a.kategori
+			WHERE
+				a.subkategori IS NULL
+			GROUP BY
+				1,2,3
+		");
+		return $query->result_array();
+	}
+
+	public function SummaryKategoriHarianChart()
+	{
+		$query_res = $this->SummaryKategoriHarian();
+
+		$date_start_num = strtotime($query_res[0]['tgl']);
+		$date_start = datetime::createfromformat('Y-m-d', $query_res[0]['tgl']);
+		$date_end = datetime::createfromformat('Y-m-d', end($query_res)['tgl']);
+		$data_int = date_diff($date_start, $date_end);
+		$data_len = $data_int->format('%a');
+		$list_kategori = [];
+
+		foreach ($query_res as $key => $value) {
+			$list_kategori[] = $value['kategori'];
+		}
+		$unique_kategori = array_unique($list_kategori);
+		$data['kategori'] = array_values($unique_kategori);
+
+		foreach ($data['kategori'] as $key => $value) {
+			$data[$value]['bm'] = array_fill(0, $data_len, '0');
+			$data[$value]['nilai'] = array_fill(0, $data_len, 0);
+		}
+
+		for ($i=0; $i < count($query_res); $i++) { 
+			$date_now = datetime::createfromformat('Y-m-d', $query_res[$i]['tgl']);
+			$kategori = $query_res[$i]['kategori'];
+			$bm = $query_res[$i]['bm'];
+			$nilai = $query_res[$i]['nilai'];
+			$dok = $query_res[$i]['jml_dok'];
+
+			$interval = date_diff($date_start, $date_now);
+			$day = $interval->format('%a');
+			$data[$kategori]['dok'][$day] = $dok;
+			$data[$kategori]['bm'][$day] = $bm;
+			$data[$kategori]['nilai'][$day] = $nilai;
+		}
+
+		for ($i=0; $i <= $data_len; $i++) { 
+			$data['tgl'][] = date("Y-m-d", $date_start_num + ($i*86400));
+		}
+
+		$jsonObject = [
+			'tooltip' => [
+				'trigger' => 'axis'
+			],
+			'legend' => [
+				'data' => $data['kategori']
+			],
+			'calculable' => false,
+			'grid' => [
+				'left' => 75,
+				'top' => 45,
+				'right' => 75,
+				'bottom' => 45
+			],
+			'xAxis' => [
+				[
+					'type' => 'category',
+					'name' => 'Tanggal',
+					'nameLocation' => 'center',
+					'nameGap' => 35,
+					'data' => $data['tgl']
+				]
+			],
+			'yAxis' => [
+				[
+					'type' => 'value',
+					'name' => 'BM',
+					'nameLocation' => 'center',
+					'nameGap' => 55,
+					'splitNumber' => 4
+				]
+			],
+			// 'color' => ['#FF4136', '#2ECC40', '#0074D9', '#FF851B'],
+			'series' => [
+
+			]
+		];
+
+		foreach ($data['kategori'] as $key => $value) {
+			$series = [
+				'name' => $value,
+				'type' => 'line',
+				// 'smooth' => true,
+				'data' => $data[$value]['bm']
+			];
+
+			$jsonObject['series'][] = $series;
+		}
+
+		return $jsonObject;
+	}
+
+	public function SummaryKategoriBulananChart()
+	{
+		$query_res = $this->SummaryKategoriBulanan();
+		$date_start = date('M-Y',strtotime($query_res[0]['year'] . '-' . $query_res[0]['month']));
+		$date_start = datetime::createfromformat('M-Y',$date_start);
+		$date_end = date('M-Y',strtotime(end($query_res)['year'] . '-' . end($query_res)['month']));
+		$date_end = datetime::createfromformat('M-Y',$date_end);
+		$interval = date_diff($date_start, $date_end);
+		$year = $interval->format('%y');
+		$month = $interval->format('%m');
+		$data_len = 12*$year + $month;
+
+		foreach ($query_res as $key => $value) {
+			$list_kategori[] = $value['kategori'];
+		}
+		$unique_kategori = array_unique($list_kategori);
+		$data['kategori'] = array_values($unique_kategori);
+
+		foreach ($data['kategori'] as $key => $value) {
+			$data['value'][$value]['bm'] = array_fill(0, $data_len, '0');
+		}
+		foreach ($query_res as $key => $value) {
+			$tgl = $value['year'] . '-' . $value['month'];
+			$tgl = date('M-Y',strtotime($tgl));
+			$list_tgl[] = $tgl;
+
+			$date_now = datetime::createfromformat('M-Y',$tgl);
+
+			$interval = date_diff($date_start, $date_now);
+			$year = $interval->format('%y');
+			$month = $interval->format('%m');
+			$total_month = 12*$year + $month;
+
+			$data['value'][$value['kategori']]['bm'][$total_month] = (int)$value['jml_dok'];
+		}
+		
+		$data['tgl'] = array_values(array_unique($list_tgl));
+
+		$jsonObject = [
+			'tooltip' => [
+				'trigger' => 'axis'
+			],
+			'legend' => [
+				'data' => $data['kategori']
+			],
+			'calculable' => false,
+			'grid' => [
+				'left' => 75,
+				'top' => 45,
+				'right' => 75,
+				'bottom' => 45
+			],
+			'xAxis' => [
+				[
+					'type' => 'category',
+					'name' => 'Bulan',
+					'nameLocation' => 'center',
+					'nameGap' => 35,
+					'data' => $data['tgl']
+				]
+			],
+			'yAxis' => [
+				[
+					'type' => 'value',
+					'name' => 'Jumlah BM (jutaan Rp)',
+					'nameLocation' => 'center',
+					'nameGap' => 55,
+					'splitNumber' => 4
+				]
+			],
+			// 'color' => ['#FF4136', '#2ECC40', '#0074D9', '#FF851B'],
+			'series' => [
+
+			]
+		];
+
+		foreach ($data['kategori'] as $key => $value) {
+			$series = [
+				'name' => $value,
+				'type' => 'line',
+				'smooth' => true,
+				'data' => $data['value'][$value]['bm']
+			];
+
+			$jsonObject['series'][] = $series;
+		}
+
+		return $jsonObject;
+	}
+
 }
