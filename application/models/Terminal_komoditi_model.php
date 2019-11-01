@@ -30,6 +30,45 @@ class Terminal_komoditi_model extends CI_Model {
 		return $query->result_array();
 	}
 
+	public function SummaryKategoriBulanan()
+	{
+		$query = $this->db->query("
+			SELECT
+				year(a.tgl) year,
+				month(a.tgl) month,
+				a.kategori,
+				SUM(a.berat) berat,
+				SUM(a.jml_dok) jml_dok,
+				SUM(a.nilai_pabean) nilai_pabean,
+				SUM(a.bm) bm
+			FROM
+				db_semesta.fact_term_kategori_copy a
+			INNER JOIN (
+				SELECT
+					a.kategori
+				FROM
+					db_semesta.fact_term_kategori_copy a
+				WHERE
+					a.tgl BETWEEN '2019-01-01' AND '2019-12-31' and
+					a.subkategori = ''
+				GROUP BY 
+					a.kategori
+				ORDER BY
+					SUM(a.jml_dok) desc
+				LIMIT
+					10
+			) filter
+			ON
+				filter.kategori = a.kategori
+			WHERE
+				a.tgl BETWEEN '2019-01-01' AND '2019-12-31' and
+				a.subkategori = ''
+			GROUP BY
+				1,2,3
+		");
+		return $query->result_array();
+	}
+
 	public function SummaryKategoriTable($date='',$dok='')
 	{
 		$date_ly = [
@@ -90,6 +129,123 @@ class Terminal_komoditi_model extends CI_Model {
 			'last' => date('Y', strtotime($date['start'] . " -1 year"))
 		];
 		return $data;
+	}
+
+	public function SummaryKategoriBulananChart($jenis='')
+	{
+		$query_res = $this->SummaryKategoriBulanan();
+		$date_start = date('M-Y',strtotime($query_res[0]['year'] . '-' . $query_res[0]['month']));
+		$date_start = datetime::createfromformat('M-Y',$date_start);
+		$date_end = date('M-Y',strtotime(end($query_res)['year'] . '-' . end($query_res)['month']));
+		$date_end = datetime::createfromformat('M-Y',$date_end);
+		$interval = date_diff($date_start, $date_end);
+		$year = $interval->format('%y');
+		$month = $interval->format('%m');
+		$data_len = 12*$year + $month;
+
+		switch ($jenis) {
+			case 'bm':
+				$division = 1000000;
+				$ylabel = 'Jumlah BM (jutaan Rp)';
+				break;
+
+			case 'nilai_pabean':
+				$division = 1000000;
+				$ylabel = 'Jumlah Nilai Pabean (jutaan Rp)';
+				break;
+
+			case 'jml_dok':
+				$division = 1;
+				$ylabel = 'Jumlah Dokumen';
+				break;
+
+			case 'berat':
+				$division = 1000;
+				$ylabel = 'Jumlah Berat (ton)';
+				break;
+			
+			default:
+				$division = 1;
+				$ylabel = 'undefined';
+				break;
+		}
+
+		foreach ($query_res as $key => $value) {
+			$list_kategori[] = $value['kategori'];
+		}
+		$unique_kategori = array_unique($list_kategori);
+		$data['kategori'] = array_values($unique_kategori);
+
+		foreach ($data['kategori'] as $key => $value) {
+			$data['value'][$value] = array_fill(0, $data_len, '0');
+		}
+		foreach ($query_res as $key => $value) {
+			$tgl = $value['year'] . '-' . $value['month'];
+			$tgl = date('M-Y',strtotime($tgl));
+			$list_tgl[] = $tgl;
+
+			$date_now = datetime::createfromformat('M-Y',$tgl);
+
+			$interval = date_diff($date_start, $date_now);
+			$year = $interval->format('%y');
+			$month = $interval->format('%m');
+			$total_month = 12*$year + $month;
+
+			$data['value'][$value['kategori']][$total_month] = $value[$jenis]/$division;
+		}
+		
+		$data['tgl'] = array_values(array_unique($list_tgl));
+
+		$jsonObject = [
+			'tooltip' => [
+				'trigger' => 'axis'
+			],
+			'legend' => [
+				'data' => $data['kategori']
+			],
+			'calculable' => false,
+			'grid' => [
+				'left' => 75,
+				'top' => 45,
+				'right' => 75,
+				'bottom' => 45
+			],
+			'xAxis' => [
+				[
+					'type' => 'category',
+					'name' => 'Bulan',
+					'nameLocation' => 'center',
+					'nameGap' => 35,
+					'data' => $data['tgl']
+				]
+			],
+			'yAxis' => [
+				[
+					'type' => 'value',
+					'name' => $ylabel,
+					'nameLocation' => 'center',
+					'nameGap' => 55,
+					'splitNumber' => 4
+				]
+			],
+			'color' => ['#e6194B', '#f58231', '#ffe119', '#469990', '#3cb44b', '#42d4f4', '#4363d8', '#911eb4', '#f032e6', '#a9a9a9'],
+			'series' => [
+
+			]
+		];
+
+		foreach ($data['kategori'] as $key => $value) {
+			$series = [
+				'name' => $value,
+				'type' => 'line',
+				'smooth' => true,
+				'data' => $data['value'][$value]
+			];
+
+			$jsonObject['series'][] = $series;
+		}
+
+		return $jsonObject;
 	}
 
 }

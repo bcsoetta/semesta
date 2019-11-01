@@ -76,6 +76,7 @@
 										<th colspan="2" style="text-align: center">Berat</th>
 										<th colspan="2" style="text-align: center">Nilai Pabean</th>
 										<th colspan="2" style="text-align: center">BM</th>
+										<th></th>
 									</tr>
 									<tr>
 										<th style="text-align: center">Kategori</th>
@@ -87,9 +88,54 @@
 										<th class="tbl-this-detail" style="text-align: center"></th>
 										<th class="tbl-last-detail" style="text-align: center"></th>
 										<th class="tbl-this-detail" style="text-align: center"></th>
+										<th style="text-align: center">Detail</th>
 									</tr>
 								</thead>
 							</table>
+						</div>
+					</div>
+				</div>
+				<div class="row-col box">
+					<div class="col-sm-12 light lt">
+						<div class="box-header">
+							<h3>BM Per Kategori</h3>
+							<!-- <small>Total penerimaan terminal per bulan</small> -->
+						</div>
+						<div class="box-body" id="ccc">
+							<div id="chart-kategori-bm-bulan" style="width: 100%; height: 40vh;"></div>
+						</div>
+					</div>
+				</div>
+				<div class="row-col box">
+					<div class="col-sm-12 light lt">
+						<div class="box-header">
+							<h3>Nilai Pabean Per Kategori</h3>
+							<!-- <small>Total penerimaan terminal per bulan</small> -->
+						</div>
+						<div class="box-body" id="ccc">
+							<div id="chart-kategori-nilai-bulan" style="width: 100%; height: 40vh;"></div>
+						</div>
+					</div>
+				</div>
+				<div class="row-col box">
+					<div class="col-sm-12 light lt">
+						<div class="box-header">
+							<h3>Berat Per Kategori</h3>
+							<!-- <small>Total penerimaan terminal per bulan</small> -->
+						</div>
+						<div class="box-body" id="ccc">
+							<div id="chart-kategori-berat-bulan" style="width: 100%; height: 40vh;"></div>
+						</div>
+					</div>
+				</div>
+				<div class="row-col box">
+					<div class="col-sm-12 light lt">
+						<div class="box-header">
+							<h3>Jumlah Dokumen Per Kategori</h3>
+							<!-- <small>Total penerimaan terminal per bulan</small> -->
+						</div>
+						<div class="box-body" id="ccc">
+							<div id="chart-kategori-dok-bulan" style="width: 100%; height: 40vh;"></div>
 						</div>
 					</div>
 				</div>

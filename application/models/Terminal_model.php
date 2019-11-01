@@ -779,7 +779,7 @@ class Terminal_model extends CI_Model {
 			$jsonObject['series'][] = $series;
 		}
 
-		return $jsonObject;
+		return $data;
 	}
 
 }
