@@ -443,8 +443,7 @@
 				<p>Yakin untuk menghapus surat tugas?</p>
 			</div>
 			<div class="modal-footer">
-				<button id="btnDelConfirm" type="button" class="btn primary p-x-md">Ya</button>
-				<button type="button" class="btn danger p-x-md" data-dismiss="modal">Batal</button>
+				<button type="button" class="btn danger p-x-md" data-dismiss="modal">Tutup</button>
 			</div>
 		</div>
 	</div>

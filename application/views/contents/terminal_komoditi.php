@@ -144,3 +144,22 @@
 	</div>
 	<!-- ############ PAGE END-->
 </div>
+
+<!-- modal detail komoditi -->
+<div id="modal-detail" class="modal" data-backdrop="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Detail Komoditi</h5>
+			</div>
+			<div class="modal-body p-lg">
+				<div id="chart-kategori-detil" style="width: 100%; height: 40vh;"></div>
+			</div>
+			<div class="modal-footer">
+				<button id="btnDelConfirm" type="button" class="btn primary p-x-md">Ya</button>
+				<button type="button" class="btn danger p-x-md" data-dismiss="modal">Batal</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /modal detail komoditi -->

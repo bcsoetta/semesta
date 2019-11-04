@@ -129,8 +129,8 @@ class P2 extends CI_Controller {
 	public function terminal_komoditi_summary()
 	{
 		$this->mainlib->logged_in();
-		$_POST['start_date'] = null;
-		$_POST['end_date'] = null;
+		// $_POST['start_date'] = null;
+		// $_POST['end_date'] = null;
 		$date = $this->Tanggal_model->PrepFilterDate($_POST['start_date'], $_POST['end_date']);
 		$data = $this->Terminal_komoditi_model->SummaryKategoriTable($date);
 		header('Content-type:application/json');
@@ -142,6 +142,17 @@ class P2 extends CI_Controller {
 		$this->mainlib->logged_in();
 		// $date = $this->Tanggal_model->PrepFilterDate($_POST['start_date'], $_POST['end_date']);
 		$data = $this->Terminal_komoditi_model->SummaryKategoriBulananChart($_POST['jenis']);
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
+
+	public function terminal_komoditi_detail()
+	{
+		$this->mainlib->logged_in();
+		$_POST['start_date'] = null;
+		$_POST['end_date'] = null;
+		$date = $this->Tanggal_model->PrepFilterDate($_POST['start_date'], $_POST['end_date']);
+		$data = $this->Terminal_komoditi_model->DetailKategoriBulananChart($date, $_POST['komoditi']);
 		header('Content-type:application/json');
 		echo json_encode($data);
 	}

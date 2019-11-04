@@ -62,7 +62,7 @@
 							{ 
 								"data": null, 
 								"render": function function_name(data, type, row) {
-									button_dtl = "<a id='" + data.kategori + "' class='detil-barang'><i class='fa fa-line-chart text-primary' data-toggle='modal' data-target='#modal-detil'></i></a>";
+									button_dtl = "<a id='" + data.kategori + "' class='detil-barang'><i class='fa fa-line-chart text-primary' data-toggle='modal' data-target='#modal-detail'></i></a>";
 									return button_dtl;
 								},
 								"createdCell" : function (td, cellData, row, col) {
@@ -112,8 +112,6 @@
 				});
 			});
 
-			
-
 		}
 
 		main();
@@ -122,6 +120,46 @@
 			event.preventDefault();
 			var input = $('#form_imp').serialize();
 			main(input);
+		});
+
+		$(document).on('click', '.detil-barang', function(e) {
+			e.preventDefault();
+			console.log('tes');
+			komoditi = $(this).attr('id');
+			$.ajax({
+				url: 'terminal_komoditi_detail',
+				method: 'POST',
+				data: {'komoditi': komoditi},
+				success: function (data) {
+					$('#modal-detail .modal-title').html('Detail ' + komoditi);
+
+					// Initialize after dom ready
+					var myChart = echarts.init(document.getElementById('chart-kategori-detil'));
+
+					// Get data from ajax
+					var option = data;
+
+					// Load data into the ECharts instance 
+					myChart.setOption(option);
+
+					// Resize chart
+					$(function () {
+
+						// Resize chart on menu width change and window resize
+						$(window).on('resize', resize);
+						$(".menu-toggle").on('click', resize);
+
+						// Resize function
+						function resize() {
+							setTimeout(function() {
+
+								// Resize chart
+								myChart.resize();
+							}, 200);
+						}
+					});
+				}
+			});
 		});
 
 }); 
