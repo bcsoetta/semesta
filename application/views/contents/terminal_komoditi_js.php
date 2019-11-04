@@ -126,6 +126,8 @@
 			e.preventDefault();
 			console.log('tes');
 			komoditi = $(this).attr('id');
+
+			// Chart komoditi
 			$.ajax({
 				url: 'terminal_komoditi_detail',
 				method: 'POST',
@@ -160,6 +162,29 @@
 					});
 				}
 			});
+
+			// Table komoditi
+			$.ajax({
+				url: 'terminal_komoditi_table',
+				method: 'POST',
+				data: {'komoditi': komoditi},
+				success: function (result) {
+					console.log(result);
+					$('#table-komoditi-detail').DataTable({
+						"destroy": true,
+						"data": result,
+						"pageLength": 5,
+						"columns": [
+							{ "data": "dok" },
+							{ "data": "terminal" },
+							{ "data": "no_cd_pibk" },
+							{ "data": "tgl" },
+							{ "data": "urbar" }
+						],
+						"order": [[ 3, "desc" ], [ 2, "desc" ]]
+					})
+				}
+			})
 		});
 
 }); 

@@ -90,6 +90,30 @@ class Terminal_komoditi_model extends CI_Model {
 		return $query->result_array();
 	}
 
+	public function DetailKategoriTransaksi($date='',$kategori='')
+	{
+		$query = $this->db->select("
+				a.dok,
+				a.terminal,
+				a.no_cd_pibk,
+				a.tgl,
+				a.urbar
+			")
+			->from("test.fact_trans_barang a")
+			->join("test.fact_dok_kategori_barang b", "
+					a.dok = b.dokumen and
+					a.terminal = b.terminal and
+					a.tahun = b.tahun and
+					a.no_cd_pibk = b.`no`
+				")
+			->where("a.tgl >=", $date['start'])
+			->where("a.tgl <=", $date['end'])
+			->where("b.category", $kategori)
+			->where("b.subcategory", "")
+			->get();
+		return $query->result_array();
+	}
+
 	public function SummaryKategoriTable($date='',$dok='')
 	{
 		$date_ly = [

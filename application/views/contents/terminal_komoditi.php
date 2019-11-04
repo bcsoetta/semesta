@@ -135,7 +135,7 @@
 							<!-- <small>Total penerimaan terminal per bulan</small> -->
 						</div>
 						<div class="box-body" id="ccc">
-							<div id="chart-kategori-dok-bulan" style="width: 100%; height: 40vh;"></div>
+							<div id="chart-kategori-dok-bulan" style="width: 100%; height: 40vh;"></div>	
 						</div>
 					</div>
 				</div>
@@ -153,11 +153,24 @@
 				<h5 class="modal-title">Detail Komoditi</h5>
 			</div>
 			<div class="modal-body p-lg">
-				<div id="chart-kategori-detil" style="width: 100%; height: 40vh;"></div>
+				<div class="m-b-2">
+					<div id="chart-kategori-detil" style="width: 100%; height: 40vh;"></div>	
+				</div>
+				<h6>Uraian barang</h6>
+				<table id="table-komoditi-detail" class="table m-b-none">
+					<thead>
+						<tr>
+							<th>Dokumen</th>
+							<th>Terminal</th>
+							<th>No CD/PIBK</th>
+							<th>Tgl Dok</th>
+							<th>Uraian Barang</th>
+						</tr>
+					</thead>
+				</table>
 			</div>
 			<div class="modal-footer">
-				<button id="btnDelConfirm" type="button" class="btn primary p-x-md">Ya</button>
-				<button type="button" class="btn danger p-x-md" data-dismiss="modal">Batal</button>
+				<button type="button" class="btn danger p-x-md" data-dismiss="modal">Tutup</button>
 			</div>
 		</div>
 	</div>
