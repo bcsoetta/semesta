@@ -359,7 +359,7 @@ class Umum_st_model extends CI_Model {
 			a.tempat_tugas,
 			a.kota_tugas,
 			a.created_at, 
-			b.id, 
+			b.id id_spd, 
 			b.no_spd, 
 			c.nip, 
 			c.nama
