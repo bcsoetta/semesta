@@ -41,7 +41,7 @@ function createTable(result, sno) {
 		var uli = "";
 		uli += "<li class='list-item'>" +
 			"<div class='m-y-sm pull-right'>" + 
-				"<a class='btn btn-xs white btn-icon p-privil' href='" + base_url + "user/privilege/?uid=" + user_id + "'>" +
+				"<a class='btn btn-xs white btn-icon p-privil' href='" + base_url + "user/privil4/?uid=" + user_id + "'>" +
 					"<i class='fa fa-user p-privil'></i>" +
 				"</a>" +
 				"<a class='btn btn-xs white btn-icon p-edit' href='" + base_url + "user/update/?uid=" + user_id + "'>" +
