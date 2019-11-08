@@ -127,7 +127,7 @@ class Peb_model extends CI_Model {
 				sum(a.total_devisa_usd) nilai
 			")
 			->from("db_semesta.fact_peb a")
-			->join("db_semesta.dim_peb_eksportir b", "a.eksportir = b.id")
+			->join("db_semesta.dim_pengguna_jasa b", "a.eksportir = b.id")
 			->join("db_semesta.dim_date c", "a.tgl_peb = c.id")
 			->where("c.date between '" . $date['start'] . "' and '" . $date['end'] . "'")
 			->group_by("b.id")
