@@ -29,6 +29,30 @@ class Umum_st_model extends CI_Model {
 
 	public function GetStHeader($id_st='')
 	{
+		$query_all_pegawai = "
+			(
+				SELECT 
+					pegawai.*
+				FROM 
+					(
+					  	(
+							SELECT 
+						  		id,
+						  		nama,
+						  		nip
+							FROM db_semesta.profile
+						) 
+						UNION ALL 
+						(
+							SELECT 
+						  		id,
+						  		nama,
+						  		nip
+							FROM db_semesta.profile_out
+						)
+					) pegawai
+			)
+		";
 
 		$query = $this->db->select("
 				a.id,
@@ -60,9 +84,9 @@ class Umum_st_model extends CI_Model {
 				a.status
 			")
 			->from("umum_st_header a")
-			->join("profile b", "a.id_pejabat = b.id")
+			->join($query_all_pegawai . 'b', "a.id_pejabat = b.id")
 			->join("dim_pejabat_tambahan c", "a.ppk = c.id", "left")
-			->join("profile d", "a.id_pejabat_kbu = d.id", "left")
+			->join($query_all_pegawai . 'd', "a.id_pejabat_kbu = d.id", "left")
 			->where("a.id", $id_st)
 			->get();
 
@@ -112,9 +136,37 @@ class Umum_st_model extends CI_Model {
 
 	public function GetStDetail($id_st='')
 	{
+		$query_all_pegawai = "
+			(
+				SELECT 
+					pegawai.*
+				FROM 
+					(
+					  	(
+							SELECT 
+						  		id,
+						  		nama,
+						  		nip,
+						  		pangkatgolongan,
+						  		jabatan
+							FROM db_semesta.profile
+						) 
+						UNION ALL 
+						(
+							SELECT 
+						  		id,
+						  		nama,
+						  		nip,
+						  		pangkatgolongan,
+						  		jabatan
+							FROM db_semesta.profile_out
+						)
+					) pegawai
+			)
+		";
 		$query = $this->db->select("a.id, a.id_pegawai, b.nama, b.nip, b.pangkatgolongan, c.pangkat, b.jabatan, a.no_spd")
 			->from("umum_st_detail a")
-			->join("profile b", "a.id_pegawai = b.id")
+			->join($query_all_pegawai . "b", "a.id_pegawai = b.id")
 			->join("dim_pangkat_gol c", "b.pangkatgolongan = c.gol")
 			->where("a.id_st", $id_st)
 			->order_by("c.rank desc")
