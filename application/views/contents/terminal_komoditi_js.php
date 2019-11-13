@@ -23,18 +23,23 @@
 			}
 		];
 
-		function main(input = 'start_date=&end_date=') {
+		start_date = '';
+		end_date = '';
+		// console.log(start_date, end_date);
+
+		function main(start_date, end_date) {
 
 			// table detail penerimaan - berat
 			$.ajax({
 				url: "terminal_komoditi_summary",
 				method: "POST",
 				type: 'json',
-				data: input,
+				data: {'start_date':start_date, 'end_date':end_date},
 				success: function(result) {
 					$('.tbl-last-detail').html(result['year']['last']);
 					$('.tbl-this-detail').html(result['year']['this']);
 					$('#table-komoditi').DataTable({
+						"destroy": true,
 						"data": result['value'],
 						"columnDefs": [
 							{
@@ -81,7 +86,7 @@
 					url: "terminal_kategori_bulan",
 					method: "POST",
 					type: 'json',
-					data: {'jenis': value['jenis']},
+					data: {'jenis': value['jenis'], 'start_date':start_date, 'end_date':end_date},
 					success: function(data) {
 						// Initialize after dom ready
 						var myChart = echarts.init(document.getElementById(value['chart']));
@@ -114,24 +119,25 @@
 
 		}
 
-		main();
+		main(start_date, end_date);
 
 		$('#form_imp').submit(function(event) {
 			event.preventDefault();
-			var input = $('#form_imp').serialize();
-			main(input);
+			start_date = $('input[name="start_date"]').val();
+			end_date = $('input[name="end_date"]').val();
+			main(start_date, end_date);
 		});
 
 		$(document).on('click', '.detil-barang', function(e) {
 			e.preventDefault();
-			console.log('tes');
+			console.log('click', start_date);
 			komoditi = $(this).attr('id');
 
 			// Chart komoditi
 			$.ajax({
 				url: 'terminal_komoditi_detail',
 				method: 'POST',
-				data: {'komoditi': komoditi},
+				data: {'komoditi': komoditi, 'start_date':start_date, 'end_date':end_date},
 				success: function (data) {
 					$('#modal-detail .modal-title').html('Detail ' + komoditi);
 
@@ -167,7 +173,7 @@
 			$.ajax({
 				url: 'terminal_komoditi_table',
 				method: 'POST',
-				data: {'komoditi': komoditi},
+				data: {'komoditi': komoditi, 'start_date':start_date, 'end_date':end_date},
 				success: function (result) {
 					console.log(result);
 					$('#table-komoditi-detail').DataTable({

@@ -530,7 +530,7 @@ class Terminal_model extends CI_Model {
 		return $data;
 	}
 
-	public function SummaryKategoriHarian()
+	public function SummaryKategoriHarian($date='')
 	{
 		$query = $this->db->query("
 			SELECT
@@ -557,7 +557,8 @@ class Terminal_model extends CI_Model {
 			ON
 				filter.kategori = a.kategori
 			WHERE
-				a.subkategori IS NULL
+				a.subkategori IS NULL and
+				a.tgl BETWEEN '" . $date['start'] . "' AND '" . $date['end'] . "'
 			GROUP BY
 				a.tgl,
 				a.kategori

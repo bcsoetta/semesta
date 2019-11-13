@@ -285,75 +285,75 @@
 				}
 			});
 
-			// chart jumlah bm per kategori
-			$.ajax({
-				url: "terminal_kategori",
-				method: "POST",
-				type: 'json',
-				data: input,
-				success: function(data) {
-					// Initialize after dom ready
-					var myChart = echarts.init(document.getElementById('chart-kategori-bm'));
+			// // chart jumlah bm per kategori
+			// $.ajax({
+			// 	url: "terminal_kategori",
+			// 	method: "POST",
+			// 	type: 'json',
+			// 	data: input,
+			// 	success: function(data) {
+			// 		// Initialize after dom ready
+			// 		var myChart = echarts.init(document.getElementById('chart-kategori-bm'));
 
-					// Get data from ajax
-					var option = data;
+			// 		// Get data from ajax
+			// 		var option = data;
 
-					// Load data into the ECharts instance 
-					myChart.setOption(option);
+			// 		// Load data into the ECharts instance 
+			// 		myChart.setOption(option);
 
-					// Resize chart
-					$(function () {
+			// 		// Resize chart
+			// 		$(function () {
 
-						// Resize chart on menu width change and window resize
-						$(window).on('resize', resize);
-						$(".menu-toggle").on('click', resize);
+			// 			// Resize chart on menu width change and window resize
+			// 			$(window).on('resize', resize);
+			// 			$(".menu-toggle").on('click', resize);
 
-						// Resize function
-						function resize() {
-							setTimeout(function() {
+			// 			// Resize function
+			// 			function resize() {
+			// 				setTimeout(function() {
 
-								// Resize chart
-								myChart.resize();
-							}, 200);
-						}
-					});
-				}
-			});
+			// 					// Resize chart
+			// 					myChart.resize();
+			// 				}, 200);
+			// 			}
+			// 		});
+			// 	}
+			// });
 
-			// chart jumlah bm per kategori bulanan
-			$.ajax({
-				url: "terminal_kategori_bulan",
-				method: "POST",
-				type: 'json',
-				data: input,
-				success: function(data) {
-					// Initialize after dom ready
-					var myChart = echarts.init(document.getElementById('chart-kategori-bm-bulan'));
+			// // chart jumlah bm per kategori bulanan
+			// $.ajax({
+			// 	url: "terminal_kategori_bulan",
+			// 	method: "POST",
+			// 	type: 'json',
+			// 	data: input,
+			// 	success: function(data) {
+			// 		// Initialize after dom ready
+			// 		var myChart = echarts.init(document.getElementById('chart-kategori-bm-bulan'));
 
-					// Get data from ajax
-					var option = data;
+			// 		// Get data from ajax
+			// 		var option = data;
 
-					// Load data into the ECharts instance 
-					myChart.setOption(option);
+			// 		// Load data into the ECharts instance 
+			// 		myChart.setOption(option);
 
-					// Resize chart
-					$(function () {
+			// 		// Resize chart
+			// 		$(function () {
 
-						// Resize chart on menu width change and window resize
-						$(window).on('resize', resize);
-						$(".menu-toggle").on('click', resize);
+			// 			// Resize chart on menu width change and window resize
+			// 			$(window).on('resize', resize);
+			// 			$(".menu-toggle").on('click', resize);
 
-						// Resize function
-						function resize() {
-							setTimeout(function() {
+			// 			// Resize function
+			// 			function resize() {
+			// 				setTimeout(function() {
 
-								// Resize chart
-								myChart.resize();
-							}, 200);
-						}
-					});
-				}
-			});
+			// 					// Resize chart
+			// 					myChart.resize();
+			// 				}, 200);
+			// 			}
+			// 		});
+			// 	}
+			// });
 
 		}
 

@@ -30,7 +30,7 @@ class Terminal_komoditi_model extends CI_Model {
 		return $query->result_array();
 	}
 
-	public function SummaryKategoriBulanan()
+	public function SummaryKategoriBulanan($date)
 	{
 		$query = $this->db->query("
 			SELECT
@@ -49,7 +49,7 @@ class Terminal_komoditi_model extends CI_Model {
 				FROM
 					db_semesta.fact_term_kategori_copy a
 				WHERE
-					a.tgl BETWEEN '2019-01-01' AND '2019-12-31' and
+					a.tgl BETWEEN '" . $date['start'] . "' AND '" . $date['end'] . "' and
 					a.subkategori = ''
 				GROUP BY 
 					a.kategori
@@ -61,7 +61,7 @@ class Terminal_komoditi_model extends CI_Model {
 			ON
 				filter.kategori = a.kategori
 			WHERE
-				a.tgl BETWEEN '2019-01-01' AND '2019-12-31' and
+				a.tgl BETWEEN '" . $date['start'] . "' AND '" . $date['end'] . "' and
 				a.subkategori = ''
 			GROUP BY
 				1,2,3
@@ -176,9 +176,9 @@ class Terminal_komoditi_model extends CI_Model {
 		return $data;
 	}
 
-	public function SummaryKategoriBulananChart($jenis='')
+	public function SummaryKategoriBulananChart($date='', $jenis='')
 	{
-		$query_res = $this->SummaryKategoriBulanan();
+		$query_res = $this->SummaryKategoriBulanan($date);
 		$date_start = date('M-Y',strtotime($query_res[0]['year'] . '-' . $query_res[0]['month']));
 		$date_start = datetime::createfromformat('M-Y',$date_start);
 		$date_end = date('M-Y',strtotime(end($query_res)['year'] . '-' . end($query_res)['month']));

@@ -117,14 +117,14 @@ class P2 extends CI_Controller {
 		$this->load->view('index', $data);
 	}
 
-	public function terminal_kategori()
-	{
-		$this->mainlib->logged_in();
-		// $date = $this->Tanggal_model->PrepFilterDate($_POST['start_date'], $_POST['end_date']);
-		$data = $this->Terminal_model->SummaryKategoriHarianChart();
-		header('Content-type:application/json');
-		echo json_encode($data);
-	}
+	// public function terminal_kategori()
+	// {
+	// 	$this->mainlib->logged_in();
+	// 	$date = $this->Tanggal_model->PrepFilterDate($_POST['start_date'], $_POST['end_date']);
+	// 	$data = $this->Terminal_model->SummaryKategoriHarianChart($date);
+	// 	header('Content-type:application/json');
+	// 	echo json_encode($data);
+	// }
 
 	public function terminal_komoditi_summary()
 	{
@@ -140,8 +140,8 @@ class P2 extends CI_Controller {
 	public function terminal_kategori_bulan()
 	{
 		$this->mainlib->logged_in();
-		// $date = $this->Tanggal_model->PrepFilterDate($_POST['start_date'], $_POST['end_date']);
-		$data = $this->Terminal_komoditi_model->SummaryKategoriBulananChart($_POST['jenis']);
+		$date = $this->Tanggal_model->PrepFilterDate($_POST['start_date'], $_POST['end_date']);
+		$data = $this->Terminal_komoditi_model->SummaryKategoriBulananChart($date, $_POST['jenis']);
 		header('Content-type:application/json');
 		echo json_encode($data);
 	}
@@ -149,8 +149,8 @@ class P2 extends CI_Controller {
 	public function terminal_komoditi_detail()
 	{
 		$this->mainlib->logged_in();
-		$_POST['start_date'] = null;
-		$_POST['end_date'] = null;
+		// $_POST['start_date'] = null;
+		// $_POST['end_date'] = null;
 		$date = $this->Tanggal_model->PrepFilterDate($_POST['start_date'], $_POST['end_date']);
 		$data = $this->Terminal_komoditi_model->DetailKategoriBulananChart($date, $_POST['komoditi']);
 		header('Content-type:application/json');
@@ -160,8 +160,8 @@ class P2 extends CI_Controller {
 	public function terminal_komoditi_table()
 	{
 		$this->mainlib->logged_in();
-		$_POST['start_date'] = null;
-		$_POST['end_date'] = null;
+		// $_POST['start_date'] = null;
+		// $_POST['end_date'] = null;
 		$date = $this->Tanggal_model->PrepFilterDate($_POST['start_date'], $_POST['end_date']);
 		$data = $this->Terminal_komoditi_model->DetailKategoriTransaksi($date, $_POST['komoditi']);
 		header('Content-type:application/json');

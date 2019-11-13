@@ -189,11 +189,10 @@
 						</div>
 					</div>
 				</div>
-				<div class="row-col box">
+				<!-- <div class="row-col box">
 					<div class="col-sm-12 light lt">
 						<div class="box-header">
 							<h3>BM Kategori</h3>
-							<!-- <small>Total penerimaan terminal per bulan</small> -->
 						</div>
 						<div class="box-body" id="ccc">
 							<div id="chart-kategori-bm" style="width: 100%; height: 40vh;"></div>
@@ -204,13 +203,12 @@
 					<div class="col-sm-12 light lt">
 						<div class="box-header">
 							<h3>BM Kategori</h3>
-							<!-- <small>Total penerimaan terminal per bulan</small> -->
 						</div>
 						<div class="box-body" id="ccc">
 							<div id="chart-kategori-bm-bulan" style="width: 100%; height: 40vh;"></div>
 						</div>
 					</div>
-				</div>
+				</div> -->
 			</div>
 		</div>
 	</div>
