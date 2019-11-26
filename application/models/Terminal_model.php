@@ -13,6 +13,7 @@ class Terminal_model extends CI_Model {
 		$query = $this->db->select("
 				b.year,
 				b.month,
+				SUM(a.jml_dok) jml_dok,
 				SUM(a.nilai_pabean) nilai,
 				SUM(a.brt_koli) berat,
 				SUM(a.bm) bm,
@@ -275,16 +276,16 @@ class Terminal_model extends CI_Model {
 
 			$data['last']['value']['bm'][] = round($row['bm']/1000000,2);
 			$data['last']['value']['nilai pabean'][] = round($row['nilai']/1000000,2);
-			$data['last']['value']['berat'][] = round($row['berat']/1000,2);
+			$data['last']['value']['jml_dok'][] = round($row['jml_dok']);
 		}
 		foreach ($query_this_year as $row) {
 			$data['curr']['tgl']['year'] = $row['year'];
 			$data['curr']['value']['bm'][] = round($row['bm']/1000000,2);
 			$data['curr']['value']['nilai pabean'][] = round($row['nilai']/1000000,2);
-			$data['curr']['value']['berat'][] = round($row['berat']/1000,2);
+			$data['curr']['value']['jml_dok'][] = round($row['jml_dok']);
 		}
 
-		$list_value = array('bm', 'nilai pabean', 'berat');
+		$list_value = array('bm', 'nilai pabean', 'jml_dok');
 		foreach ($list_value as $key => $value) {
 			$list[$value] = array_merge($data['last']['value'][$value], $data['curr']['value'][$value]);
 			$max[$value] = max($list[$value]);
@@ -296,7 +297,10 @@ class Terminal_model extends CI_Model {
 
 		$jsonObject = [
 			'tooltip' => [
-				'trigger' => 'axis'
+				'trigger' => 'axis',
+				'axisPointer' => [
+					'type' => 'cross'
+				]
 			],
 			'legend' => [
 				
@@ -320,15 +324,12 @@ class Terminal_model extends CI_Model {
 			'yAxis' => [
 				[
 					'type' => 'value',
-					'name' => 'Berat (ton)',
+					'name' => 'Jumlah Dokumen',
 					'nameLocation' => 'center',
 					'nameGap' => 55,
 					'min' => 0,
-					'max' => $max['berat'],
-					'interval' => $max['berat']/4,
-					'axisPointer' => [
-						'show' => true
-					]
+					'max' => $max['jml_dok'],
+					'interval' => $max['jml_dok']/4
 				],
 				[
 					'type' => 'value',
@@ -337,10 +338,7 @@ class Terminal_model extends CI_Model {
 					'nameGap' => 55,
 					'min' => 0,
 					'max' => $max['bm'],
-					'interval' => $max['bm']/4,
-					'axisPointer' => [
-						'show' => true
-					]
+					'interval' => $max['bm']/4
 				],
 				[
 					'type' => 'value',
@@ -350,10 +348,7 @@ class Terminal_model extends CI_Model {
 					'nameGap' => 55,
 					'min' => 0,
 					'max' => $max['nilai pabean'],
-					'interval' => $max['nilai pabean']/4,
-					'axisPointer' => [
-						'show' => true
-					]
+					'interval' => $max['nilai pabean']/4
 				],
 			],
 			'color' => ['#2F89FC', '#2F89FC', '#52DE97', '#FF5733', '#FF5733', '#FFC30F'],
@@ -371,7 +366,7 @@ class Terminal_model extends CI_Model {
 					'data' => $v
 				];
 
-				if ($k == 'berat') {
+				if ($k == 'jml_dok') {
 					$series['type'] = 'bar';
 					$series['yAxisIndex'] = 0;
 					$series['barGap'] = '0%';

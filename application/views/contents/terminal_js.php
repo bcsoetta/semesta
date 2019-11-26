@@ -118,14 +118,14 @@
 
 			// chart perbandingan netto - bm
 			$.ajax({
-				url: "terminal_penerimaan_berat",
+				url: "terminal_penerimaan_nilai",
 				method: "POST",
 				type: 'json',
 				data: input,
 				success: function(data) {
 
 					// Initialize after dom ready
-					var myChart = echarts.init(document.getElementById('chart-netto-bm'));
+					var myChart = echarts.init(document.getElementById('chart-nilai-bm'));
 
 					// Get data from ajax
 					var option = data;

@@ -88,7 +88,7 @@ class P2 extends CI_Controller {
 		echo json_encode($data);
 	}
 
-	public function terminal_penerimaan_berat()
+	public function terminal_penerimaan_nilai()
 	{
 		$this->mainlib->logged_in();
 		$date = $this->Tanggal_model->PrepFilterDate($_POST['start_date'], $_POST['end_date']);

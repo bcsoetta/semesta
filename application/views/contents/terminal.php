@@ -145,11 +145,11 @@
 				<div class="row-col box">
 					<div class="col-sm-12 light lt">
 						<div class="box-header">
-							<h3>Perbandingan Netto - BM</h3>
+							<h3>Perbandingan BM - Nilai Pabean - Jumlah Dokumen</h3>
 							<!-- <small>Total penerimaan terminal per bulan</small> -->
 						</div>
 						<div class="box-body" id="ccc">
-							<div id="chart-netto-bm" style="width: 100%; height: 40vh;"></div>
+							<div id="chart-nilai-bm" style="width: 100%; height: 40vh;"></div>
 						</div>
 					</div>
 				</div>
