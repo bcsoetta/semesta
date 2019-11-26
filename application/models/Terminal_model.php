@@ -472,10 +472,10 @@ class Terminal_model extends CI_Model {
 
 		$data = [];
 		$nilai_curr_kum = 0;
-		$berat_curr_kum = 0;
+		$jml_dok_curr_kum = 0;
 		$bm_curr_kum = 0;
 		$nilai_last_kum = 0;
-		$berat_last_kum = 0;
+		$jml_dok_last_kum = 0;
 		$bm_last_kum = 0;
 		for ($i=0; $i < count($query_this_year); $i++) { 
 			$dateObj = DateTime::createFromFormat('!m', $query_this_year[$i]['month']);
@@ -484,8 +484,8 @@ class Terminal_model extends CI_Model {
 			$nilai = $query_this_year[$i]['nilai']/1000000;
 			$nilai_curr_kum += $nilai;
 			
-			$berat = $query_this_year[$i]['berat']/1000;
-			$berat_curr_kum += $berat;
+			$jml_dok = $query_this_year[$i]['jml_dok'];
+			$jml_dok_curr_kum += $jml_dok;
 
 			$bm = $query_this_year[$i]['bm']/1000000;
 			$bm_curr_kum += $bm;
@@ -493,8 +493,8 @@ class Terminal_model extends CI_Model {
 			$data['value'][$i]['order'] = $i;
 			$data['value'][$i]['nilai_curr'] = number_format($nilai, 2, ',', '.');
 			$data['value'][$i]['nilai_curr_kum'] = number_format($nilai_curr_kum, 2, ',', '.');
-			$data['value'][$i]['berat_curr'] = number_format($berat, 2, ',', '.');
-			$data['value'][$i]['berat_curr_kum'] = number_format($berat_curr_kum, 2, ',', '.');
+			$data['value'][$i]['jml_dok_curr'] = $jml_dok;
+			$data['value'][$i]['jml_dok_curr_kum'] = $jml_dok_curr_kum;
 			$data['value'][$i]['bm_curr'] = number_format($bm, 2, ',', '.');
 			$data['value'][$i]['bm_curr_kum'] = number_format($bm_curr_kum, 2, ',', '.');
 			$data['year']['curr'] = $query_this_year[$i]['year'];
@@ -506,8 +506,8 @@ class Terminal_model extends CI_Model {
 			$nilai = $query_last_year[$i]['nilai']/1000000;
 			$nilai_last_kum += $nilai;
 			
-			$berat = $query_last_year[$i]['berat']/1000;
-			$berat_last_kum += $berat;
+			$jml_dok = $query_last_year[$i]['jml_dok'];
+			$jml_dok_last_kum += $jml_dok;
 
 			$bm = $query_last_year[$i]['bm']/1000000;
 			$bm_last_kum += $bm;
@@ -515,8 +515,8 @@ class Terminal_model extends CI_Model {
 			$data['value'][$i]['order'] = $i;
 			$data['value'][$i]['nilai_last'] = number_format($nilai, 2, ',', '.');
 			$data['value'][$i]['nilai_last_kum'] = number_format($nilai_last_kum, 2, ',', '.');
-			$data['value'][$i]['berat_last'] = number_format($berat, 2, ',', '.');
-			$data['value'][$i]['berat_last_kum'] = number_format($berat_last_kum, 2, ',', '.');
+			$data['value'][$i]['jml_dok_last'] = $jml_dok;
+			$data['value'][$i]['jml_dok_last_kum'] = $jml_dok_last_kum;
 			$data['value'][$i]['bm_last'] = number_format($bm, 2, ',', '.');
 			$data['value'][$i]['bm_last_kum'] = number_format($bm_last_kum, 2, ',', '.');
 			$data['year']['last'] = $query_last_year[$i]['year'];

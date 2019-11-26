@@ -156,7 +156,7 @@
 				<div class="row-col box">
 					<div class="col-sm-12">
 						<div class="box-header">
-							<h3>Detail Perbandingan BM - Nilai Pabean - Netto</h3>
+							<h3>Detail Perbandingan BM - Nilai Pabean - Jumlah Dokumen</h3>
 							<!-- <small>Total penerimaan terminal per bulan</small> -->
 						</div>
 						<div class="box-body" id="ccc">
@@ -175,14 +175,14 @@
 										<th>BM Kumulatif<br>(juta Rp)</th>
 										<th>Nilai Pabean<br>(juta Rp)</th>
 										<th>Nilai Pabean Kumulatif<br>(juta Rp)</th>
-										<th>Berat<br>(ton)</th>
-										<th>Berat Kumulatif<br>(ton)</th>
+										<th>Dokumen</th>
+										<th>Dokumen Kumulatif</th>
 										<th>BM<br>(juta Rp)</th>
 										<th>BM Kumulatif<br>(juta Rp)</th>
 										<th>Nilai Pabean<br>(juta Rp)</th>
 										<th>Nilai Pabean Kumulatif<br>(juta Rp)</th>
-										<th>Berat<br>(ton)</th>
-										<th>Berat Kumulatif<br>(ton)</th>
+										<th>Dokumen</th>
+										<th>Dokumen Kumulatif</th>
 									</tr>
 								</thead>
 							</table>

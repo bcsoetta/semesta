@@ -246,11 +246,11 @@
 								"defaultContent": ""
 							},
 							{ 
-								"data": "berat_last",
+								"data": "jml_dok_last",
 								"defaultContent": ""
 							},
 							{ 
-								"data": "berat_last_kum",
+								"data": "jml_dok_last_kum",
 								"defaultContent": ""
 							},
 							{ 
@@ -270,11 +270,11 @@
 								"defaultContent": ""
 							},
 							{ 
-								"data": "berat_curr",
+								"data": "jml_dok_curr",
 								"defaultContent": ""
 							},
 							{ 
-								"data": "berat_curr_kum",
+								"data": "jml_dok_curr_kum",
 								"defaultContent": ""
 							}
 							
