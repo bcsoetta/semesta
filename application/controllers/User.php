@@ -702,7 +702,8 @@ class User extends CI_Controller
 		$this->load->model('User_priv_model');
 		$data['class'] = $this->router->fetch_class();
 		$data['hal'] = 'privileges';
-		$data['content'] = 'priv_user';
+		// $data['content'] = 'priv_user';
+		$data['content'] = 'user_privil';
 		$data['user'] = $this->User_model->get_user_detail_by_id($user_id);
 		$this->load->view('index', $data);
 	}

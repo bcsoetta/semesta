@@ -70,4 +70,25 @@ class Tanggal_model extends CI_Model {
 		return $waktu;
 	}
 
+	public function PrepFilterDate($start, $end)
+	{
+		$date = [];
+
+		if ($start == null) {
+			$date['start'] = date('Y-01-01');
+		} else {
+			$start = str_replace('/', '-', $start);
+			$date['start'] = date('Y-m-d', strtotime($start));
+		}
+
+		if ($end == null) {
+			$date['end'] = date('Y-12-31');
+		} else {
+			$end = str_replace('/', '-', $end);
+			$date['end'] = date('Y-m-d', strtotime($end));
+		}
+
+		return $date;
+	}
+
 }
