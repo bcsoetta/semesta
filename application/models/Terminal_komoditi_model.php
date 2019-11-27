@@ -99,8 +99,8 @@ class Terminal_komoditi_model extends CI_Model {
 				a.tgl,
 				a.urbar
 			")
-			->from("test.fact_trans_barang a")
-			->join("test.fact_dok_kategori_barang b", "
+			->from("db_semesta.fact_trans_barang a")
+			->join("db_semesta.fact_dok_kategori_barang b", "
 					a.dok = b.dokumen and
 					a.terminal = b.terminal and
 					a.tahun = b.tahun and
