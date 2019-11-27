@@ -99,8 +99,8 @@ class Terminal_komoditi_model extends CI_Model {
 				a.tgl,
 				a.urbar
 			")
-			->from("db_semesta.fact_trans_barang a")
-			->join("db_semesta.fact_dok_kategori_barang b", "
+			->from("db_semesta.fact_term_trans_barang a")
+			->join("db_semesta.fact_term_dok_kategori_barang b", "
 					a.dok = b.dokumen and
 					a.terminal = b.terminal and
 					a.tahun = b.tahun and
@@ -331,7 +331,10 @@ class Terminal_komoditi_model extends CI_Model {
 
 		$jsonObject = [
 			'tooltip' => [
-				'trigger' => 'axis'
+				'trigger' => 'axis',
+				'axisPointer' => [
+					'type' => 'cross'
+				]
 			],
 			'legend' => [
 				
@@ -360,10 +363,7 @@ class Terminal_komoditi_model extends CI_Model {
 					'nameGap' => 55,
 					'min' => 0,
 					'max' => $max['berat'],
-					'interval' => $max['berat']/4,
-					'axisPointer' => [
-						'show' => true
-					]
+					'interval' => $max['berat']/4
 				],
 				[
 					'type' => 'value',
@@ -372,10 +372,7 @@ class Terminal_komoditi_model extends CI_Model {
 					'nameGap' => 55,
 					'min' => 0,
 					'max' => $max['bm'],
-					'interval' => $max['bm']/4,
-					'axisPointer' => [
-						'show' => true
-					]
+					'interval' => $max['bm']/4
 				],
 				[
 					'type' => 'value',
@@ -385,10 +382,7 @@ class Terminal_komoditi_model extends CI_Model {
 					'nameGap' => 55,
 					'min' => 0,
 					'max' => $max['nilai pabean'],
-					'interval' => $max['nilai pabean']/4,
-					'axisPointer' => [
-						'show' => true
-					]
+					'interval' => $max['nilai pabean']/4
 				],
 			],
 			'color' => ['#2F89FC', '#2F89FC', '#52DE97', '#FF5733', '#FF5733', '#FFC30F'],
