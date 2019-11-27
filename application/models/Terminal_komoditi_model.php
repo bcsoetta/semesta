@@ -17,7 +17,7 @@ class Terminal_komoditi_model extends CI_Model {
 			SUM(a.pph) pph,
 			SUM(a.ppnbm) ppnbm
 		");
-		$this->db->from("db_semesta.fact_term_kategori_copy a");
+		$this->db->from("db_semesta.fact_term_kategori a");
 		$this->db->where("a.tgl >=", $date['start']);
 		$this->db->where("a.tgl <=", $date['end']);
 		$this->db->where("a.kategori <>", "");
@@ -42,12 +42,12 @@ class Terminal_komoditi_model extends CI_Model {
 				SUM(a.nilai_pabean) nilai_pabean,
 				SUM(a.bm) bm
 			FROM
-				db_semesta.fact_term_kategori_copy a
+				db_semesta.fact_term_kategori a
 			INNER JOIN (
 				SELECT
 					a.kategori
 				FROM
-					db_semesta.fact_term_kategori_copy a
+					db_semesta.fact_term_kategori a
 				WHERE
 					a.tgl BETWEEN '" . $date['start'] . "' AND '" . $date['end'] . "' and
 					a.subkategori = ''
@@ -80,7 +80,7 @@ class Terminal_komoditi_model extends CI_Model {
 				SUM(a.nilai_pabean) nilai_pabean,
 				SUM(a.bm) bm
 			")
-			->from("db_semesta.fact_term_kategori_copy a")
+			->from("db_semesta.fact_term_kategori a")
 			->where("a.tgl >=", $date['start'])
 			->where("a.tgl <=", $date['end'])
 			->where("a.kategori", $kategori)
