@@ -46,7 +46,8 @@
 					    }
 					},
 					{ "data": "BM Hit", render: $.fn.dataTable.render.number( '.', ',', 2, 'Rp ' ) },
-					{ "data": "PDRI", render: $.fn.dataTable.render.number( '.', ',', 2, 'Rp ' ) }
+					{ "data": "PDRI", render: $.fn.dataTable.render.number( '.', ',', 2, 'Rp ' ) },
+					{ "data": "Denda", render: $.fn.dataTable.render.number( '.', ',', 2, 'Rp ' ) }
 				],
 				"footerCallback": function ( row, data, start, end, display ) {
 					var api = this.api(), data;
@@ -91,6 +92,13 @@
 						return intVal(a) + intVal(b);
 						}, 0 );
 
+					totalDenda = api
+						.column( 6 )
+						.data()
+						.reduce( function (a, b) {
+						return intVal(a) + intVal(b);
+						}, 0 );
+
 		            // Update footer
 		            $( api.column( 1 ).footer() ).html(
 		                totalPib
@@ -110,6 +118,10 @@
 
 		            $( api.column( 5 ).footer() ).html(
 						numberFormat(totalPdri)
+					);
+
+					$( api.column( 6 ).footer() ).html(
+						numberFormat(totalDenda)
 					);
 				}
 			});

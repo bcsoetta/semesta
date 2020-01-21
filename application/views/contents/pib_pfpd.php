@@ -84,11 +84,13 @@
 										<th>Hit Rate</th>
 										<th>BM Hit</th>
 										<th>PDRI Hit</th>
+										<th>Denda</th>
 									</tr>
 								</thead>
 								<tfoot>
 									<tr>
 										<th>Total</th>
+										<th></th>
 										<th></th>
 										<th></th>
 										<th></th>
