@@ -161,6 +161,7 @@ class Perbend_model extends CI_Model {
 			$lunas = substr($status,-1);
 
 			$filter_status = "d.status = " . $status . " AND d.jt_tempo = " . $jt_tempo;
+			$col_lunas = ", f.tgl_ntpn `Tgl Lunas`, f.ntpn `NTPN`, f.tgl_billing `Tgl Billing`, f.kode_billing `Kode Billing`";
 
 			if ($stat_master == 2) {
 				$dok_mutasi = "Srt Teguran";
@@ -183,7 +184,7 @@ class Perbend_model extends CI_Model {
 			} elseif ($status == 19) {
 
 				$order = " ORDER BY 7 DESC";
-				$this->ListSuratPiutang($filter_status, $order, $date);
+				$this->ListSuratPiutang($filter_status, $order, $date, $col_lunas);
 
 			} elseif (in_array($status, array(20,30,60)) && $jt_tempo == 0) {
 
@@ -198,7 +199,7 @@ class Perbend_model extends CI_Model {
 			} elseif (in_array($status, array(29,39,69))) {
 
 				$order = " ORDER BY 9 DESC";
-				$this->ListSuratMutasi($filter_status, $order, $dok_mutasi, $date);
+				$this->ListSuratMutasi($filter_status, $order, $dok_mutasi, $date, $col_lunas);
 
 			}
 
@@ -212,7 +213,7 @@ class Perbend_model extends CI_Model {
 
 	}
 
-	private function ListSuratPiutang($filter='', $order='', $date='')
+	private function ListSuratPiutang($filter='', $order='', $date='', $col_lunas='')
 	{
 
 		$query_sptnp = "
@@ -222,8 +223,7 @@ class Perbend_model extends CI_Model {
 				e.TGL_SPTNP `Tgl Dok`,
 				e.ID_IMP `NPWP`,
 				g.nama `Nama`,
-				e.JT_TEMPO_SPTNP `Jt Tempo`,
-				f.tgl_ntpn `Tgl Lunas`
+				e.JT_TEMPO_SPTNP `Jt Tempo`" . $col_lunas . "
 			FROM (
 				SELECT
 					a.jns_dok,
@@ -262,8 +262,7 @@ class Perbend_model extends CI_Model {
 				e.TGL_DOK `Tgl Dok`,
 				e.ID_PRSH `NPWP`,
 				g.nama `Nama`,
-				e.TGL_JT_TEMPO `Jt Tempo`,
-				f.tgl_ntpn `Tgl Lunas`
+				e.TGL_JT_TEMPO `Jt Tempo`" . $col_lunas . "
 			FROM (
 				SELECT
 					a.jns_dok,
@@ -302,8 +301,7 @@ class Perbend_model extends CI_Model {
 				e.TGL_SPP `Tgl Dok`,
 				e.NPWP `NPWP`,
 				g.nama `Nama`,
-				e.TGL_JT_TEMPO `Jt Tempo`,
-				f.tgl_ntpn `Tgl Lunas`
+				e.TGL_JT_TEMPO `Jt Tempo`" . $col_lunas . "
 			FROM (
 				SELECT
 					a.jns_dok,
@@ -342,8 +340,7 @@ class Perbend_model extends CI_Model {
 				e.TGL_SPSA `Tgl Dok`,
 				e.NPWP `NPWP`,
 				g.nama `Nama`,
-				e.TGL_JT_TEMPO `Jt Tempo`,
-				f.tgl_ntpn `Tgl Lunas`
+				e.TGL_JT_TEMPO `Jt Tempo`" . $col_lunas . "
 			FROM (
 				SELECT
 					a.jns_dok,
@@ -380,7 +377,7 @@ class Perbend_model extends CI_Model {
 		$this->list_piutang = $query->result();
 	}
 
-	private function ListSuratMutasi($filter='', $order='', $dok_mutasi='', $date='')
+	private function ListSuratMutasi($filter='', $order='', $dok_mutasi='', $date='', $col_lunas='')
 	{
 
 		$query_sptnp = "
@@ -390,10 +387,9 @@ class Perbend_model extends CI_Model {
 				e.tgl_sptnp `Tgl Dok`,
 				e.id_imp `NPWP`,
 				h.nama `Nama`,
-				CONCAT(f.no_status, f.no_agenda) `" . $dok_mutasi . "`,	
-				f.tgl_status `Tgl Surat`, 
-				e.jt_tempo_sptnp `Jt Tempo`,
-				g.tgl_ntpn `Tgl Lunas`
+				CONCAT(g.no_status, g.no_agenda) `" . $dok_mutasi . "`,	
+				g.tgl_status `Tgl Surat`, 
+				e.jt_tempo_sptnp `Jt Tempo`" . $col_lunas . "
 			FROM (
 				SELECT
 					a.jns_dok,
@@ -422,8 +418,8 @@ class Perbend_model extends CI_Model {
 				LEFT JOIN db_semesta.dim_date c ON a.tgl_jt_tempo = c.id
 			) d
 			INNER JOIN data_dt.sptnp e ON d.id_dok = e.id AND d.jns_dok = 1
-			INNER JOIN data_dt.piutang_status f ON d.id_status = f.id
-			LEFT JOIN data_dt.billing g ON d.id_billing = g.id
+			INNER JOIN data_dt.piutang_status g ON d.id_status = g.id
+			LEFT JOIN data_dt.billing f ON d.id_billing = f.id
 			LEFT JOIN db_semesta.dim_pengguna_jasa h on e.id_imp = h.npwp
 			WHERE " . $filter;
 
@@ -434,10 +430,9 @@ class Perbend_model extends CI_Model {
 				e.TGL_DOK `Tgl Dok`,
 				e.ID_PRSH `NPWP`,
 				h.nama `Nama`,
-				CONCAT(f.no_status, f.no_agenda) `" . $dok_mutasi . "`,	
-				f.tgl_status `Tgl Surat`, 
-				e.TGL_JT_TEMPO `Jt Tempo`,
-				g.tgl_ntpn `Tgl Lunas`
+				CONCAT(g.no_status, g.no_agenda) `" . $dok_mutasi . "`,	
+				g.tgl_status `Tgl Surat`, 
+				e.TGL_JT_TEMPO `Jt Tempo`" . $col_lunas . "
 			FROM (
 				SELECT
 					a.jns_dok,
@@ -466,8 +461,8 @@ class Perbend_model extends CI_Model {
 				LEFT JOIN db_semesta.dim_date c ON a.tgl_jt_tempo = c.id
 			) d
 			INNER JOIN data_dt.spktnp e ON d.id_dok = e.id AND d.jns_dok = 2
-			INNER JOIN data_dt.piutang_status f ON d.id_status = f.id
-			LEFT JOIN data_dt.billing g ON d.id_billing = g.id
+			INNER JOIN data_dt.piutang_status g ON d.id_status = g.id
+			LEFT JOIN data_dt.billing f ON d.id_billing = f.id
 			LEFT JOIN db_semesta.dim_pengguna_jasa h on e.ID_PRSH = h.npwp
 			WHERE " . $filter;
 
@@ -478,10 +473,9 @@ class Perbend_model extends CI_Model {
 				e.TGL_SPP `Tgl Dok`,
 				e.NPWP `NPWP`,
 				h.nama `Nama`,
-				CONCAT(f.no_status, f.no_agenda) `" . $dok_mutasi . "`,	
-				f.tgl_status `Tgl Surat`, 
-				e.TGL_JT_TEMPO `Jt Tempo`,
-				g.tgl_ntpn `Tgl Lunas`
+				CONCAT(g.no_status, g.no_agenda) `" . $dok_mutasi . "`,	
+				g.tgl_status `Tgl Surat`, 
+				e.TGL_JT_TEMPO `Jt Tempo`" . $col_lunas . "
 			FROM (
 				SELECT
 					a.jns_dok,
@@ -510,8 +504,8 @@ class Perbend_model extends CI_Model {
 				LEFT JOIN db_semesta.dim_date c ON a.tgl_jt_tempo = c.id
 			) d
 			INNER JOIN data_dt.spp e ON d.id_dok = e.id AND d.jns_dok = 4
-			INNER JOIN data_dt.piutang_status f ON d.id_status = f.id
-			LEFT JOIN data_dt.billing g ON d.id_billing = g.id
+			INNER JOIN data_dt.piutang_status g ON d.id_status = g.id
+			LEFT JOIN data_dt.billing f ON d.id_billing = f.id
 			LEFT JOIN db_semesta.dim_pengguna_jasa h on e.NPWP = h.npwp
 			WHERE " . $filter;
 
@@ -522,10 +516,9 @@ class Perbend_model extends CI_Model {
 				e.TGL_SPSA `Tgl Dok`,
 				e.NPWP `NPWP`,
 				h.nama `Nama`,
-				CONCAT(f.no_status, f.no_agenda) `" . $dok_mutasi . "`,	
-				f.tgl_status `Tgl Surat`, 
-				e.TGL_JT_TEMPO `Jt Tempo`,
-				g.tgl_ntpn `Tgl Lunas`
+				CONCAT(g.no_status, g.no_agenda) `" . $dok_mutasi . "`,	
+				g.tgl_status `Tgl Surat`, 
+				e.TGL_JT_TEMPO `Jt Tempo`" . $col_lunas . "
 			FROM (
 				SELECT
 					a.jns_dok,
@@ -554,8 +547,8 @@ class Perbend_model extends CI_Model {
 				LEFT JOIN db_semesta.dim_date c ON a.tgl_jt_tempo = c.id
 			) d
 			INNER JOIN data_dt.spsa e ON d.id_dok = e.id AND d.jns_dok = 5
-			INNER JOIN data_dt.piutang_status f ON d.id_status = f.id
-			LEFT JOIN data_dt.billing g ON d.id_billing = g.id
+			INNER JOIN data_dt.piutang_status g ON d.id_status = g.id
+			LEFT JOIN data_dt.billing f ON d.id_billing = f.id
 			LEFT JOIN db_semesta.dim_pengguna_jasa h on e.NPWP = h.npwp
 			WHERE " . $filter;
 
@@ -756,6 +749,7 @@ class Perbend_model extends CI_Model {
 
 		$data = $this->list_piutang;
 
+		$main_col = ['Dok', 'No Dok', 'Tgl Dok', 'NPWP', 'Nama', 'Jt Tempo', 'Tgl Lunas'];
 		$table = [];
 		$columns = [];
 		$rows = [];
@@ -772,11 +766,20 @@ class Perbend_model extends CI_Model {
 		];
 
 		foreach ($data[0] as $key => $value) {
-			$columns[] = [
-				'name' => $key,
-				'title' => $key,
-				'type' => 'text'
-			];
+			if (in_array($key, $main_col)) {
+				$columns[] = [
+					'name' => $key,
+					'title' => $key,
+					'type' => 'text'
+				];
+			} else {
+				$columns[] = [
+					'name' => $key,
+					'title' => $key,
+					'type' => 'text',
+					'breakpoints' => 'all'
+				];
+			}
 		}
 
 		$table['columns'] = $columns;

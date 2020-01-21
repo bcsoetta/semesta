@@ -105,5 +105,15 @@
 
 		})
 
+		$(".excelexport").on("click", function (e) {
+			var csv = FooTable.get('#table-list-piutang').toCSV(true);
+			/*  console.log ("csv: " + csv);*/
+			var hiddenElement = document.createElement('a');
+			hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+			hiddenElement.target = '_blank';
+			hiddenElement.download = 'SDTB_DM_010_LICENSES_DONGLES_ACT.csv';
+			hiddenElement.click();
+		}); 
+
 	}); 
 </script>

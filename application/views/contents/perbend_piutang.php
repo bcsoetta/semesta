@@ -296,6 +296,11 @@
 						</div>
 						<div class="box-divider m-a-0"></div>
 						<div class="box-body">
+							<!-- <button class="btn btn-warning excelexport btn-md" type="button">export</button> -->
+							<!-- <span class="excelexport pull-right"><a href="#" class="fa fa-download text-info"></a></span> -->
+							<button class="excelexport btn btn-sm primary pull-right">
+								<span href="#" class="fa fa-download"></span>  CSV
+							</button>
 							<table id="table-list-piutang" class="table m-b-none"></table>	
 						</div>
 					</div>
