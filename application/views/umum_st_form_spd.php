@@ -149,10 +149,8 @@
                                         <?php 
                                             if ($st_header->dipa == '1') {
                                                 echo('KPU.03/' . $st_header->tahun);
-                                            } elseif ($st_header->dipa == '2') {
-                                                echo('');
                                             } else {
-                                                echo('AGENDA TIDAK DITEMUKAN');
+                                                echo('');
                                             }
                                         ?>
                                     </td>
@@ -164,10 +162,8 @@
                                         <?php 
                                             if ($st_header->dipa == '1') {
                                                 echo('SPD-' . $pegawai->no_spd);
-                                            } elseif ($st_header->dipa == '2') {
-                                                echo('SPD-');
                                             } else {
-                                                echo('AGENDA TIDAK DITEMUKAN');
+                                                echo('SPD-');
                                             }
                                         ?>
                                     </td>

@@ -99,7 +99,7 @@
 
 		.naskah-dinas .ttd .plh {
 			position: absolute;
-			left: 94mm;
+			left: 92mm;
 		}
 
 		.naskah-dinas .lampiran {
@@ -247,7 +247,7 @@
 					<p>Ditetapkan di Tangerang</p>
 					<p><?php echo 'Pada tanggal ' . $st_header->tgl_st; ?></p>
 					<?php if ($st_header->plh == '1') { ?>
-						<p class="plh">PLH.&nbsp;</p>
+						<p class="plh">PLH.</p>
 					<?php } ?>
 					<p><?php echo strtoupper($st_header->jabatan); ?></p>
 					<br><br><br><br>
@@ -296,7 +296,7 @@
 					<br><br><br>
 					<div class="ttd">
 						<?php if ($st_header->plh == '1') { ?>
-							<p class="plh">PLH.&nbsp;</p>
+							<p class="plh">PLH.</p>
 						<?php } ?>
 						<p><?php echo $st_header->jabatan; ?></p>
 						<br><br><br><br>
