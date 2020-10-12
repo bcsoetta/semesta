@@ -278,13 +278,13 @@ class Umum_model extends CI_Model {
 	}
 
 	public function get_privils_ref_detail_for_paginate_count($search) {
-		$query = $this->db->query("SELECT COUNT(*) AS allcount FROM empl_ref WHERE nama LIKE '%$search%'");
+		$query = $this->db->query("SELECT COUNT(*) AS allcount FROM profile WHERE nama LIKE '%$search%'");
 		$result = $query->result_array();
 		return $result[0]['allcount'];
 	}
 
 	public function get_privils_ref_detail_for_paginate($rowno, $rowperpage, $search, $pid) {
-		$query = $this->db->query("SELECT id, nama, nip, kehadiran FROM (SELECT a.id, a.nip, a.nama, b.kehadiran FROM empl_ref a INNER JOIN umum_ppkp_peserta b ON a.nip = b.nip WHERE b.ppkp_id = '$pid' UNION SELECT r.id, r.nip, r.nama, 'nan' FROM empl_ref r WHERE r.nama NOT IN (SELECT t.nama FROM umum_ppkp_peserta t WHERE t.ppkp_id = '$pid')) a WHERE a.nama LIKE '%$search%' ORDER BY a.nama ASC LIMIT $rowno, $rowperpage");
+		$query = $this->db->query("SELECT id, nama, nip, kehadiran FROM (SELECT a.id, a.nip, a.nama, b.kehadiran FROM profile a INNER JOIN umum_ppkp_peserta b ON a.nip = b.nip WHERE b.ppkp_id = '$pid' UNION SELECT r.id, r.nip, r.nama, 'nan' FROM profile r WHERE r.nama NOT IN (SELECT t.nama FROM umum_ppkp_peserta t WHERE t.ppkp_id = '$pid')) a WHERE a.nama LIKE '%$search%' ORDER BY a.nama ASC LIMIT $rowno, $rowperpage");
 		return $query->result_array();
 	}
 
