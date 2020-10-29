@@ -338,4 +338,43 @@ class Pib extends CI_Controller {
 		echo json_encode($data);
 	}
 
+	// Halaman importir
+	public function komoditi()
+	{
+		$this->mainlib->logged_in();
+		// $this->mainlib->privilege();
+		$data['menus'] = $this->mainlib->menus();
+		$data['class'] = $this->router->fetch_class();
+		$data['hal'] = 'komoditi';
+		$data['content'] = 'pib_komoditi';
+		$this->load->view('index', $data);
+	}
+
+	public function get_komoditi()
+	{
+		$this->mainlib->logged_in();
+		$this->load->model('Pib_komoditi_model');
+		$data = $this->Pib_komoditi_model->ChartHsNilai();
+		header('Content-type:application/json');
+		echo json_encode($data);
+		// echo $data;
+	}
+
+	public function get_komoditi_test()
+	{
+		$this->mainlib->logged_in();
+		$this->load->model('Pib_komoditi_model');
+		$data = $this->Pib_komoditi_model->test();
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
+
+	public function get_komoditi_test2()
+	{
+		$this->mainlib->logged_in();
+		$this->load->model('Pib_komoditi_model');
+		$data = $this->Pib_komoditi_model->test2();
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
 }
