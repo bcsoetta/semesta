@@ -357,7 +357,6 @@ class Pib extends CI_Controller {
 		$data = $this->Pib_komoditi_model->ChartsHs();
 		header('Content-type:application/json');
 		echo json_encode($data);
-		// echo $data;
 	}
 
 	public function get_komoditi_test()

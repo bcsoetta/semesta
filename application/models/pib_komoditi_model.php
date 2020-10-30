@@ -7,11 +7,24 @@ class Pib_komoditi_model extends CI_Model {
 		$query = $this->db->query("
 			SELECT
 				c.kode,
+				SUM(a.jml_pib) jml_pib,
 				SUM(a.nilai_pabean_idr) nilai,
 				SUM(a.bm) bm,
 				SUM(a.ppn) ppn,
 				SUM(a.pph) pph,
-				SUM(a.ppnbm) ppnbm
+				SUM(a.ppnbm) ppnbm,
+				SUM(a.bm_dp) bm_dp,
+				SUM(a.ppn_dp) ppn_dp,
+				SUM(a.pph_dp) pph_dp,
+				SUM(a.ppnbm_dp) ppnbm_dp,
+				SUM(a.bm_tangguh) bm_tangguh,
+				SUM(a.ppn_tangguh) ppn_tangguh,
+				SUM(a.pph_tangguh) pph_tangguh,
+				SUM(a.ppnbm_tangguh) ppnbm_tangguh,
+				SUM(a.bm_bebas) bm_bebas,
+				SUM(a.ppn_bebas) ppn_bebas,
+				SUM(a.pph_bebas) pph_bebas,
+				SUM(a.ppnbm_bebas) ppnbm_bebas
 			FROM db_semesta.fact_pib_hs a
 			INNER JOIN db_semesta.dim_date b ON
 				a.tgl_pib = b.id
@@ -79,10 +92,14 @@ class Pib_komoditi_model extends CI_Model {
 		}
 		$stackHsBm = $this->PrepareStackHsNilai($sumHsMonth, "bm", $periods, $explicitHsBm);
 
+		// Prepare HS table data
+		$tableHs = $this->PrepareHsTable($sumHs);
+
 		$chartOptions["pieHsNilai"] = $pieHsNilai;
 		$chartOptions["stackHsNilai"] = $stackHsNilai;
 		$chartOptions["pieHsBm"] = $pieHsBm;
 		$chartOptions["stackHsBm"] = $stackHsBm;
+		$chartOptions["tableHs"] = $tableHs;
 
 		return $chartOptions;
 	}
@@ -282,6 +299,55 @@ class Pib_komoditi_model extends CI_Model {
 		];
 
 		return $chartOptions;
+	}
+
+	private function PrepareHsTable($sumHs)
+	{
+		$dataTable = [];
+		foreach ($sumHs as $key => $value) {
+			$nilai = round((float)$value->nilai / 1000000,2,PHP_ROUND_HALF_UP);
+			$bm = round((float)$value->bm / 1000000,2,PHP_ROUND_HALF_UP);
+			$ppn = round((float)$value->ppn / 1000000,2,PHP_ROUND_HALF_UP);
+			$pph = round((float)$value->pph / 1000000,2,PHP_ROUND_HALF_UP);
+			$ppnbm = round((float)$value->ppnbm / 1000000,2,PHP_ROUND_HALF_UP);
+			$bm_dp = round((float)$value->bm_dp / 1000000,2,PHP_ROUND_HALF_UP);
+			$ppn_dp = round((float)$value->ppn_dp / 1000000,2,PHP_ROUND_HALF_UP);
+			$pph_dp = round((float)$value->pph_dp / 1000000,2,PHP_ROUND_HALF_UP);
+			$ppnbm_dp = round((float)$value->ppnbm_dp / 1000000,2,PHP_ROUND_HALF_UP);
+			$bm_tangguh = round((float)$value->bm_tangguh / 1000000,2,PHP_ROUND_HALF_UP);
+			$ppn_tangguh = round((float)$value->ppn_tangguh / 1000000,2,PHP_ROUND_HALF_UP);
+			$pph_tangguh = round((float)$value->pph_tangguh / 1000000,2,PHP_ROUND_HALF_UP);
+			$ppnbm_tangguh = round((float)$value->ppnbm_tangguh / 1000000,2,PHP_ROUND_HALF_UP);
+			$bm_bebas = round((float)$value->bm_bebas / 1000000,2,PHP_ROUND_HALF_UP);
+			$ppn_bebas = round((float)$value->ppn_bebas / 1000000,2,PHP_ROUND_HALF_UP);
+			$pph_bebas = round((float)$value->pph_bebas / 1000000,2,PHP_ROUND_HALF_UP);
+			$ppnbm_bebas = round((float)$value->ppnbm_bebas / 1000000,2,PHP_ROUND_HALF_UP);
+
+			$dataHs = [
+				"hs" => $value->kode,
+				"jml_pib" => $value->jml_pib,
+				"nilai" => $nilai,
+				"bm" => $bm,
+				"ppn" => $ppn,
+				"pph" => $pph,
+				"ppnbm" => $ppnbm,
+				"bm_bebas" => $bm_bebas,
+				"ppn_bebas" => $ppn_bebas,
+				"pph_bebas" => $pph_bebas,
+				"ppnbm_bebas" => $ppnbm_bebas,
+				"bm_tangguh" => $bm_tangguh,
+				"ppn_tangguh" => $ppn_tangguh,
+				"pph_tangguh" => $pph_tangguh,
+				"ppnbm_tangguh" => $ppnbm_tangguh,
+				"bm_dp" => $bm_dp,
+				"ppn_dp" => $ppn_dp,
+				"pph_dp" => $pph_dp,
+				"ppnbm_dp" => $ppnbm_dp
+			];
+			array_push($dataTable, $dataHs);
+		}
+
+		return $dataTable;
 	}
 
 }
