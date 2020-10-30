@@ -1,6 +1,6 @@
 <!-- echarts -->
-<script src="<?php echo base_url('assets/libs/echarts/echarts.min.js'); ?>"></script>
-<script src="<?php echo base_url('assets/libs/echarts/theme/macarons2.js'); ?>"></script>
+<script src="<?php echo base_url('assets/libs/echarts-4.9.0/echarts.min.js'); ?>"></script>
+<script src="<?php echo base_url('assets/libs/echarts-4.9.0/theme/inspired.js'); ?>"></script>
 <script src="<?php echo base_url('assets/libs/jquery/footable/dist/footable-3.1.5.js'); ?>"></script>
 
 <script type="text/javascript">
@@ -38,7 +38,8 @@
 			method: "POST",
 			// data: input,
 			success: function(data) {
-				displayChart('chart-test', data);
+				displayChart('chart-pie-nilai', data["pieHsNilai"]);
+				displayChart('chart-stack-nilai', data["stackHsNilai"]);
 			}
 		});
 

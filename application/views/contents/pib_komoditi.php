@@ -1,5 +1,5 @@
 <div ui-view class="app-body" id="view">
-	<!-- ############ PAGE START-->
+	<!-- ############ PAGE START ############ -->
 	<div class="row-col b-b">
 		<div class="col-md">
 			<div class="padding">
@@ -62,33 +62,34 @@
 						</div>
 					</div>
 				</div>
-				<!-- Pie charts -->
+
+				<!-- Chart nilai pabean -->
+				<div class="row-col box">
+					
+					<!-- Chart pie -->
+					<div class="col-sm-5">
+						<div class="box-header">
+							<h3>Nilai Pabean</h3>
+							<small class="block text-muted">Nilai pabean dalam miliar rupiah</small>
+						</div>
+						<div class="box-body">
+							<div id="chart-pie-nilai" style="height: 50vh;"></div>
+						</div>
+					</div>
+
+					<!-- Chart stack -->
+					<div class="col-sm-7">
+						<div class="box-header">
+							<h3>&nbsp;</h3>
+							<small class="block text-muted">Nilai pabean per bulan dalam miliar rupiah</small>
+						</div>
+						<div class="box-body">
+							<div id="chart-stack-nilai" style="height: 50vh;"></div>
+						</div>
+					</div>
+				</div>
+
 				<div class="row">
-
-					<div class="col-sm-6">
-						<div class="box">
-							<div class="box-header">
-								<h3>Nilai Pabean</h3>
-								<small class="block text-muted">Nilai pabean dalam miliar rupiah</small>
-							</div>
-							<div class="box-body">
-								<div id="chart-test" style="height:300px"></div>
-							</div>
-						</div>
-					</div>
-
-					<div class="col-sm-6">
-						<div class="box">
-							<div class="box-header">
-								<h3>Doughnut</h3>
-								<small class="block text-muted">set center and radius, tooltip display</small>
-							</div>
-							<div class="box-body">
-								<div id="chart-test2" style="height:300px"></div>
-							</div>
-						</div>
-					</div>
-
 					<div class="col-sm-6">
 					<div class="box">
 						<div class="box-header">
