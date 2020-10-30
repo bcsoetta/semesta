@@ -89,6 +89,32 @@
 					</div>
 				</div>
 
+				<!-- Chart bea masuk -->
+				<div class="row-col box">
+					
+					<!-- Chart pie -->
+					<div class="col-sm-5">
+						<div class="box-header">
+							<h3>Bea Masuk</h3>
+							<small class="block text-muted">Bea masuk dalam miliar rupiah</small>
+						</div>
+						<div class="box-body">
+							<div id="chart-pie-bm" style="height: 50vh;"></div>
+						</div>
+					</div>
+
+					<!-- Chart stack -->
+					<div class="col-sm-7">
+						<div class="box-header">
+							<h3>&nbsp;</h3>
+							<small class="block text-muted">Bea masuk per bulan dalam miliar rupiah</small>
+						</div>
+						<div class="box-body">
+							<div id="chart-stack-bm" style="height: 50vh;"></div>
+						</div>
+					</div>
+				</div>
+
 				<div class="row">
 					<div class="col-sm-6">
 					<div class="box">

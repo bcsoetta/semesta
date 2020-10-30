@@ -40,6 +40,8 @@
 			success: function(data) {
 				displayChart('chart-pie-nilai', data["pieHsNilai"]);
 				displayChart('chart-stack-nilai', data["stackHsNilai"]);
+				displayChart('chart-pie-bm', data["pieHsBm"]);
+				displayChart('chart-stack-bm', data["stackHsBm"]);
 			}
 		});
 

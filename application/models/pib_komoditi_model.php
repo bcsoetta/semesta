@@ -58,19 +58,31 @@ class Pib_komoditi_model extends CI_Model {
 	{
 		$chartOptions = [];
 
+		// Get data
 		$periods = $this->ListMonth($sta, $end);
 		$sumHs = $this->GetDataHs($sta, $end);
 		$sumHsMonth = $this->GetDataHsMonthly($sta, $end);
 
-		$pieHsNilai = $this->PreparePieHsNilai($sumHs);
-		$explicitHs = $pieHsNilai["legend"]["data"];
-		if (($key = array_search("lainnya", $explicitHs)) !== false) {
-			unset($explicitHs[$key]);
+		// Prepare nilai pabean HS chart options
+		$pieHsNilai = $this->PreparePieData($sumHs, "nilai");
+		$explicitHsNilai = $pieHsNilai["legend"]["data"];
+		if (($key = array_search("lainnya", $explicitHsNilai)) !== false) {
+			unset($explicitHsNilai[$key]);
 		}
-		$stackHsNilai = $this->PrepareStackHsNilai($sumHsMonth, $periods, $explicitHs);
+		$stackHsNilai = $this->PrepareStackHsNilai($sumHsMonth, "nilai", $periods, $explicitHsNilai);
+
+		// Prepare bea masuk HS chart options
+		$pieHsBm = $this->PreparePieData($sumHs, "bm");
+		$explicitHsBm = $pieHsBm["legend"]["data"];
+		if (($key = array_search("lainnya", $explicitHsBm)) !== false) {
+			unset($explicitHsBm[$key]);
+		}
+		$stackHsBm = $this->PrepareStackHsNilai($sumHsMonth, "bm", $periods, $explicitHsBm);
 
 		$chartOptions["pieHsNilai"] = $pieHsNilai;
 		$chartOptions["stackHsNilai"] = $stackHsNilai;
+		$chartOptions["pieHsBm"] = $pieHsBm;
+		$chartOptions["stackHsBm"] = $stackHsBm;
 
 		return $chartOptions;
 	}
@@ -92,30 +104,36 @@ class Pib_komoditi_model extends CI_Model {
 		return $yearMonths;
 	}
 
-	private function PreparePieHsNilai($sumHs)
+	private function PreparePieData($sumHs, $dataType)
 	{
-		$sum_nilai = 0;
-		$sum_other = 0;
+		if ($dataType == 'nilai') {
+			$chartName = "Nilai Pabean";
+		} else if ($dataType == 'bm') {
+			$chartName = "Bea Masuk";
+		}
+
+		$sumAll = 0;
+		$sumOther = 0;
 		$dataValues = [];
 		$dataLabels = [];
 
 		foreach ($sumHs as $key => $value) {
-			$sum_nilai += (float)$value->nilai;
+			$sumAll += (float)$value->$dataType;
 		}
 
 		foreach ($sumHs as $key => $value) {
-			$nilai = round((float)$value->nilai / 1000000000,2,PHP_ROUND_HALF_UP);
-			$part = $nilai / ($sum_nilai / 1000000000);
+			$hsValue = round((float)$value->$dataType / 1000000000,2,PHP_ROUND_HALF_UP);
+			$part = $hsValue / ($sumAll / 1000000000);
 			if ($part > 0.01) {
-				$nilai_hs[(string)$value->kode] = $nilai;
+				$hsValues[(string)$value->kode] = $hsValue;
 			} else {
-				$sum_other += $nilai;
+				$sumOther += $hsValue;
 			}
 		}
-		arsort($nilai_hs);
-		$nilai_hs['lainnya'] = round($sum_other,2,PHP_ROUND_HALF_UP);
+		arsort($hsValues);
+		$hsValues['lainnya'] = round($sumOther,2,PHP_ROUND_HALF_UP);
 
-		foreach ($nilai_hs as $key => $value) {
+		foreach ($hsValues as $key => $value) {
 			$dataValue = [
 				"value" => $value,
 				"name" => $key
@@ -124,13 +142,19 @@ class Pib_komoditi_model extends CI_Model {
 			array_push($dataLabels, $key);
 		}
 
-		$chartOptions = $this->PreparePieChart("Nilai Pabean", $dataLabels, $dataValues);
+		$chartOptions = $this->PreparePieChart($chartName, $dataLabels, $dataValues);
 
 		return $chartOptions;
 	}
 
-	private function PrepareStackHsNilai($sumHsMonth, $periods, $explicitHs)
+	private function PrepareStackHsNilai($sumHsMonth, $dataType, $periods, $explicitHs)
 	{
+		if ($dataType == "nilai") {
+			$yAxisName = "Nilai Pabean (miliar Rp)";
+		} else if ($dataType == "bm") {
+			$yAxisName = "Bea Masuk (miliar Rp)";
+		}
+		
 		$data = [];
 		foreach ($explicitHs as $hs) {
 			$data[$hs] = array_fill(0, count($periods), 0);
@@ -140,9 +164,9 @@ class Pib_komoditi_model extends CI_Model {
 		foreach ($sumHsMonth as $key => $value) {
 			$monthIdx = array_search([$value->year, $value->month], $periods);
 			if (in_array($value->kode, $explicitHs)) {
-				$data[$value->kode][$monthIdx] = round((float)$value->nilai / 1000000000,2,PHP_ROUND_HALF_UP);
+				$data[$value->kode][$monthIdx] = round((float)$value->$dataType / 1000000000,2,PHP_ROUND_HALF_UP);
 			} else {
-				$data["lainnya"][$monthIdx] += (float)$value->nilai / 1000000000;
+				$data["lainnya"][$monthIdx] += (float)$value->$dataType / 1000000000;
 			}
 		}
 
@@ -150,7 +174,7 @@ class Pib_komoditi_model extends CI_Model {
 			$data["lainnya"][$key] = round($value,2,PHP_ROUND_HALF_UP);
 		}
 
-		$chartOptions = $this->PrepareStackChart($periods, $data, 'Nilai Pabean (miliar Rp)');
+		$chartOptions = $this->PrepareStackChart($periods, $data, $yAxisName);
 
 		return $chartOptions;
 	}
