@@ -7,7 +7,7 @@
 				<div class="row-col box">
 					<div class="col-sm-12">
 						<div class="box-body">
-							<form action="#" id="form_imp">
+							<form action="#" id="date-filter">
 								<div class="col-sm-6 form-group">
 								</div>
 								<div class="col-sm-2 form-group">

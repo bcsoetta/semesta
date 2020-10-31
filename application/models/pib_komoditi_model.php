@@ -67,7 +67,7 @@ class Pib_komoditi_model extends CI_Model {
 		return $query->result();
 	}
 
-	public function ChartsHs($sta='2020-01-01', $end='2020-12-31')
+	public function ChartsHs($sta, $end)
 	{
 		$chartOptions = [];
 

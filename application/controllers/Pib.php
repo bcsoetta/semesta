@@ -354,7 +354,7 @@ class Pib extends CI_Controller {
 	{
 		$this->mainlib->logged_in();
 		$this->load->model('Pib_komoditi_model');
-		$data = $this->Pib_komoditi_model->ChartsHs();
+		$data = $this->Pib_komoditi_model->ChartsHs($_POST["start_date"], $_POST["end_date"]);
 		header('Content-type:application/json');
 		echo json_encode($data);
 	}

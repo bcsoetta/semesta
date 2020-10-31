@@ -2,6 +2,7 @@
 <script src="<?php echo base_url('assets/libs/echarts-4.9.0/echarts.min.js'); ?>"></script>
 <script src="<?php echo base_url('assets/libs/echarts-4.9.0/theme/inspired.js'); ?>"></script>
 <script src="<?php echo base_url('assets/libs/jquery/datatables/js/datatables.js'); ?>"></script>
+<script src="<?php echo base_url('assets/libs/js/moment/moment.js'); ?>"></script>
 
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -75,18 +76,53 @@
 			});
 		};
 
-		$.ajax({
-			url: "get_komoditi",
-			method: "POST",
-			// data: input,
-			success: function(data) {
-				DisplayChart('chart-pie-nilai', data["pieHsNilai"]);
-				DisplayChart('chart-stack-nilai', data["stackHsNilai"]);
-				DisplayChart('chart-pie-bm', data["pieHsBm"]);
-				DisplayChart('chart-stack-bm', data["stackHsBm"]);
-				DisplayTable('table-data-hs', data["tableHs"]);
+		function main(start='', end='') {
+			// Get start date
+			if (start == '') {
+				var staDate = new Date(new Date().getFullYear(), 0, 1);
+				var staDate = moment(staDate).format('YYYY-MM-DD');
+			} else {
+				var staDate = moment(start, 'DD/MM/YYYY');
+				var staDate = moment(staDate).format('YYYY-MM-DD');
 			}
-		});
+			
+			// Get end date
+			if (end=='') {
+				var endDate = new Date();
+				var endDate = moment(endDate).format('YYYY-MM-DD');
+			} else {
+				var endDate = moment(end, 'DD/MM/YYYY');
+				var endDate = moment(endDate).format('YYYY-MM-DD');
+			}
+
+			// Get data
+			$.ajax({
+				url: "get_komoditi",
+				method: "POST",
+				data: {
+					'start_date': staDate, 
+					'end_date': endDate
+				},
+				success: function(data) {
+					DisplayChart('chart-pie-nilai', data["pieHsNilai"]);
+					DisplayChart('chart-stack-nilai', data["stackHsNilai"]);
+					DisplayChart('chart-pie-bm', data["pieHsBm"]);
+					DisplayChart('chart-stack-bm', data["stackHsBm"]);
+					DisplayTable('table-data-hs', data["tableHs"]);
+				}
+			});
+		}
+
+		main();
+
+		$(document).on("click", "#date-filter button[type='submit']", function (e) {
+			e.preventDefault();
+
+			var startDate = $("input#start_date").val()
+			var endDate = $("input#end_date").val()
+
+			main(startDate, endDate);
+		})
 
 	});
 </script>
