@@ -6,6 +6,7 @@ class Pib_komoditi_model extends CI_Model {
 	{
 		$query = $this->db->query("
 			SELECT
+				c.id,
 				c.kode,
 				SUM(a.jml_pib) jml_pib,
 				SUM(a.nilai_pabean_idr) nilai,
@@ -324,6 +325,7 @@ class Pib_komoditi_model extends CI_Model {
 			$ppnbm_bebas = round((float)$value->ppnbm_bebas / 1000000,2,PHP_ROUND_HALF_UP);
 
 			$dataHs = [
+				"id" => $value->id,
 				"hs" => $value->kode,
 				"jml_pib" => $value->jml_pib,
 				"nilai" => $nilai,

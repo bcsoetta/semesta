@@ -44,7 +44,12 @@
 				},
 				"data": data,
 				"columns": [
-					{ "data": "hs" },
+					{ 
+						"data": "hs",
+						"render": function (data,type,row) {
+							return `<a href='detail_komoditi/?hsid=${row.id}'>${row.hs}</a>`;
+						}
+					},
 					{ "data": "jml_pib" },
 					{ "data": "nilai" },
 					{ "data": "bm" },

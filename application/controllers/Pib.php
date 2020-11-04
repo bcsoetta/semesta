@@ -338,7 +338,7 @@ class Pib extends CI_Controller {
 		echo json_encode($data);
 	}
 
-	// Halaman importir
+	// Halaman komoditi
 	public function komoditi()
 	{
 		$this->mainlib->logged_in();
@@ -359,20 +359,29 @@ class Pib extends CI_Controller {
 		echo json_encode($data);
 	}
 
-	public function get_komoditi_test()
+	public function detail_komoditi()
 	{
 		$this->mainlib->logged_in();
-		$this->load->model('Pib_komoditi_model');
-		$data = $this->Pib_komoditi_model->ChartsHs();
-		header('Content-type:application/json');
-		echo json_encode($data);
+		// $this->mainlib->privilege();
+		$hs_id = $_GET['hsid'];
+		$this->load->model('Pib_komoditi_detail_model');
+		$data['menus'] = $this->mainlib->menus();
+		$data['class'] = $this->router->fetch_class();
+		$data['hal'] = 'detail komoditi';
+		$data['content'] = 'pib_komoditi_detail';
+		$data['description'] = $this->Pib_komoditi_detail_model->GetHsDescription($hs_id);
+		$this->load->view('index', $data);
+		// header('Content-type:application/json');
+		// echo json_encode($data);
 	}
 
-	public function get_komoditi_test2()
+	public function get_detail_komoditi()
 	{
 		$this->mainlib->logged_in();
-		$this->load->model('Pib_komoditi_model');
-		$data = $this->Pib_komoditi_model->test2();
+		// $this->mainlib->privilege();
+		$hs_id = $_GET['hsid'];
+		$this->load->model('Pib_komoditi_detail_model');
+		$data = $this->Pib_komoditi_detail_model->GetDataHs($hs_id);
 		header('Content-type:application/json');
 		echo json_encode($data);
 	}

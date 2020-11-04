@@ -137,10 +137,10 @@
 							</div>
 							<div class="box-body">
 								<div id="chart-imp" style="height:40vh"></div>
+							</div>
 						</div>
 					</div>
 
-					</div>
 					<div class="col-sm-6">
 						<div class="box">
 							<div class="box-header">
