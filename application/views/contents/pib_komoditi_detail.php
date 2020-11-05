@@ -54,6 +54,64 @@
 						</div>
 					</div>
 				</div>
+
+				<div class="row-col box">
+					<div class="col-sm-12">
+						<div class="box-header pb-0">
+							<h3>Importir</h3>
+						</div>
+						<div class="box-body p-0">
+							<div class="col-sm-12 col-md-6">
+								<div class="box-header p-0">
+									<small>Proporsi nilai pabean per importir dalam miliar rupiah</small>
+								</div>
+								<div id="chart-pie-nilai-importir" style="height:40vh"></div>
+							</div>
+							<div class="col-sm-12 col-md-6">
+								<div class="box-header p-0">
+									<small>Proporsi bea masuk per importir dalam miliar rupiah</small>
+								</div>
+								<div id="chart-pie-nilai-bm" style="height:40vh"></div>
+							</div>
+							<div class="col-sm-12 pt-5">
+								<table id="table-data-importir" class="table table-striped row-border m-b-none">
+									<thead>
+										<tr>
+											<th rowspan="3" class="text-center align-middle border-left">Importir</th>
+											<th rowspan="3" class="text-center align-middle border-left">Jml PIB</th>
+											<th rowspan="3" class="text-center align-middle border-left">Nilai Pabean (juta Rp)</th>
+											<th colspan="16" class="text-center border-left border-right">Pungutan (juta Rp)</th>
+										</tr>
+										<tr>
+											<th colspan="4" class="text-center border-left">Bayar</th>
+											<th colspan="4" class="text-center border-left">Bebas</th>
+											<th colspan="4" class="text-center border-left">Ditangguhkan</th>
+											<th colspan="4" class="text-center border-right">Ditanggung Pemerintah</th>
+										</tr>
+										<tr>
+											<th class="text-center border-left">BM</th>
+											<th class="text-center">PPN</th>
+											<th class="text-center">PPh</th>
+											<th class="text-center">PPnBM</th>
+											<th class="text-center border-left">BM</th>
+											<th class="text-center">PPN</th>
+											<th class="text-center">PPh</th>
+											<th class="text-center">PPnBM</th>
+											<th class="text-center border-left">BM</th>
+											<th class="text-center">PPN</th>
+											<th class="text-center">PPh</th>
+											<th class="text-center">PPnBM</th>
+											<th class="text-center border-left">BM</th>
+											<th class="text-center">PPN</th>
+											<th class="text-center">PPh</th>
+											<th class="text-center border-right">PPnBM</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
