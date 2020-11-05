@@ -124,9 +124,12 @@
 				success: function(data) {
 					DisplayChart('chart-bar-nilai', data["barHsNilai"]);
 					DisplayChart('chart-bar-bm', data["barHsBm"]);
-					DisplayChart('chart-pie-nilai-importir', data["pieImportirNilai"]);
-					DisplayChart('chart-pie-nilai-bm', data["pieImportirBm"]);
+					DisplayChart('chart-pie-importir-nilai', data["pieImportirNilai"]);
+					DisplayChart('chart-pie-importir-bm', data["pieImportirBm"]);
 					DisplayTable('table-data-importir', data["tableImportir"], 'importir');
+					DisplayChart('chart-pie-fasilitas-nilai', data["pieFasilitasNilai"]);
+					DisplayChart('chart-pie-fasilitas-pungutan', data["pieFasilitasPungutan"]);
+					DisplayTable('table-data-fasilitas', data["tableFasilitas"], 'fasilitas');
 				}
 			});
 		}

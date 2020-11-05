@@ -61,6 +61,13 @@ class Pib_komoditi_detail_model extends CI_Model {
 		$data['pieImportirNilai'] = $this->PreparePieChart($dataImportir, 'nilai');
 		$data['pieImportirBm'] = $this->PreparePieChart($dataImportir, 'bm');
 		$data['tableImportir'] = $dataImportir;
+
+		// Chart fasilitas
+		$dataFasilitas = $this->GetDataHsFasilitas($hsid, $sta, $end);
+		$data['pieFasilitasNilai'] = $this->PreparePieChart($dataFasilitas, 'nilai');
+		$data['pieFasilitasPungutan'] = $this->PreparePieChart($dataFasilitas, 'pungutan', 'aggregate');
+		$data['tableFasilitas'] = $dataFasilitas;
+
 		return $data;
 	}
 
@@ -235,15 +242,90 @@ class Pib_komoditi_detail_model extends CI_Model {
 		return $result;
 	}
 
-	private function PreparePieChart($data, $dataType)
+	// Data fasilitas
+	private function GetDataHsFasilitas($hsid, $sta, $end)
+	{
+		$query = $this->db->query("
+			SELECT
+				c.id,
+				c.ur_fasilitas label,
+				COUNT(DISTINCT a.no_aju) jml_pib,
+				SUM(a.cif * a.kurs) nilai,
+				SUM(a.bm) bm,
+				SUM(a.ppn) ppn,
+				SUM(a.pph) pph,
+				SUM(a.ppnbm) ppnbm,
+				SUM(a.bm_dp) bm_dp,
+				SUM(a.ppn_dp) ppn_dp,
+				SUM(a.pph_dp) pph_dp,
+				SUM(a.ppnbm_dp) ppnbm_dp,
+				SUM(a.bm_tangguh) bm_tangguh,
+				SUM(a.ppn_tangguh) ppn_tangguh,
+				SUM(a.pph_tangguh) pph_tangguh,
+				SUM(a.ppnbm_tangguh) ppnbm_tangguh,
+				SUM(a.bm_bebas) bm_bebas,
+				SUM(a.ppn_bebas) ppn_bebas,
+				SUM(a.pph_bebas) pph_bebas,
+				SUM(a.ppnbm_bebas) ppnbm_bebas
+			FROM db_semesta.fact_pib_detail a
+			INNER JOIN db_semesta.dim_date b ON
+				a.tgl_pib = b.id
+			INNER JOIN db_semesta.dim_pib_fasilitas c ON
+				a.fasilitas = c.id
+			WHERE
+				b.date BETWEEN '$sta' AND '$end' and
+				a.hs = $hsid
+			GROUP BY
+				c.id
+		");
+
+		$result = $query->result();
+		return $result;
+	}
+
+	private function PreparePieChart($data, $dataType, $chartType='total')
 	{
 		if ($dataType == 'nilai') {
 			$chartName = "Nilai Pabean";
 		} else if ($dataType == 'bm') {
 			$chartName = "Bea Masuk";
+		} else if ($dataType == "pungutan") {
+			$chartName = "Pungutan";
 		}
 
-		$dataChart = $this->PreparePieData($data, $dataType);
+		if ($chartType == 'total') {
+			$dataChart = $this->PreparePieData($data, $dataType);
+			$dataAggregate = [
+				'name' => 'Total ' . $chartName,
+				'type' => 'pie',
+				'top' => 20,
+				'radius' => [0, '40%'],
+				'label' => [
+					'formatter' => '{c}',
+					'position' => 'inner'
+				],
+				'labelLine' => [
+					'show' => false
+				],
+				'data' => [
+					[
+						'value' => $dataChart['total'],
+						'name' => 'total'
+					]
+				]
+			];
+		} else {
+			$dataChart = $this->PreparePieDataPungutan($data);
+			$dataAggregate = [
+				'name' => 'Agregat ' . $chartName,
+				'type' => 'pie',
+				'top' => 20,
+				'selectedMode' => 'single',
+				'radius' => [0, '40%'],
+				'startAngle' => 180,
+				'data' => $dataChart['aggregate']
+			];
+		}
 
 		$chartOptions = [
 			'tooltip' => [
@@ -268,25 +350,7 @@ class Pib_komoditi_detail_model extends CI_Model {
 					'startAngle' => 180,
 					'data' => $dataChart['values']
 				],
-				[
-					'name' => 'Total ' . $chartName,
-					'type' => 'pie',
-					'top' => 20,
-					'radius' => [0, '40%'],
-					'label' => [
-						'formatter' => '{c}',
-						'position' => 'inner'
-					],
-					'labelLine' => [
-						'show' => false
-					],
-					'data' => [
-						[
-							'value' => $dataChart['total'],
-							'name' => 'total'
-						]
-					]
-				]
+				$dataAggregate
 			]
 		];
 
@@ -329,6 +393,65 @@ class Pib_komoditi_detail_model extends CI_Model {
 				array_push($dataChart['values'], $dataChartValue);
 				array_push($dataChart['labels'], $key);
 			}
+		}
+
+		return $dataChart;
+	}
+
+	private function PreparePieDataPungutan($data)
+	{
+		$sumPungutan = [];
+		$sumJnsPungutan = [];
+
+		foreach ($data as $d) {
+			foreach ($d as $key => $value) {
+				if (!in_array($key, ['id', 'label', 'jml_pib', 'nilai'])) {
+					if ($value > 0) {
+						if (array_key_exists($key, $sumPungutan)) {
+							$sumPungutan[$key] += $value;
+						} else {
+							$sumPungutan[$key] = $value;
+						}
+						
+						$pungutanExplode = explode("_", $key);
+						if (count($pungutanExplode) > 1) {
+							if (array_key_exists($pungutanExplode[1], $sumJnsPungutan)) {
+								$sumJnsPungutan[$pungutanExplode[1]] += $value;
+							} else {
+								$sumJnsPungutan[$pungutanExplode[1]] = $value;
+							}
+						} else {
+							if (array_key_exists("bayar", $sumJnsPungutan)) {
+								$sumJnsPungutan["bayar"] += $value;
+							} else {
+								$sumJnsPungutan["bayar"] = $value;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		$dataChart = [
+			"values" => [],
+			"aggregate" => [],
+			"labels" => []
+		];
+		foreach ($sumPungutan as $key => $value) {
+			$dataChartValue = [
+				"value" => round((float)$value / 1000000000,2,PHP_ROUND_HALF_UP),
+				"name" => $key
+			];
+			array_push($dataChart["values"], $dataChartValue);
+			array_push($dataChart["labels"], $key);
+		}
+		foreach ($sumJnsPungutan as $key => $value) {
+			$dataChartValue = [
+				"value" => round((float)$value / 1000000000,2,PHP_ROUND_HALF_UP),
+				"name" => $key
+			];
+			array_push($dataChart["aggregate"], $dataChartValue);
+			array_push($dataChart["labels"], $key);
 		}
 
 		return $dataChart;
