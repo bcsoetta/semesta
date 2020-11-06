@@ -209,12 +209,12 @@ class Pib_komoditi_detail_model extends CI_Model {
 	// Data importir
 	private function GetDataHsImportir($hsid, $sta, $end)
 	{
-		$query = $this->db->query("
+		$sql = "
 			SELECT
 				c.id,
 				c.nama label,
-				COUNT(DISTINCT a.no_aju) jml_pib,
-				SUM(a.cif * a.kurs) nilai,
+				SUM(a.jml_pib) jml_pib,
+				SUM(a.nilai_pabean_idr) nilai,
 				SUM(a.bm) bm,
 				SUM(a.ppn) ppn,
 				SUM(a.pph) pph,
@@ -231,7 +231,7 @@ class Pib_komoditi_detail_model extends CI_Model {
 				SUM(a.ppn_bebas) ppn_bebas,
 				SUM(a.pph_bebas) pph_bebas,
 				SUM(a.ppnbm_bebas) ppnbm_bebas
-			FROM db_semesta.fact_pib_detail a
+			FROM db_semesta.fact_pib_importir_hs a
 			INNER JOIN db_semesta.dim_date b ON
 				a.tgl_pib = b.id
 			INNER JOIN db_semesta.dim_pengguna_jasa c ON
@@ -241,7 +241,9 @@ class Pib_komoditi_detail_model extends CI_Model {
 				a.hs = $hsid
 			GROUP BY
 				c.id
-		");
+		";
+
+		$query = $this->db->query($sql);
 
 		$result = $query->result();
 		return $result;
@@ -250,12 +252,12 @@ class Pib_komoditi_detail_model extends CI_Model {
 	// Data fasilitas
 	private function GetDataHsFasilitas($hsid, $sta, $end)
 	{
-		$query = $this->db->query("
+		$sql = "
 			SELECT
 				c.id,
 				c.ur_fasilitas label,
-				COUNT(DISTINCT a.no_aju) jml_pib,
-				SUM(a.cif * a.kurs) nilai,
+				SUM(a.jml_pib) jml_pib,
+				SUM(a.nilai_pabean_idr) nilai,
 				SUM(a.bm) bm,
 				SUM(a.ppn) ppn,
 				SUM(a.pph) pph,
@@ -272,7 +274,7 @@ class Pib_komoditi_detail_model extends CI_Model {
 				SUM(a.ppn_bebas) ppn_bebas,
 				SUM(a.pph_bebas) pph_bebas,
 				SUM(a.ppnbm_bebas) ppnbm_bebas
-			FROM db_semesta.fact_pib_detail a
+			FROM db_semesta.fact_pib_hs_fasilitas a
 			INNER JOIN db_semesta.dim_date b ON
 				a.tgl_pib = b.id
 			INNER JOIN db_semesta.dim_pib_fasilitas c ON
@@ -282,7 +284,9 @@ class Pib_komoditi_detail_model extends CI_Model {
 				a.hs = $hsid
 			GROUP BY
 				c.id
-		");
+		";
+
+		$query = $this->db->query($sql);
 
 		$result = $query->result();
 		return $result;
@@ -291,13 +295,13 @@ class Pib_komoditi_detail_model extends CI_Model {
 	// Data negara
 	private function GetDataHsNegara($hsid, $sta, $end)
 	{
-		$query = $this->db->query("
+		$sql = "
 			SELECT
 				c.id,
 				c.nm_echarts label,
-				COUNT(DISTINCT a.no_aju) jml_pib,
-				SUM(a.cif * a.kurs) nilai
-			FROM db_semesta.fact_pib_detail a
+				SUM(a.jml_pib) jml_pib,
+				SUM(a.nilai_pabean_idr) nilai
+			FROM db_semesta.fact_pib_negara_pemasok_hs a
 			INNER JOIN db_semesta.dim_date b ON
 				a.tgl_pib = b.id
 			INNER JOIN db_semesta.dim_negara c ON
@@ -307,7 +311,9 @@ class Pib_komoditi_detail_model extends CI_Model {
 				a.hs = $hsid
 			GROUP BY
 				c.id
-		");
+		";
+
+		$query = $this->db->query($sql);
 
 		$result = $query->result();
 		return $result;
