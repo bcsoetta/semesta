@@ -1,4 +1,5 @@
 <script src="<?php echo base_url('assets/libs/echarts-4.9.0/echarts.min.js'); ?>"></script>
+<script src="<?php echo base_url('assets/libs/echarts/world.js'); ?>"></script>
 <script src="<?php echo base_url('assets/libs/jquery/datatables/js/datatables.js'); ?>"></script>
 <script src="<?php echo base_url('assets/libs/js/moment/moment.js'); ?>"></script>
 
@@ -89,6 +90,41 @@
 			});
 		};
 
+		function DisplayTableNegara(tableName, data) {
+			tableElement = document.getElementById(tableName);
+			$(tableElement).DataTable({
+				"destroy": true,
+				"info": false,
+				"lengthChange": false,
+				"data": data,
+				"columns": [
+					{ 
+						"data": "label",
+						"render": function (data,type,row) {
+							return `<a href='../detail_negara/?negaraid=${row.id}'>${row.label}</a>`;
+						}
+					},
+					{ "data": "jml_pib" },
+					{ "data": "nilai" }
+				],
+				"columnDefs": [
+					{ "searchable": false, "className": "text-right", "targets": [ 1,2 ] },
+					{
+						"render": function(data,type,row){
+							var nf = new Intl.NumberFormat();
+
+							var milNum = parseFloat(data) / 1000000;
+							var rounded = milNum.toFixed(2);
+							var formatted = nf.format(rounded);
+							return formatted;
+						},
+						"targets": [ 2 ]
+					}
+				],
+				"order": [[ 2, "desc" ]]
+			});
+		}
+
 		function main(start='', end='') {
 			// Get start date
 			if (start == '') {
@@ -130,6 +166,8 @@
 					DisplayChart('chart-pie-fasilitas-nilai', data["pieFasilitasNilai"]);
 					DisplayChart('chart-pie-fasilitas-pungutan', data["pieFasilitasPungutan"]);
 					DisplayTable('table-data-fasilitas', data["tableFasilitas"], 'fasilitas');
+					DisplayChart('chart-map-negara-nilai', data["mapNegaraNilai"]);
+					DisplayTableNegara('table-data-negara', data["tableNegara"]);
 				}
 			});
 		}

@@ -45,6 +45,28 @@
   text-align: justify;
 }
 
+.dataTable.padding-sm tbody td {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+#table-data-negara_wrapper > .row:nth-child(2) {
+  margin-bottom: 5px;
+}
+
+#table-data-negara_wrapper > .row:nth-child(3) {
+  margin-bottom: 25px;
+}
+
+#table-data-negara_wrapper > .row:nth-child(1) > div:nth-child(2),
+#table-data-negara_wrapper > .row:nth-child(3) > div:nth-child(2) {
+  width: 100%;
+}
+
+#table-data-negara_paginate {
+  text-align: center;
+}
+
 .dataTables_wrapper > .row:nth-child(2) {
   margin-bottom: 25px;
 }

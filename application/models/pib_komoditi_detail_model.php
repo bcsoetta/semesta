@@ -68,6 +68,11 @@ class Pib_komoditi_detail_model extends CI_Model {
 		$data['pieFasilitasPungutan'] = $this->PreparePieChart($dataFasilitas, 'pungutan', 'aggregate');
 		$data['tableFasilitas'] = $dataFasilitas;
 
+		// Chart negara
+		$dataNegara = $this->GetDataHsNegara($hsid, $sta, $end);
+		$data['tableNegara'] = $dataNegara;
+		$data['mapNegaraNilai'] = $this->PrepareMapChart($dataNegara, "nilai");
+
 		return $data;
 	}
 
@@ -283,6 +288,31 @@ class Pib_komoditi_detail_model extends CI_Model {
 		return $result;
 	}
 
+	// Data negara
+	private function GetDataHsNegara($hsid, $sta, $end)
+	{
+		$query = $this->db->query("
+			SELECT
+				c.id,
+				c.nm_echarts label,
+				COUNT(DISTINCT a.no_aju) jml_pib,
+				SUM(a.cif * a.kurs) nilai
+			FROM db_semesta.fact_pib_detail a
+			INNER JOIN db_semesta.dim_date b ON
+				a.tgl_pib = b.id
+			INNER JOIN db_semesta.dim_negara c ON
+				a.negara_pemasok = c.id
+			WHERE
+				b.date BETWEEN '$sta' AND '$end' and
+				a.hs = $hsid
+			GROUP BY
+				c.id
+		");
+
+		$result = $query->result();
+		return $result;
+	}
+
 	private function PreparePieChart($data, $dataType, $chartType='total')
 	{
 		if ($dataType == 'nilai') {
@@ -452,6 +482,69 @@ class Pib_komoditi_detail_model extends CI_Model {
 			];
 			array_push($dataChart["aggregate"], $dataChartValue);
 			array_push($dataChart["labels"], $key);
+		}
+
+		return $dataChart;
+	}
+
+	private function PrepareMapChart($data, $dataType)
+	{
+		$chartData = $this->PrepareMapData($data, $dataType);
+
+		$chartOptions = [
+			"tooltip" => [
+				"trigger" => 'item'
+			],
+			"dataRange" => [
+				"min" => 0,
+				"max" => $chartData["maxValue"],
+				"text" => ['High','Low'],
+				"realtime" => false,
+				"calculable" => true,
+				"color" => ['orangered','yellow','lightskyblue']
+			],
+			"series" => [
+				[
+					"name" => 'Negara Pemasok',
+					"type" => 'map',
+					"mapType" => 'world',
+					"roam" => true,
+					// "mapLocation": {
+					// 	y : 60
+					// },
+					"itemStyle" => [
+						"emphasis" => [
+							"label" => [
+								"show" => true
+							]
+						]
+					],
+					"data" => $chartData["values"]
+				]
+			]
+		];
+
+		return $chartOptions;
+	}
+
+	private function PrepareMapData($data, $dataType)
+	{
+		$dataChart = [
+			"values" => [],
+			"maxValue" => 0
+		];
+
+		foreach ($data as $d) {
+			$value = round((float)$d->$dataType / 1000000,2,PHP_ROUND_HALF_UP);
+			$dataChartValue = [
+				"name" => $d->label,
+				"value" => $value
+			];
+			array_push($dataChart["values"], $dataChartValue);
+
+			if ($value > $dataChart["maxValue"]) {
+				$dataChart["maxValue"] = round($value,-3,PHP_ROUND_HALF_UP);
+			}
 		}
 
 		return $dataChart;

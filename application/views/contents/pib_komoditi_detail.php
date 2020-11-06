@@ -174,6 +174,34 @@
 					</div>
 				</div>
 
+				<!-- Chart negara -->
+				<div class="row-col box">
+					<div class="col-sm-12">
+						<div class="box-header pb-0">
+							<h3>Negara Pemasok</h3>
+						</div>
+						<div class="box-body p-0">
+							<div class="col-sm-12 col-md-8">
+								<div class="box-header p-0">
+									<small>Nilai pabean per negara pemasok dalam juta rupiah</small>
+								</div>
+								<div id="chart-map-negara-nilai" style="height:70vh"></div>
+							</div>
+							<div class="col-sm-12 col-md-4">
+								<table id="table-data-negara" class="table table-striped padding-sm row-border m-b-none">
+									<thead>
+										<tr>
+											<th>Negara</th>
+											<th>Jml PIB</th>
+											<th>Nilai Pabean<br>(juta Rp)</th>
+										</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
 			</div>
 		</div>
 	</div>
