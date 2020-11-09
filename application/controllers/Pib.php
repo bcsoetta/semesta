@@ -333,7 +333,7 @@ class Pib extends CI_Controller {
 	{
 		$this->mainlib->logged_in();
 		$this->load->model('Pib_importir_model');
-		$data = $this->Pib_importir_model->GetImportirAll();
+		$data = $this->Pib_importir_model->GetChartData($_POST["start_date"], $_POST["end_date"]);
 		header('Content-type:application/json');
 		echo json_encode($data);
 	}
