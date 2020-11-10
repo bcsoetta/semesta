@@ -128,6 +128,8 @@
 									<tr>
 										<th rowspan="3" class="text-center align-middle border-left">Importir</th>
 										<th rowspan="3" class="text-center align-middle border-left">Jml PIB</th>
+										<th rowspan="3" class="text-center align-middle border-left">Netto (kg)</th>
+										<th rowspan="3" class="text-center align-middle border-left">Bruto (kg)</th>
 										<th rowspan="3" class="text-center align-middle border-left">Nilai Pabean (juta Rp)</th>
 										<th colspan="16" class="text-center border-left border-right">Pungutan (juta Rp)</th>
 									</tr>

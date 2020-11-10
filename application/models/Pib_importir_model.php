@@ -34,6 +34,8 @@ class Pib_importir_model extends CI_Model {
 				c.id,
 				c.nama,
 				SUM(a.jml_pib) jml_pib,
+				SUM(a.netto) netto,
+				SUM(a.bruto) bruto,
 				SUM(a.nilai_pabean_idr) nilai,
 				SUM(a.bm) bm,
 				SUM(a.ppn) ppn,
@@ -73,6 +75,7 @@ class Pib_importir_model extends CI_Model {
 				c.nama,
 				b.year,
 				b.month,
+				SUM(a.netto) netto,
 				SUM(a.nilai_pabean_idr) nilai,
 				SUM(a.bm) bm,
 				SUM(a.ppn) ppn,
@@ -104,30 +107,40 @@ class Pib_importir_model extends CI_Model {
 		$dataSummary = $this->GetDataImportir($sta, $end);
 		$monthDataSummary = $this->GetDataImportirMonthly($sta, $end);
 
-		// Prepare nilai pabean HS chart options
-		$pieHsNilai = $this->PreparePieData($dataSummary, "nilai");
-		$explicitHsNilai = $pieHsNilai["legend"]["data"];
-		if (($key = array_search("lainnya", $explicitHsNilai)) !== false) {
-			unset($explicitHsNilai[$key]);
+		// Prepare nilai pabean chart options
+		$pieNilai = $this->PreparePieData($dataSummary, "nilai");
+		$explicitLabelNilai = $pieNilai["legend"]["data"];
+		if (($key = array_search("lainnya", $explicitLabelNilai)) !== false) {
+			unset($explicitLabelNilai[$key]);
 		}
-		$stackHsNilai = $this->PrepareStackHsNilai($monthDataSummary, "nilai", $periods, $explicitHsNilai);
+		$stackNilai = $this->PrepareStackData($monthDataSummary, "nilai", $periods, $explicitLabelNilai);
 
-		// Prepare bea masuk HS chart options
-		$pieHsBm = $this->PreparePieData($dataSummary, "bm");
-		$explicitHsBm = $pieHsBm["legend"]["data"];
-		if (($key = array_search("lainnya", $explicitHsBm)) !== false) {
-			unset($explicitHsBm[$key]);
+		// Prepare bea masuk chart options
+		$pieBm = $this->PreparePieData($dataSummary, "bm");
+		$explicitLabelBm = $pieBm["legend"]["data"];
+		if (($key = array_search("lainnya", $explicitLabelBm)) !== false) {
+			unset($explicitLabelBm[$key]);
 		}
-		$stackHsBm = $this->PrepareStackHsNilai($monthDataSummary, "bm", $periods, $explicitHsBm);
+		$stackBm = $this->PrepareStackData($monthDataSummary, "bm", $periods, $explicitLabelBm);
 
-		// Prepare HS table data
-		$tableHs = $this->PrepareHsTable($dataSummary);
+		// Prepare netto chart options
+		$pieNetto = $this->PreparePieData($dataSummary, "netto");
+		$explicitLabelNetto = $pieNetto["legend"]["data"];
+		if (($key = array_search("lainnya", $explicitLabelNetto)) !== false) {
+			unset($explicitLabelNetto[$key]);
+		}
+		$stackNetto = $this->PrepareStackData($monthDataSummary, "netto", $periods, $explicitLabelNetto);
 
-		$chartOptions["pieNilai"] = $pieHsNilai;
-		$chartOptions["stackNilai"] = $stackHsNilai;
-		$chartOptions["pieBm"] = $pieHsBm;
-		$chartOptions["stackBm"] = $stackHsBm;
-		$chartOptions["table"] = $tableHs;
+		// Prepare table data
+		$tableData = $this->PrepareHsTable($dataSummary);
+
+		$chartOptions["pieNilai"] = $pieNilai;
+		$chartOptions["stackNilai"] = $stackNilai;
+		$chartOptions["pieBm"] = $pieBm;
+		$chartOptions["stackBm"] = $stackBm;
+		$chartOptions["pieNetto"] = $pieNetto;
+		$chartOptions["pieNetto"] = $pieNetto;
+		$chartOptions["table"] = $tableData;
 
 		return $chartOptions;
 	}
@@ -153,8 +166,13 @@ class Pib_importir_model extends CI_Model {
 	{
 		if ($dataType == 'nilai') {
 			$chartName = "Nilai Pabean";
+			$divisor = 1000000000;
 		} else if ($dataType == 'bm') {
 			$chartName = "Bea Masuk";
+			$divisor = 1000000000;
+		} else if ($dataType == 'netto') {
+			$chartName = "Netto";
+			$divisor = 1;
 		}
 
 		$sumAll = 0;
@@ -167,8 +185,8 @@ class Pib_importir_model extends CI_Model {
 		}
 
 		foreach ($sumHs as $key => $value) {
-			$hsValue = round((float)$value->$dataType / 1000000000,2,PHP_ROUND_HALF_UP);
-			$part = $hsValue / ($sumAll / 1000000000);
+			$hsValue = round((float)$value->$dataType / $divisor,2,PHP_ROUND_HALF_UP);
+			$part = $hsValue / ($sumAll / $divisor);
 			if ($part > 0.01) {
 				$hsValues[(string)$value->nama] = $hsValue;
 			} else {
@@ -192,26 +210,31 @@ class Pib_importir_model extends CI_Model {
 		return $chartOptions;
 	}
 
-	private function PrepareStackHsNilai($sumHsMonth, $dataType, $periods, $explicitHs)
+	private function PrepareStackData($summaryMonth, $dataType, $periods, $explicitLabel)
 	{
 		if ($dataType == "nilai") {
 			$yAxisName = "Nilai Pabean (miliar Rp)";
+			$divisor = 1000000000;
 		} else if ($dataType == "bm") {
 			$yAxisName = "Bea Masuk (miliar Rp)";
+			$divisor = 1000000000;
+		} else if ($dataType == "netto") {
+			$yAxisName = "Netto (kg)";
+			$divisor = 1;
 		}
 		
 		$data = [];
-		foreach ($explicitHs as $hs) {
-			$data[$hs] = array_fill(0, count($periods), 0);
+		foreach ($explicitLabel as $label) {
+			$data[$label] = array_fill(0, count($periods), 0);
 		}
 		$data["lainnya"] = array_fill(0, count($periods), 0);
 
-		foreach ($sumHsMonth as $key => $value) {
+		foreach ($summaryMonth as $key => $value) {
 			$monthIdx = array_search([$value->year, $value->month], $periods);
-			if (in_array($value->nama, $explicitHs)) {
-				$data[$value->nama][$monthIdx] = round((float)$value->$dataType / 1000000000,2,PHP_ROUND_HALF_UP);
+			if (in_array($value->nama, $explicitLabel)) {
+				$data[$value->nama][$monthIdx] = round((float)$value->$dataType / $divisor,2,PHP_ROUND_HALF_UP);
 			} else {
-				$data["lainnya"][$monthIdx] += (float)$value->$dataType / 1000000000;
+				$data["lainnya"][$monthIdx] += (float)$value->$dataType / $divisor;
 			}
 		}
 
@@ -336,6 +359,8 @@ class Pib_importir_model extends CI_Model {
 	{
 		$dataTable = [];
 		foreach ($sumHs as $key => $value) {
+			$netto = round((float)$value->netto,2,PHP_ROUND_HALF_UP);
+			$bruto = round((float)$value->bruto,2,PHP_ROUND_HALF_UP);
 			$nilai = round((float)$value->nilai / 1000000,2,PHP_ROUND_HALF_UP);
 			$bm = round((float)$value->bm / 1000000,2,PHP_ROUND_HALF_UP);
 			$ppn = round((float)$value->ppn / 1000000,2,PHP_ROUND_HALF_UP);
@@ -358,6 +383,8 @@ class Pib_importir_model extends CI_Model {
 				"id" => $value->id,
 				"nama" => $value->nama,
 				"jml_pib" => $value->jml_pib,
+				"netto" => $netto,
+				"bruto" => $bruto,
 				"nilai" => $nilai,
 				"bm" => $bm,
 				"ppn" => $ppn,

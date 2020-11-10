@@ -51,6 +51,8 @@
 						}
 					},
 					{ "data": "jml_pib" },
+					{ "data": "netto" },
+					{ "data": "bruto" },
 					{ "data": "nilai" },
 					{ "data": "bm" },
 					{ "data": "ppn" },
@@ -70,14 +72,14 @@
 					{ "data": "ppnbm_dp" }
 				],
 				"columnDefs": [
-					{ "searchable": false, "targets": [ 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18 ] },
-					{ "className": "text-right", "targets": [ 4,5,6,8,9,10,12,13,14,16,17 ] },
+					{ "searchable": false, "targets": [ 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20 ] },
+					{ "className": "text-right", "targets": [ 6,7,8,10,11,12,14,15,16,18,19 ] },
 					{ "className": "border-left", "width": 200, "targets": [ 0 ] },
-					{ "className": "border-left text-right", "targets": [ 1,2,3,7,11,15 ] },
-					{ "className": "border-right text-right", "targets": [ 18 ] },
-					{ "render": $.fn.dataTable.render.number('.', ',', 2, ''), "targets": [ 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18 ] }
+					{ "className": "border-left text-right", "targets": [ 1,2,3,4,5,9,13,17 ] },
+					{ "className": "border-right text-right", "targets": [ 20 ] },
+					{ "render": $.fn.dataTable.render.number('.', ',', 2, ''), "targets": [ 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20 ] }
 				],
-				"order": [[ 2, "desc" ]]
+				"order": [[ 4, "desc" ]]
 			});
 		};
 
