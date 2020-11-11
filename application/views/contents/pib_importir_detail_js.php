@@ -90,6 +90,38 @@
 			});
 		};
 
+		function DisplayTableJalur(tableName, data) {
+			tableElement = document.getElementById(tableName);
+			$(tableElement).DataTable({
+				"destroy": true,
+				"data": data,
+				"columns": [
+					{ "data": "grup_jalur" },
+					{ "data": "jalur" },
+					{ "data": "jml_pib" },
+					{ "data": "nilai" }
+				],
+				"columnDefs" : [
+					{ 
+						"searchable": false,
+						"className": "text-right",
+						"targets": [2, 3] 
+					},
+					{
+						"render": function(data,type,row){
+							var nf = new Intl.NumberFormat();
+
+							var milNum = parseFloat(data) / 1000000;
+							var rounded = milNum.toFixed(2);
+							var formatted = nf.format(rounded);
+							return formatted;
+						},
+						"targets": [ 3 ]
+					}
+				]
+			});
+		}
+
 		function DisplayTableNegara(tableName, data) {
 			tableElement = document.getElementById(tableName);
 			$(tableElement).DataTable({
@@ -146,23 +178,26 @@
 
 			// Get HS id
 			var urlParams = new URLSearchParams(window.location.search);
-			var hsid = urlParams.get('hsid');
+			var impid = urlParams.get('impid');
 
 			// Get data
 			$.ajax({
-				url: "../get_detail_komoditi",
-				method: "POST",
+				url: "../get_detail_importir",
+				method: "GET",
 				data: {
-					'hsid': hsid,
+					'impid': impid,
 					'start_date': staDate, 
 					'end_date': endDate
 				},
 				success: function(data) {
-					DisplayChart('chart-bar-nilai', data["barHsNilai"]);
-					DisplayChart('chart-bar-bm', data["barHsBm"]);
-					DisplayChart('chart-pie-importir-nilai', data["pieImportirNilai"]);
-					DisplayChart('chart-pie-importir-bm', data["pieImportirBm"]);
-					DisplayTable('table-data-importir', data["tableImportir"], 'importir');
+					DisplayChart('chart-bar-nilai', data["barNilai"]);
+					DisplayChart('chart-bar-bm', data["barBm"]);
+					DisplayChart('chart-pie-hs-nilai', data["pieHsNilai"]);
+					DisplayChart('chart-pie-hs-bm', data["pieHsBm"]);
+					DisplayTable('table-data-hs', data["tableHs"], 'komoditi');
+					DisplayChart('chart-pie-jalur-dok', data["pieJalurDok"]);
+					DisplayChart('chart-bar-jalur-dok', data["barJalurDok"]);
+					DisplayTableJalur('table-data-jalur', data["tableJalur"]);
 					DisplayChart('chart-pie-fasilitas-nilai', data["pieFasilitasNilai"]);
 					DisplayChart('chart-pie-fasilitas-pungutan', data["pieFasilitasPungutan"]);
 					DisplayTable('table-data-fasilitas', data["tableFasilitas"], 'fasilitas');

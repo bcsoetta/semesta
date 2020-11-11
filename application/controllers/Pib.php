@@ -334,7 +334,33 @@ class Pib extends CI_Controller {
 		$this->mainlib->logged_in();
 		$this->load->model('Pib_importir_model');
 		$data = $this->Pib_importir_model->GetChartData($_POST["start_date"], $_POST["end_date"]);
-		// $data = $this->Pib_importir_model->GetChartData('2020-01-01', '2020-12-31');
+		header('Content-type:application/json');
+		echo json_encode($data);
+	}
+
+	public function detail_importir()
+	{
+		$this->mainlib->logged_in();
+		// $this->mainlib->privilege();
+		$imp_id = $_GET['impid'];
+		$this->load->model('Pib_importir_detail_model');
+		$data['menus'] = $this->mainlib->menus();
+		$data['class'] = $this->router->fetch_class();
+		$data['hal'] = 'detail importir';
+		$data['content'] = 'pib_importir_detail';
+		$data['description'] = $this->Pib_importir_detail_model->GetImportirDescription($imp_id);
+		$this->load->view('index', $data);
+		// header('Content-type:application/json');
+		// echo json_encode($data);
+	}
+
+	public function get_detail_importir()
+	{
+		$this->mainlib->logged_in();
+		// $this->mainlib->privilege();
+		$imp_id = $_GET['impid'];
+		$this->load->model('Pib_importir_detail_model');
+		$data = $this->Pib_importir_detail_model->GetDataImportir($imp_id);
 		header('Content-type:application/json');
 		echo json_encode($data);
 	}
@@ -372,17 +398,15 @@ class Pib extends CI_Controller {
 		$data['content'] = 'pib_komoditi_detail';
 		$data['description'] = $this->Pib_komoditi_detail_model->GetHsDescription($hs_id);
 		$this->load->view('index', $data);
-		// header('Content-type:application/json');
-		// echo json_encode($data);
 	}
 
 	public function get_detail_komoditi()
 	{
 		$this->mainlib->logged_in();
 		// $this->mainlib->privilege();
-		$hs_id = $_GET['hsid'];
+		$hs_id = $_POST['hsid'];
 		$this->load->model('Pib_komoditi_detail_model');
-		$data = $this->Pib_komoditi_detail_model->GetDataHs($hs_id);
+		$data = $this->Pib_komoditi_detail_model->GetDataHs($hs_id, $_POST["start_date"], $_POST["end_date"]);
 		header('Content-type:application/json');
 		echo json_encode($data);
 	}

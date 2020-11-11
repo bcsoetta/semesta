@@ -1,41 +1,22 @@
 <?php
 
-class Pib_komoditi_detail_model extends CI_Model {
-
-	// HS Description
-	public function GetHsDescription($hsid)
+class Pib_importir_detail_model extends CI_Model {
+	// Importir Description
+	public function GetImportirDescription($id)
 	{
-		$reachParent = false;
-		$hsDesc = [];
-
-		$searchHsId = $hsid;
-		while ($reachParent == false) {
-			$query = $this->db->query("
-				SELECT
-					a.id,
-					a.parent_id,
-					a.takik,
-					a.kode,
-					a.uraian,
-					a.uraian_english
-				FROM db_patops.hs_code a
-				WHERE
-					a.id = $searchHsId
-			");
-
-			$result = $query->row_array();
-			$searchHsId = $result['parent_id'];
-			if ($result['parent_id'] == null) {
-				$reachParent = true;
-			}
-			array_unshift($hsDesc, $result);
-		}
-
-		return $hsDesc;
+		$sql = "
+			SELECT *
+			FROM db_semesta.dim_pengguna_jasa a
+			WHERE
+				a.id = $id
+		";
+		$query = $this->db->query($sql);
+		$result = $query->row_array();
+		return $result;
 	}
 
-	// Fact HS
-	public function GetDataHs($hsid, $sta='2020-01-01', $end='2020-12-31')
+	// Fact importir
+	public function GetDataImportir($id, $sta='2020-01-01', $end='2020-12-31')
 	{
 		$periods = $this->ListMonth($sta, $end);
 
@@ -51,27 +32,34 @@ class Pib_komoditi_detail_model extends CI_Model {
 		}
 
 		// Bar chart nilai pabean dan BM
-		$dataMonthCurrent = $this->GetDataHsMonthly($hsid, $sta, $end);
-		$dataMonthBefore = $this->GetDataHsMonthly($hsid, $datesBefore['sta'], $datesBefore['end']);
-		$data['barHsNilai'] = $this->PrepareBarChart($dataMonthCurrent, $dataMonthBefore, $periods, 'nilai');
-		$data['barHsBm'] = $this->PrepareBarChart($dataMonthCurrent, $dataMonthBefore, $periods, 'bm');
+		$dataMonthCurrent = $this->GetDataMonthly($id, $sta, $end);
+		$dataMonthBefore = $this->GetDataMonthly($id, $datesBefore['sta'], $datesBefore['end']);
+		$data['barNilai'] = $this->PrepareBarChart($dataMonthCurrent, $dataMonthBefore, $periods, 'nilai');
+		$data['barBm'] = $this->PrepareBarChart($dataMonthCurrent, $dataMonthBefore, $periods, 'bm');
 
-		// Chart importir
-		$dataImportir = $this->GetDataHsImportir($hsid, $sta, $end);
-		$data['pieImportirNilai'] = $this->PreparePieChart($dataImportir, 'nilai');
-		$data['pieImportirBm'] = $this->PreparePieChart($dataImportir, 'bm');
-		$data['tableImportir'] = $dataImportir;
+		// Chart HS
+		$dataHs = $this->GetDataHs($id, $sta, $end);
+		$data['pieHsNilai'] = $this->PreparePieChart($dataHs, 'nilai');
+		$data['pieHsBm'] = $this->PreparePieChart($dataHs, 'bm');
+		$data['tableHs'] = $dataHs;
 
+		// Chart jalur
+		$dataJalur = $this->GetDataJalur($id, $sta, $end);
+		$dataJalurBulan = $this->GetDataJalurBulan($id, $sta, $end);
+		$data['pieJalurDok'] = $this->PreparePieChart($dataJalur, 'jml_pib', 'aggregate');
+		$data['barJalurDok'] = $this->PrepareBarChartJalur($dataJalurBulan, $periods);
+		$data['tableJalur'] = $dataJalur;
+		
 		// Chart fasilitas
-		$dataFasilitas = $this->GetDataHsFasilitas($hsid, $sta, $end);
+		$dataFasilitas = $this->GetDataFasilitas($id, $sta, $end);
 		$data['pieFasilitasNilai'] = $this->PreparePieChart($dataFasilitas, 'nilai');
 		$data['pieFasilitasPungutan'] = $this->PreparePieChart($dataFasilitas, 'pungutan', 'aggregate');
 		$data['tableFasilitas'] = $dataFasilitas;
 
 		// Chart negara
-		$dataNegara = $this->GetDataHsNegara($hsid, $sta, $end);
-		$data['tableNegara'] = $dataNegara;
+		$dataNegara = $this->GetDataNegara($id, $sta, $end);
 		$data['mapNegaraNilai'] = $this->PrepareMapChart($dataNegara, "nilai");
+		$data['tableNegara'] = $dataNegara;
 
 		return $data;
 	}
@@ -93,8 +81,8 @@ class Pib_komoditi_detail_model extends CI_Model {
 		return $yearMonths;
 	}
 
-	// Monthly HS summary
-	private function GetDataHsMonthly($hsid, $sta, $end)
+	// Monthly summary
+	private function GetDataMonthly($id, $sta, $end)
 	{
 		$query = $this->db->query("
 			SELECT
@@ -102,11 +90,11 @@ class Pib_komoditi_detail_model extends CI_Model {
 				b.month,
 				SUM(a.nilai_pabean_idr) nilai,
 				SUM(a.bm) bm
-			FROM db_semesta.fact_pib_hs a
+			FROM db_semesta.fact_pib_importir a
 			INNER JOIN db_semesta.dim_date b ON
 				a.tgl_pib = b.id
 			WHERE
-				a.hs = $hsid and
+				a.importir = $id and
 				b.date BETWEEN '$sta' AND '$end'
 			GROUP BY
 				1,2
@@ -206,13 +194,13 @@ class Pib_komoditi_detail_model extends CI_Model {
 		return $data;
 	}
 
-	// Data importir
-	private function GetDataHsImportir($hsid, $sta, $end)
+	// Data HS
+	private function GetDataHs($id, $sta, $end)
 	{
 		$sql = "
 			SELECT
 				c.id,
-				c.nama label,
+				c.kode label,
 				SUM(a.jml_pib) jml_pib,
 				SUM(a.nilai_pabean_idr) nilai,
 				SUM(a.bm) bm,
@@ -234,11 +222,11 @@ class Pib_komoditi_detail_model extends CI_Model {
 			FROM db_semesta.fact_pib_importir_hs a
 			INNER JOIN db_semesta.dim_date b ON
 				a.tgl_pib = b.id
-			INNER JOIN db_semesta.dim_pengguna_jasa c ON
-				a.importir = c.id
+			INNER JOIN db_patops.hs_code c ON
+				a.hs = c.id
 			WHERE
 				b.date BETWEEN '$sta' AND '$end' and
-				a.hs = $hsid
+				a.importir = $id
 			GROUP BY
 				c.id
 		";
@@ -249,8 +237,63 @@ class Pib_komoditi_detail_model extends CI_Model {
 		return $result;
 	}
 
+	// Data jalur
+	private function GetDataJalur($id, $sta, $end)
+	{
+		$sql = "
+			SELECT
+				c.id,
+				c.jalur,
+				c.grup_jalur,
+				SUM(a.jml_pib) jml_pib,
+				SUM(a.nilai_pabean_idr) nilai
+			FROM db_semesta.fact_pib_jalur_importir a
+			INNER JOIN db_semesta.dim_date b ON
+				a.tgl_pib = b.id
+			INNER JOIN db_semesta.dim_pib_jalur c ON
+				a.jalur = c.id
+			WHERE
+				b.date BETWEEN '$sta' AND '$end' AND
+				a.importir = $id
+			GROUP BY
+				c.id
+		";
+
+		$query = $this->db->query($sql);
+
+		$result = $query->result();
+		return $result;
+	}
+
+	private function GetDataJalurBulan($id, $sta, $end)
+	{
+		$sql = "
+			SELECT
+				b.year,
+				b.month,
+				c.grup_jalur,
+				SUM(a.jml_pib) jml_pib,
+				SUM(a.nilai_pabean_idr) nilai
+			FROM db_semesta.fact_pib_jalur_importir a
+			INNER JOIN db_semesta.dim_date b ON
+				a.tgl_pib = b.id
+			INNER JOIN db_semesta.dim_pib_jalur c ON
+				a.jalur = c.id
+			WHERE
+				b.date BETWEEN '$sta' AND '$end' AND
+				a.importir = $id
+			GROUP BY
+				1,2,3
+		";
+
+		$query = $this->db->query($sql);
+
+		$result = $query->result();
+		return $result;
+	}
+
 	// Data fasilitas
-	private function GetDataHsFasilitas($hsid, $sta, $end)
+	private function GetDataFasilitas($id, $sta, $end)
 	{
 		$sql = "
 			SELECT
@@ -274,14 +317,14 @@ class Pib_komoditi_detail_model extends CI_Model {
 				SUM(a.ppn_bebas) ppn_bebas,
 				SUM(a.pph_bebas) pph_bebas,
 				SUM(a.ppnbm_bebas) ppnbm_bebas
-			FROM db_semesta.fact_pib_hs_fasilitas a
+			FROM db_semesta.fact_pib_importir_fasilitas a
 			INNER JOIN db_semesta.dim_date b ON
 				a.tgl_pib = b.id
 			INNER JOIN db_semesta.dim_pib_fasilitas c ON
 				a.fasilitas = c.id
 			WHERE
 				b.date BETWEEN '$sta' AND '$end' and
-				a.hs = $hsid
+				a.importir = $id
 			GROUP BY
 				c.id
 		";
@@ -293,7 +336,7 @@ class Pib_komoditi_detail_model extends CI_Model {
 	}
 
 	// Data negara
-	private function GetDataHsNegara($hsid, $sta, $end)
+	private function GetDataNegara($id, $sta, $end)
 	{
 		$sql = "
 			SELECT
@@ -301,14 +344,14 @@ class Pib_komoditi_detail_model extends CI_Model {
 				c.nm_echarts label,
 				SUM(a.jml_pib) jml_pib,
 				SUM(a.nilai_pabean_idr) nilai
-			FROM db_semesta.fact_pib_negara_pemasok_hs a
+			FROM db_semesta.fact_pib_importir_negara_pemasok a
 			INNER JOIN db_semesta.dim_date b ON
 				a.tgl_pib = b.id
 			INNER JOIN db_semesta.dim_negara c ON
 				a.negara_pemasok = c.id
 			WHERE
 				b.date BETWEEN '$sta' AND '$end' and
-				a.hs = $hsid
+				a.importir = $id
 			GROUP BY
 				c.id
 		";
@@ -327,6 +370,8 @@ class Pib_komoditi_detail_model extends CI_Model {
 			$chartName = "Bea Masuk";
 		} else if ($dataType == "pungutan") {
 			$chartName = "Pungutan";
+		} else if ($dataType == "jml_pib") {
+			$chartName = "Jml PIB";
 		}
 
 		if ($chartType == 'total') {
@@ -350,8 +395,13 @@ class Pib_komoditi_detail_model extends CI_Model {
 					]
 				]
 			];
-		} else {
-			$dataChart = $this->PreparePieDataPungutan($data);
+		} else if ($chartType == 'aggregate') {
+			if ($dataType == 'pungutan') {
+				$dataChart = $this->PreparePieDataPungutan($data);
+			} else if ($dataType == 'jml_pib') {
+				$dataChart = $this->PreparePieDataJalur($data);
+			}
+
 			$dataAggregate = [
 				'name' => 'Agregat ' . $chartName,
 				'type' => 'pie',
@@ -493,6 +543,47 @@ class Pib_komoditi_detail_model extends CI_Model {
 		return $dataChart;
 	}
 
+	private function PreparePieDataJalur($data)
+	{
+		$dataChart = [
+			"values" => [],
+			"aggregate" => [],
+			"labels" => []
+		];
+
+		$dataChartAggregates = [];
+
+		foreach ($data as $key => $value) {
+			$jml_pib = (int)$value->jml_pib;
+			$jalur = $value->jalur;
+			$grup_jalur = $value->grup_jalur;
+
+			$dataChartValue = [
+				"value" => $jml_pib,
+				"name" => $jalur
+			];
+			array_push($dataChart["values"], $dataChartValue);
+			array_push($dataChart["labels"], $jalur);
+
+			if (array_key_exists($grup_jalur, $dataChartAggregates)) {
+				$dataChartAggregates[$grup_jalur] += $jml_pib;
+			} else {
+				$dataChartAggregates[$grup_jalur] = $jml_pib;
+			}
+		}
+
+		foreach ($dataChartAggregates as $key => $value) {
+			$dataChartAggregate = [
+				"value" => $value,
+				"name" => $key
+			];
+			array_push($dataChart["aggregate"], $dataChartAggregate);
+			array_push($dataChart["labels"], $key);
+		}
+
+		return $dataChart;
+	}
+
 	private function PrepareMapChart($data, $dataType)
 	{
 		$chartData = $this->PrepareMapData($data, $dataType);
@@ -551,6 +642,86 @@ class Pib_komoditi_detail_model extends CI_Model {
 		}
 
 		return $dataChart;
+	}
+
+	private function PrepareBarChartJalur($data, $periods)
+	{
+		$chartData = $this->PrepareBarDataJalur($data, $periods);
+
+		$chartOptions = [
+			'tooltip' => [
+				'trigger' => 'axis',
+				'axisPointer' => [
+					'type' => 'cross',
+					'label' => [
+						'backgroundColor' => '#6a7985'
+					]
+				]
+			],
+			"legend" => [
+				"data" => $chartData["labels"]
+			],
+			"xAxis" => [
+				'name' => 'Bulan',
+				'nameLocation' => 'center',
+				'nameGap' => 30,
+				"type" => 'category',
+				"data" => $chartData["xLabels"]
+			],
+			"yAxis" => [
+				'name' => "Jumlah PIB",
+				'nameLocation' => 'center',
+				'nameGap' => 40,
+				"type" => 'value'
+			],
+			"series" => $chartData["series"]
+		];
+
+		return $chartOptions;
+	}
+
+	private function PrepareBarDataJalur($data, $periods)
+	{
+		$dataCharts = [
+			"series" => [],
+			"labels" => [],
+			"xLabels" => []
+		];
+		$dataSeries = [];
+
+		foreach ($data as $key => $value) {
+			// Prepare data series
+			$grup_jalur = $value->grup_jalur;
+			if (!array_key_exists($grup_jalur, $dataSeries)) {
+				$dataSeries[$grup_jalur] = array_fill(0, count($periods), 0);
+			}
+			$monthIdx = array_search([$value->year, $value->month], $periods);
+			$dataSeries[$grup_jalur][$monthIdx] = (int)$value->jml_pib;
+
+			// Prepare data label
+			if (!in_array($grup_jalur, $dataCharts["labels"])) {
+				array_push($dataCharts["labels"], $grup_jalur);
+			}
+		}
+
+		foreach ($dataSeries as $key => $value) {
+			$series = [
+				"name" => $key,
+				"type" => 'bar',
+				"stack" => 'jalur',
+				"data" => $value
+			];
+
+			array_push($dataCharts["series"], $series);
+		}
+
+		foreach ($periods as $key => $value) {
+			$xLabel = implode('-', $value);
+			array_push($dataCharts["xLabels"], $xLabel);
+		}
+
+		return $dataCharts;
+
 	}
 
 }
