@@ -118,7 +118,7 @@
 				<div class="row-col box">
 					<div class="col-sm-8">
 						<div class="box-header">
-							<h3>Daftar Komoditi</h3>
+							<h3>Daftar Importir</h3>
 						</div>
 						<div class="box-divider m-a-0"></div>
 

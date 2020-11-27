@@ -369,7 +369,7 @@ class Pib extends CI_Controller {
 	public function komoditi()
 	{
 		$this->mainlib->logged_in();
-		// $this->mainlib->privilege();
+		$this->mainlib->privilege();
 		$data['menus'] = $this->mainlib->menus();
 		$data['class'] = $this->router->fetch_class();
 		$data['hal'] = 'komoditi';
